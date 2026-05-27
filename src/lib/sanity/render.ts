@@ -19,6 +19,14 @@ export function renderPortableText(body: unknown): string {
         `<a href="${opts.value?.href ?? '#'}" target="_blank" rel="noopener noreferrer">${opts.children ?? ''}</a>`,
       code: (opts: { children?: unknown }) => `<code>${opts.children ?? ''}</code>`,
     },
+    types: {
+      image: (opts: { value?: { asset?: { url?: string }; alt?: string } }) => {
+        const src = opts.value?.asset?.url ?? ''
+        const alt = opts.value?.alt ?? ''
+        if (!src) return ''
+        return `<figure class="my-6"><img src="${src}" alt="${alt}" class="rounded-xl max-w-full" loading="lazy" /><${''}/figure>`
+      },
+    },
   }
 
   return toHTML(body as Parameters<typeof toHTML>[0], { components } as Parameters<typeof toHTML>[1])
