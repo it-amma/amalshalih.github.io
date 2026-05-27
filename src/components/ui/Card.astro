@@ -12,8 +12,8 @@ const base = 'rounded-2xl border border-primary-100 bg-white transition-all dura
 
 const variants: Record<string, string> = {
 	default: 'p-6 ring-1 ring-primary-50',
-	hover: 'p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
-	overflow: 'overflow-hidden ring-1 ring-primary-50',
+	hover: 'p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
+	overflow: 'overflow-hidden border-0 ring-1 ring-primary-50',
 	plain: 'p-6',
 };
 
@@ -23,7 +23,7 @@ const paddingMap: Record<string, string> = {
 	lg: 'p-8',
 };
 
-const classes = [base, variants[variant], variant === 'default' ? '' : paddingMap[padding], className];
+const classes = [base, variants[variant], (variant === 'default' || variant === 'overflow' || variant === 'hover') ? '' : paddingMap[padding], className];
 ---
 
 {
