@@ -4,6 +4,20 @@ import Button from '../components/ui/Button.astro';
 import Card from '../components/ui/Card.astro';
 import Icon from '../components/ui/Icon.astro';
 import { STATS } from '../data/site';
+import { getSiteSettings } from '../lib/sanity/client';
+
+type StatItem = { number: string; label: string };
+
+let stats: StatItem[] = STATS;
+
+try {
+  const sanitySettings = await getSiteSettings();
+  if (sanitySettings?.stats && sanitySettings.stats.length > 0) {
+    stats = sanitySettings.stats;
+  }
+} catch {
+  // Sanity unavailable — use local fallback
+}
 ---
 
 <BaseLayout

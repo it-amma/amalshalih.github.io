@@ -9,6 +9,7 @@ export const siteSettingsType = defineType({
     {name: 'profil', title: 'Profil'},
     {name: 'kontak', title: 'Kontak'},
     {name: 'sosmed', title: 'Sosial Media'},
+    {name: 'beranda', title: 'Beranda'},
   ],
   fields: [
     defineField({
@@ -83,6 +84,13 @@ export const siteSettingsType = defineType({
       group: 'kontak',
     }),
     defineField({
+      name: 'mapsUrl',
+      title: 'Google Maps URL',
+      type: 'url',
+      description: 'Link Google Maps lokasi yayasan',
+      group: 'kontak',
+    }),
+    defineField({
       name: 'linktree',
       title: 'Linktree URL',
       type: 'url',
@@ -99,6 +107,27 @@ export const siteSettingsType = defineType({
         {name: 'youtube', title: 'YouTube', type: 'url'},
         {name: 'tiktok', title: 'TikTok', type: 'url'},
       ],
+    }),
+    defineField({
+      name: 'stats',
+      title: 'Statistik Beranda',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {name: 'number', title: 'Angka/Nilai', type: 'string'},
+            {name: 'label', title: 'Label', type: 'string'},
+          ],
+          preview: {
+            select: {
+              title: 'number',
+              subtitle: 'label',
+            },
+          },
+        },
+      ],
+      group: 'beranda',
     }),
   ],
 })

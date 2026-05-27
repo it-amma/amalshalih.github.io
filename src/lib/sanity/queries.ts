@@ -62,6 +62,8 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0] {
   phone,
   email,
   "qrisImageUrl": qrisImage.asset->url,
+  mapsUrl,
   linktree,
-  socialMedia
+  socialMedia,
+  stats[]{ number, label }
 }`

@@ -56,6 +56,7 @@ export interface SanitySiteSettings {
   phone?: string
   email?: string
   qrisImageUrl?: string
+  mapsUrl?: string
   linktree?: string
   socialMedia?: {
     facebook?: string
@@ -63,4 +64,8 @@ export interface SanitySiteSettings {
     youtube?: string
     tiktok?: string
   }
+  stats?: {
+    number: string
+    label: string
+  }[]
 }
