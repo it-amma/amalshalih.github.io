@@ -3,7 +3,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/sections/PageHeader.astro';
 import Card from '../components/ui/Card.astro';
 import Icon from '../components/ui/Icon.astro';
+import { getSiteSettings } from '../lib/sanity/client';
 import { SITE, CONTACT } from '../data/site';
+
+// Hybrid: try Sanity first, fall back to local data
+let addressFull = CONTACT.address.full;
+let addressStreet = CONTACT.address.street;
+let phone = CONTACT.phone;
+let phoneUrl = CONTACT.phoneUrl;
+let email = CONTACT.email;
+
+try {
+  const s = await getSiteSettings();
+  if (s) {
+    if (s.address) {
+      addressStreet = s.address.street ?? addressStreet;
+      // address.full is not in Sanity — keep local fallback
+      addressFull = `${s.address.street ?? CONTACT.address.street}, ${s.address.village ?? CONTACT.address.village}, ${s.address.district ?? CONTACT.address.district}`;
+    }
+    if (s.phone) phone = s.phone;
+    if (s.email) email = s.email;
+  }
+} catch {
+  // Sanity unavailable — use local data silently
+}
 ---
 
 <BaseLayout
@@ -34,7 +57,7 @@ import { SITE, CONTACT } from '../data/site';
 						seluruh komponen masyarakat sekitar.
 					</p>
 					<p>
-						Berlokasi di {CONTACT.address.full},
+						Berlokasi di {addressFull},
 						kami hadir untuk membantu dan mendukung masyarakat kurang mampu, yatim piatu,
 						dan dhuafa sebagaimana diajarkan dalam Islam.
 					</p>
@@ -187,7 +210,7 @@ import { SITE, CONTACT } from '../data/site';
 				</div>
 				<h3 class="font-semibold text-warm-900">Telepon/WA</h3>
 				<p class="mt-1 text-sm text-warm-700">
-					<a href={CONTACT.phoneUrl} class="text-primary-600 hover:underline">{CONTACT.phone}</a>
+					<a href={phoneUrl} class="text-primary-600 hover:underline">{phone}</a>
 				</p>
 			</div>
 			<div class="rounded-xl border border-primary-100 bg-white p-6">
@@ -196,7 +219,7 @@ import { SITE, CONTACT } from '../data/site';
 				</div>
 				<h3 class="font-semibold text-warm-900">Email</h3>
 				<p class="mt-1 text-sm text-warm-700">
-					<a href={`mailto:${CONTACT.email}`} class="text-primary-600 hover:underline break-all">{CONTACT.email}</a>
+					<a href={`mailto:${email}`} class="text-primary-600 hover:underline break-all">{email}</a>
 				</p>
 			</div>
 			<div class="rounded-xl border border-primary-100 bg-white p-6">
