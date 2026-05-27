@@ -1,0 +1,39 @@
+---
+interface Props {
+	variant?: 'default' | 'hover' | 'overflow' | 'plain';
+	padding?: 'sm' | 'md' | 'lg';
+	class?: string;
+	href?: string;
+}
+
+const { variant = 'default', padding = 'md', href, class: className } = Astro.props;
+
+const base = 'rounded-2xl border border-primary-100 bg-white';
+
+const variants: Record<string, string> = {
+	default: 'p-6 ring-1 ring-primary-50',
+	hover: 'p-8 transition-shadow hover:shadow-lg',
+	overflow: 'overflow-hidden ring-1 ring-primary-50',
+	plain: 'p-6',
+};
+
+const paddingMap: Record<string, string> = {
+	sm: 'p-4',
+	md: 'p-6',
+	lg: 'p-8',
+};
+
+const classes = [base, variants[variant], variant === 'default' ? '' : paddingMap[padding], className];
+---
+
+{
+	href ? (
+		<a href={href} class:list={classes}>
+			<slot />
+		</a>
+	) : (
+		<div class:list={classes}>
+			<slot />
+		</div>
+	)
+}

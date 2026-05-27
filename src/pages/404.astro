@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+---
+
+<BaseLayout
+	title="Halaman Tidak Ditemukan"
+	description="Halaman yang Anda cari tidak ditemukan."
+>
+	<section class="flex flex-1 items-center justify-center px-4 py-32">
+		<div class="text-center">
+			<p class="text-8xl font-extrabold text-primary-200">404</p>
+			<h1 class="mt-4 text-3xl font-bold text-warm-900 sm:text-4xl">
+				Halaman Tidak Ditemukan
+			</h1>
+			<p class="mt-4 mx-auto max-w-md text-warm-700">
+				Maaf, halaman yang Anda cari tidak tersedia atau telah dipindahkan.
+			</p>
+			<div class="mt-8 flex flex-wrap justify-center gap-4">
+				<Button variant="primary" href="/">Kembali ke Beranda</Button>
+				<Button variant="outline" href="/donasi">Donasi</Button>
+			</div>
+		</div>
+	</section>
+</BaseLayout>

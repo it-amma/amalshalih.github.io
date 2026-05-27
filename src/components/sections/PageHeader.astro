@@ -1,0 +1,23 @@
+---
+interface Props {
+	label: string;
+	title: string;
+	description?: string;
+	class?: string;
+}
+
+const { label, title, description, class: className } = Astro.props;
+---
+
+<section class:list={['bg-gradient-to-br from-primary-800 to-primary-900 text-white', className]}>
+	<div class="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+		<p class="mb-2 text-sm font-semibold uppercase tracking-widest text-gold-300">
+			{label}
+		</p>
+		<h1 class="text-4xl font-extrabold text-white sm:text-5xl">{title}</h1>
+		{description && (
+			<p class="mt-4 max-w-2xl text-lg text-primary-100">{description}</p>
+		)}
+		<slot name="after" />
+	</div>
+</section>

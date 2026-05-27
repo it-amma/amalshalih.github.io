@@ -22,3 +22,18 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Playwright MCP — ephemeral test artifacts
+.playwright-mcp/
+
+# OpenKB binary raw assets (dokumen legal, logo mentah, dll)
+.openkb/*.pdf
+.openkb/*.jpg
+.openkb/*.jpeg
+.openkb/*.png
+.openkb/*.PNG
+.openkb/*.docx
+.openkb/*.ai
+
+# Sisyphus runtime artifacts (not work plans)
+.sisyphus/run-continuation/

@@ -1,0 +1,121 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Icon from '../components/ui/Icon.astro';
+import { CONTACT, SITE, SOCIAL } from '../data/site';
+import { NAV_ITEMS } from '../lib/constants';
+
+interface Props {
+	title: string;
+	description: string;
+	image?: string;
+	currentPage?: string;
+}
+
+const { title, description, image, currentPage } = Astro.props;
+---
+
+<!doctype html>
+<html lang="id">
+	<head>
+		<BaseHead title={title} description={description} image={image} />
+	</head>
+	<body class="flex min-h-screen flex-col">
+		<a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-primary-600 focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg">
+			Langsung ke konten utama
+		</a>
+		<header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-primary-100">
+			<nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+				<a href="/" class="flex items-center gap-3">
+					<img src="/logo-yayasan-sm.webp" alt="Logo Yayasan ASIB" class="h-12 w-12 rounded-full object-cover" width="48" height="48" fetchpriority="high" />
+					<div class="hidden sm:block">
+						<p class="text-sm font-bold leading-tight text-primary-800">Yayasan Amal Shalih</p>
+						<p class="text-xs text-warm-700">Insan Bantul</p>
+					</div>
+				</a>
+
+				<div class="flex items-center gap-1">
+					{NAV_ITEMS.map((item) => (
+						<a
+							href={item.href}
+							class={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+								currentPage === item.href
+									? 'bg-primary-50 text-primary-700'
+									: 'text-warm-700 hover:bg-warm-100 hover:text-warm-800'
+							}`}
+						>
+							{item.label}
+						</a>
+					))}
+					<a
+						href="/donasi"
+						class="ml-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700 transition-colors"
+					>
+						Donasi
+					</a>
+				</div>
+			</nav>
+		</header>
+
+		<main id="main-content" class="flex-1" tabindex="-1">
+			<slot />
+		</main>
+
+		<footer class="bg-primary-950 text-white">
+			<div class="mx-auto max-w-6xl px-4 py-12">
+				<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+					<div>
+						<h3 class="mb-3 text-lg font-bold text-white">{SITE.shortName}</h3>
+						<p class="text-sm text-primary-200 leading-relaxed">
+							{SITE.description}
+						</p>
+					</div>
+					<div>
+						<h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-primary-300">Navigasi</h3>
+						<ul class="space-y-2 text-sm">
+							<li><a href="/" class="text-primary-200 hover:text-white transition-colors">Beranda</a></li>
+							<li><a href="/tentang" class="text-primary-200 hover:text-white transition-colors">Tentang Kami</a></li>
+							<li><a href="/program" class="text-primary-200 hover:text-white transition-colors">Program</a></li>
+							<li><a href="/kegiatan" class="text-primary-200 hover:text-white transition-colors">Kegiatan</a></li>
+							<li><a href="/donasi" class="text-primary-200 hover:text-white transition-colors">Donasi</a></li>
+							<li><a href="/kontak" class="text-primary-200 hover:text-white transition-colors">Kontak</a></li>
+						</ul>
+					</div>
+					<div>
+						<h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-primary-300">Kontak</h3>
+						<ul class="space-y-2 text-sm text-primary-200">
+							<li>{CONTACT.address.full}</li>
+							<li><a href={CONTACT.phoneUrl} class="hover:text-white transition-colors">{CONTACT.phone}</a></li>
+							<li><a href={`mailto:${CONTACT.email}`} class="hover:text-white transition-colors">{CONTACT.email}</a></li>
+						</ul>
+					</div>
+					<div>
+						<h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-primary-300">Ikuti Kami</h3>
+						<div class="flex flex-wrap gap-3 text-primary-300">
+							<a href={SOCIAL.facebook.url} target="_blank" rel="noopener noreferrer" class="p-1.5 hover:text-white transition-colors" aria-label={SOCIAL.facebook.ariaLabel}>
+								<Icon name="facebook" size={5} />
+							</a>
+							<a href={SOCIAL.instagram.url} target="_blank" rel="noopener noreferrer" class="p-1.5 hover:text-white transition-colors" aria-label={SOCIAL.instagram.ariaLabel}>
+								<Icon name="instagram" size={5} />
+							</a>
+							<a href={SOCIAL.tiktok.url} target="_blank" rel="noopener noreferrer" class="p-1.5 hover:text-white transition-colors" aria-label={SOCIAL.tiktok.ariaLabel}>
+								<Icon name="tiktok" size={5} />
+							</a>
+							<a href={SOCIAL.youtube.url} target="_blank" rel="noopener noreferrer" class="p-1.5 hover:text-white transition-colors" aria-label={SOCIAL.youtube.ariaLabel}>
+								<Icon name="youtube" size={5} />
+							</a>
+							<a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer" class="p-1.5 hover:text-white transition-colors" aria-label="WhatsApp">
+								<Icon name="whatsapp" size={5} />
+							</a>
+							<a href={SOCIAL.linktree.url} target="_blank" rel="noopener noreferrer" class="p-1.5 hover:text-white transition-colors" aria-label="Linktree">
+								<Icon name="external-link" size={5} />
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="mt-10 border-t border-primary-800 pt-6 text-center text-sm text-primary-400">
+					&copy; {new Date().getFullYear()} {SITE.name}. Seluruh hak cipta dilindungi.
+				</div>
+			</div>
+		</footer>
+	</body>
+</html>

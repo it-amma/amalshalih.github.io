@@ -1,0 +1,155 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/sections/PageHeader.astro';
+import Card from '../components/ui/Card.astro';
+import Icon from '../components/ui/Icon.astro';
+import { SITE, CONTACT } from '../data/site';
+---
+
+<BaseLayout
+	title="Tentang Kami"
+	description="Profil Yayasan Amal Shalih Insan Bantul — visi, misi, legalitas, dan struktur organisasi lembaga yang bergerak di bidang pendidikan, sosial, dan keagamaan di Bantul, Yogyakarta."
+	currentPage="/tentang"
+>
+	<PageHeader
+		label="Tentang Kami"
+		title="Mengenal Yayasan ASIB"
+	/>
+
+	<!-- Profil -->
+	<section class="mx-auto max-w-6xl px-4 py-16">
+		<div class="grid gap-12 lg:grid-cols-3">
+			<div class="lg:col-span-2">
+				<h2 class="text-2xl font-bold text-warm-900 sm:text-3xl">Profil Yayasan</h2>
+				<div class="mt-6 space-y-4 leading-relaxed text-warm-700">
+					<p>
+						Yayasan Amal Shalih Insan Bantul (ASIB) adalah organisasi nirlaba yang berdiri sejak
+						<strong>{SITE.foundedDate}</strong> berdasarkan SK Kemenkumham RI
+						No. {SITE.legal.sk}.
+					</p>
+					<p>
+						Kami memiliki tiga bidang utama: <strong>Pendidikan</strong>, <strong>Sosial Kemanusiaan</strong>, dan
+						<strong>Keagamaan</strong>. Untuk mewujudkan program di setiap bidang, kami melibatkan
+						seluruh komponen masyarakat sekitar.
+					</p>
+					<p>
+						Berlokasi di {CONTACT.address.full},
+						kami hadir untuk membantu dan mendukung masyarakat kurang mampu, yatim piatu,
+						dan dhuafa sebagaimana diajarkan dalam Islam.
+					</p>
+				</div>
+			</div>
+			<div>
+				<div class="rounded-2xl bg-primary-50 p-8 ring-1 ring-primary-100/50">
+					<h3 class="text-lg font-bold text-primary-800">Informasi Legal</h3>
+					<dl class="mt-4 space-y-3 text-sm">
+						<div>
+							<dt class="font-semibold text-warm-800">SK Kemenkumham</dt>
+							<dd class="text-warm-700">{SITE.legal.sk}</dd>
+						</div>
+						<div>
+							<dt class="font-semibold text-warm-800">NIB</dt>
+							<dd class="text-warm-700">{SITE.legal.nib}</dd>
+						</div>
+						<div>
+							<dt class="font-semibold text-warm-800">NPWP</dt>
+							<dd class="text-warm-700">{SITE.legal.npwp}</dd>
+						</div>
+						<div>
+							<dt class="font-semibold text-warm-800">KBLI</dt>
+							<dd class="text-warm-700">{SITE.legal.kbli}</dd>
+						</div>
+					</dl>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Visi Misi -->
+	<section class="bg-warm-50 py-16 ring-1 ring-primary-100/30">
+		<div class="mx-auto max-w-6xl px-4">
+			<div class="grid gap-12 lg:grid-cols-2">
+				<!-- Visi -->
+				<Card variant="hover" class="p-8">
+					<div class="mb-4 icon-box-sm">
+						<Icon name="star" size={6} />
+					</div>
+					<h2 class="text-2xl font-bold text-warm-900">Visi</h2>
+					<p class="mt-4 text-lg leading-relaxed text-warm-700">
+						&ldquo;Menjadi Lembaga Yang Profesional dan Berkarakter Serta
+						<strong class="text-primary-700">Maslahat Bagi Umat</strong>.&rdquo;
+					</p>
+				</Card>
+
+				<!-- Misi -->
+				<Card variant="hover" class="p-8">
+					<div class="mb-4 icon-box-sm">
+						<Icon name="check-circle" size={6} />
+					</div>
+					<h2 class="text-2xl font-bold text-warm-900">Misi</h2>
+					<ol class="mt-4 space-y-3 text-warm-700">
+						<li class="flex gap-3">
+							<span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-100 text-xs font-bold text-primary-700">1</span>
+							<span>Menyelenggarakan kegiatan keagamaan, sosial, dan kemanusiaan.</span>
+						</li>
+						<li class="flex gap-3">
+							<span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-100 text-xs font-bold text-primary-700">2</span>
+							<span>Mewujudkan pembinaan yang fokus pada bidang pendidikan dan Tahfiz Al-Qur'an.</span>
+						</li>
+						<li class="flex gap-3">
+							<span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-100 text-xs font-bold text-primary-700">3</span>
+							<span>Melaksanakan penggalangan dan penyaluran donasi untuk semua bidang.</span>
+						</li>
+						<li class="flex gap-3">
+							<span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-100 text-xs font-bold text-primary-700">4</span>
+							<span>Memiliki dan mengembangkan usaha produktif serta menguntungkan.</span>
+						</li>
+					</ol>
+				</Card>
+			</div>
+		</div>
+	</section>
+
+	<!-- Kontak -->
+	<section class="mx-auto max-w-6xl px-4 py-16">
+		<h2 class="text-2xl font-bold text-warm-900 sm:text-3xl">Hubungi Kami</h2>
+		<div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+			<div class="rounded-xl border border-primary-100 bg-white p-6">
+				<div class="mb-3 icon-box-sm">
+					<Icon name="location" size={5} />
+				</div>
+				<h3 class="font-semibold text-warm-900">Alamat</h3>
+				<p class="mt-1 text-sm text-warm-700">
+					Juron, Pendowoharjo, Sewon<br />Bantul, DIY 55185
+				</p>
+			</div>
+			<div class="rounded-xl border border-primary-100 bg-white p-6">
+				<div class="mb-3 icon-box-sm">
+					<Icon name="phone" size={5} />
+				</div>
+				<h3 class="font-semibold text-warm-900">Telepon/WA</h3>
+				<p class="mt-1 text-sm text-warm-700">
+					<a href={CONTACT.phoneUrl} class="text-primary-600 hover:underline">{CONTACT.phone}</a>
+				</p>
+			</div>
+			<div class="rounded-xl border border-primary-100 bg-white p-6">
+				<div class="mb-3 icon-box-sm">
+					<Icon name="email" size={5} />
+				</div>
+				<h3 class="font-semibold text-warm-900">Email</h3>
+				<p class="mt-1 text-sm text-warm-700">
+					<a href={`mailto:${CONTACT.email}`} class="text-primary-600 hover:underline break-all">{CONTACT.email}</a>
+				</p>
+			</div>
+			<div class="rounded-xl border border-primary-100 bg-white p-6">
+				<div class="mb-3 icon-box-sm">
+					<Icon name="globe" size={5} />
+				</div>
+				<h3 class="font-semibold text-warm-900">Website</h3>
+				<p class="mt-1 text-sm text-warm-700">
+					<a href={SITE.url} class="text-primary-600 hover:underline">{SITE.shortName}</a>
+				</p>
+			</div>
+		</div>
+	</section>
+</BaseLayout>

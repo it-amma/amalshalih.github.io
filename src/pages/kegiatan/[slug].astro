@@ -1,0 +1,80 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Button from '../../components/ui/Button.astro';
+import { KATEGORI_LABELS } from '../../lib/constants';
+
+export async function getStaticPaths() {
+	const kegiatan = await getCollection('kegiatan');
+	return kegiatan.map((item) => ({
+		params: { slug: item.id },
+		props: { item },
+	}));
+}
+
+const { item } = Astro.props;
+const { Content } = await render(item);
+---
+
+<BaseLayout
+	title={item.data.title}
+	description={item.data.description}
+>
+	<article class="mx-auto max-w-3xl px-4 py-16">
+		<!-- Back link -->
+		<a
+			href="/kegiatan"
+			class="mb-8 inline-flex items-center gap-1 text-sm font-medium text-warm-700 hover:text-primary-700 transition-colors"
+		>
+			<Icon name="arrow-left" size={4} />
+			Semua Kegiatan
+		</a>
+
+		<!-- Header -->
+		<header class="mb-10">
+			<div class="mb-4 flex flex-wrap items-center gap-3">
+				<span class="inline-block rounded-full bg-primary-50 px-3 py-1 text-sm font-medium text-primary-600">
+					{KATEGORI_LABELS[item.data.kategori] || item.data.kategori}
+				</span>
+				<time datetime={item.data.date.toISOString()} class="text-sm text-warm-500">
+					{item.data.date.toLocaleDateString('id-ID', {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric',
+					})}
+				</time>
+			</div>
+			<h1 class="text-3xl font-extrabold leading-tight text-warm-900 sm:text-4xl">
+				{item.data.title}
+			</h1>
+			<p class="mt-3 text-lg text-warm-700">
+				{item.data.description}
+			</p>
+		</header>
+
+		<!-- Content -->
+		<div class="prose prose-warm max-w-none
+			prose-headings:text-warm-900 prose-headings:font-bold
+			prose-p:text-warm-700 prose-p:leading-relaxed
+			prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline
+			prose-strong:text-warm-900
+			prose-blockquote:border-primary-400 prose-blockquote:bg-warm-50 prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic
+			prose-li:text-warm-700
+		">
+			<Content />
+		</div>
+
+		<!-- CTA Donasi -->
+		<div class="mt-12 rounded-2xl bg-primary-50 p-8 text-center ring-1 ring-primary-100">
+			<h2 class="text-xl font-bold text-primary-800">Dukung Program Kami</h2>
+			<p class="mt-2 text-sm text-primary-700">
+				Setiap donasi Anda membantu kami menjangkau lebih banyak penerima manfaat.
+			</p>
+			<Button variant="primary" href="/donasi" class="mt-4">
+				Donasi Sekarang
+				<Icon name="arrow-right" size={5} />
+			</Button>
+		</div>
+	</article>
+</BaseLayout>

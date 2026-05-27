@@ -1,20 +1,15 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { z } from 'astro/zod';
 
-const blog = defineCollection({
-	// Load Markdown and MDX files in the `src/content/blog/` directory.
-	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
-	// Type-check frontmatter using a schema
-	schema: ({ image }) =>
-		z.object({
-			title: z.string(),
-			description: z.string(),
-			// Transform string to Date object
-			pubDate: z.coerce.date(),
-			updatedDate: z.coerce.date().optional(),
-			heroImage: z.optional(image()),
-		}),
+const kegiatan = defineCollection({
+	loader: glob({ pattern: '**/*.md', base: './src/content/kegiatan' }),
+	schema: z.object({
+		title: z.string(),
+		description: z.string(),
+		date: z.coerce.date(),
+		image: z.string().optional(),
+		kategori: z.enum(['pendidikan', 'keagamaan', 'sosial', 'umum']),
+	}),
 });
 
-export const collections = { blog };
+export const collections = { kegiatan };

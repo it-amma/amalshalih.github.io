@@ -1,0 +1,14 @@
+// Cloudflare Pages configuration
+// Build command dikonfigurasi di dashboard Cloudflare Pages:
+//   Build command: bun run build
+//   Build output: dist
+//   Framework preset: Astro
+//
+// Manual deploy:
+//   bunx wrangler pages deploy dist/ --project-name=amalshalih-id
+{
+	"$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+	"name": "amalshalih",
+	"compatibility_date": "2026-05-27",
+	"pages_build_output_dir": "dist"
+}

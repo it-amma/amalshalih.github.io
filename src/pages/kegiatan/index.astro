@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/sections/PageHeader.astro';
+import Card from '../../components/ui/Card.astro';
+
+import { KATEGORI_LABELS } from '../../lib/constants';
+
+const kegiatan = await getCollection('kegiatan');
+kegiatan.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout
+	title="Kegiatan"
+	description="Kegiatan dan program terbaru Yayasan Amal Shalih Insan Bantul — berita, laporan, dan dokumentasi program pendidikan, keagamaan, dan sosial."
+	currentPage="/kegiatan"
+>
+	<PageHeader
+		label="Kegiatan"
+		title="Kegiatan &amp; Berita"
+		description="Ikuti kegiatan terbaru dan laporan program Yayasan ASIB."
+	/>
+
+	<section class="mx-auto max-w-6xl px-4 py-16">
+		{
+			kegiatan.length === 0 ? (
+				<div class="text-center py-16">
+					<p class="text-warm-700">Belum ada kegiatan terbaru. Kunjungi kembali nanti.</p>
+				</div>
+			) : (
+				<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+					{kegiatan.map((item) => (
+						<Card variant="hover" href={`/kegiatan/${item.id}`}>
+							<div class="p-6">
+								<div class="mb-3 flex items-center gap-3">
+									<span class="inline-block rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-600">
+										{KATEGORI_LABELS[item.data.kategori] || item.data.kategori}
+									</span>
+									<time datetime={item.data.date.toISOString()} class="text-xs text-warm-500">
+										{item.data.date.toLocaleDateString('id-ID', {
+											year: 'numeric',
+											month: 'long',
+											day: 'numeric',
+										})}
+									</time>
+								</div>
+								<h2 class="text-lg font-bold leading-snug text-warm-900 group-hover:text-primary-700 transition-colors">
+									{item.data.title}
+								</h2>
+								<p class="mt-2 text-sm leading-relaxed text-warm-700 line-clamp-3">
+									{item.data.description}
+								</p>
+							</div>
+						</Card>
+					))}
+				</div>
+			)
+		}
+	</section>
+</BaseLayout>
