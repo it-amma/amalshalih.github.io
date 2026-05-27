@@ -4,22 +4,83 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Icon from '../../components/ui/Icon.astro';
 import Button from '../../components/ui/Button.astro';
 import { KATEGORI_LABELS } from '../../lib/constants';
+import { getKegiatanList, getKegiatanItem } from '../../lib/sanity/client';
+import { renderPortableText } from '../../lib/sanity/render';
 
 export async function getStaticPaths() {
-	const kegiatan = await getCollection('kegiatan');
-	return kegiatan.map((item) => ({
-		params: { slug: item.id },
-		props: { item },
-	}));
+  const slugs = new Set<string>();
+
+  try {
+    const sanityItems = await getKegiatanList();
+    for (const item of sanityItems) slugs.add(item.slug);
+  } catch {
+    // Sanity unavailable
+  }
+
+  const localItems = await getCollection('kegiatan');
+  for (const item of localItems) slugs.add(item.id);
+
+  return Array.from(slugs).map((slug) => ({ params: { slug } }));
 }
 
-const { item } = Astro.props;
-const { Content } = await render(item);
+const { slug } = Astro.params;
+
+type PageData = {
+  title: string;
+  description: string;
+  date: Date;
+  kategori: string;
+  fromSanity: boolean;
+  bodyHtml: string;
+};
+
+let pageData: PageData | null = null;
+
+try {
+  const sanityItem = await getKegiatanItem(slug);
+  if (sanityItem) {
+    pageData = {
+      title: sanityItem.title,
+      description: sanityItem.excerpt ?? '',
+      date: new Date(sanityItem.date),
+      kategori: sanityItem.category,
+      fromSanity: true,
+      bodyHtml: renderPortableText(sanityItem.body),
+    };
+  }
+} catch {
+  // Sanity unavailable
+}
+
+let Content = null;
+
+if (!pageData) {
+  const localItems = await getCollection('kegiatan');
+  const localItem = localItems.find((item) => item.id === slug);
+  if (localItem) {
+    const rendered = await render(localItem);
+    Content = rendered.Content;
+    pageData = {
+      title: localItem.data.title,
+      description: localItem.data.description,
+      date: localItem.data.date,
+      kategori: localItem.data.kategori,
+      fromSanity: false,
+      bodyHtml: '',
+    };
+  }
+}
+
+if (!pageData) {
+  return Astro.redirect('/kegiatan');
+}
+
+const { title, description, date, kategori, fromSanity, bodyHtml } = pageData;
 ---
 
 <BaseLayout
-	title={item.data.title}
-	description={item.data.description}
+	title={title}
+	description={description}
 >
 	<article class="mx-auto max-w-3xl px-4 py-16">
 		<!-- Back link -->
@@ -35,10 +96,10 @@ const { Content } = await render(item);
 		<header class="mb-10">
 			<div class="mb-4 flex flex-wrap items-center gap-3">
 				<span class="inline-block rounded-full bg-primary-50 px-3 py-1 text-sm font-medium text-primary-600">
-					{KATEGORI_LABELS[item.data.kategori] || item.data.kategori}
+					{KATEGORI_LABELS[kategori] || kategori}
 				</span>
-				<time datetime={item.data.date.toISOString()} class="text-sm text-warm-500">
-					{item.data.date.toLocaleDateString('id-ID', {
+				<time datetime={date.toISOString()} class="text-sm text-warm-500">
+					{date.toLocaleDateString('id-ID', {
 						year: 'numeric',
 						month: 'long',
 						day: 'numeric',
@@ -46,10 +107,10 @@ const { Content } = await render(item);
 				</time>
 			</div>
 			<h1 class="text-3xl font-extrabold leading-tight text-warm-900 sm:text-4xl">
-				{item.data.title}
+				{title}
 			</h1>
 			<p class="mt-3 text-lg text-warm-700">
-				{item.data.description}
+				{description}
 			</p>
 		</header>
 
@@ -62,7 +123,7 @@ const { Content } = await render(item);
 			prose-blockquote:border-primary-400 prose-blockquote:bg-warm-50 prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic
 			prose-li:text-warm-700
 		">
-			<Content />
+			{fromSanity ? <div set:html={bodyHtml} /> : Content && <Content />}
 		</div>
 
 		<!-- CTA Donasi -->

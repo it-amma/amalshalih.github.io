@@ -3,11 +3,43 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/sections/PageHeader.astro';
 import Card from '../../components/ui/Card.astro';
-
 import { KATEGORI_LABELS } from '../../lib/constants';
+import { getKegiatanList } from '../../lib/sanity/client';
 
-const kegiatan = await getCollection('kegiatan');
-kegiatan.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+interface kegiatanEntry {
+  id: string;
+  data: {
+    title: string;
+    description: string;
+    date: Date;
+    kategori: string;
+  };
+}
+
+let kegiatan: kegiatanEntry[] = [];
+
+try {
+  const sanityItems = await getKegiatanList();
+  if (sanityItems && sanityItems.length > 0) {
+    kegiatan = sanityItems.map((item) => ({
+      id: item.slug,
+      data: {
+        title: item.title,
+        description: item.excerpt ?? '',
+        date: new Date(item.date),
+        kategori: item.category,
+      },
+    }));
+  }
+} catch {
+  // Sanity unavailable
+}
+
+if (kegiatan.length === 0) {
+  const localItems = await getCollection('kegiatan');
+  localItems.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  kegiatan = localItems;
+}
 ---
 
 <BaseLayout
