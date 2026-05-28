@@ -135,7 +135,7 @@ try {
 				<div class="px-4 sm:px-6 pb-4 sm:pb-6">
 					<div class="grid gap-5 sm:gap-8 pt-3 lg:grid-cols-2">
 						<!-- Visi -->
-						<Card variant="hover" class="p-5 sm:p-8">
+						<Card variant="hover" class="p-4 sm:p-8">
 							<div class="mb-3 icon-box-sm">
 								<Icon name="star" size={6} aria-hidden="true" />
 							</div>
@@ -144,7 +144,7 @@ try {
 						</Card>
 
 						<!-- Misi -->
-						<Card variant="hover" class="p-5 sm:p-8">
+						<Card variant="hover" class="p-4 sm:p-8">
 							<div class="mb-3 icon-box-sm">
 								<Icon name="check-circle" size={6} aria-hidden="true" />
 							</div>
@@ -178,7 +178,7 @@ try {
 						<p class="mb-5 text-center text-sm sm:text-base text-warm-700">Kepengurusan Yayasan Amal Shalih Insan Bantul</p>
 						<div class="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4 items-start">
 							{pengurus.length > 0 ? pengurus.map((p) => (
-								<Card variant="default" class="p-6 text-center">
+								<Card variant="default" class="p-4 sm:p-6 text-center">
 									{p.photoUrl ? (
 										<img src={p.photoUrl} alt={p.photoAlt ?? p.name} class="mx-auto mb-4 h-16 w-16 rounded-full object-cover" loading="lazy" width="64" height="64" />
 									) : (
@@ -192,42 +192,42 @@ try {
 								</Card>
 							)) : (
 								<>
-									<Card variant="default" class="p-6 text-center">
+									<Card variant="default" class="p-4 sm:p-6 text-center">
 										<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-100 text-primary-700">
 											<Icon name="star" size={8} aria-hidden="true" />
 										</div>
 										<h3 class="font-bold text-warm-900">Pembina</h3>
 										<p class="mt-1 text-sm text-warm-700">Dewan Pembina Yayasan</p>
 									</Card>
-									<Card variant="default" class="p-6 text-center">
+									<Card variant="default" class="p-4 sm:p-6 text-center">
 										<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-100 text-primary-700">
 											<Icon name="star" size={8} aria-hidden="true" />
 										</div>
 										<h3 class="font-bold text-warm-900">Pengawas</h3>
 										<p class="mt-1 text-sm text-warm-700">Dewan Pengawas Yayasan</p>
 									</Card>
-									<Card variant="default" class="p-6 text-center">
+									<Card variant="default" class="p-4 sm:p-6 text-center">
 										<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-100 text-primary-700">
 											<Icon name="heart" size={8} aria-hidden="true" />
 										</div>
 										<h3 class="font-bold text-warm-900">Ketua</h3>
 										<p class="mt-1 text-sm text-warm-700">Ketua Yayasan</p>
 									</Card>
-									<Card variant="default" class="p-6 text-center">
+									<Card variant="default" class="p-4 sm:p-6 text-center">
 										<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-100 text-primary-700">
 											<Icon name="book" size={8} aria-hidden="true" />
 										</div>
 										<h3 class="font-bold text-warm-900">Sekretaris</h3>
 										<p class="mt-1 text-sm text-warm-700">Sekretaris Yayasan</p>
 									</Card>
-									<Card variant="default" class="p-6 text-center">
+									<Card variant="default" class="p-4 sm:p-6 text-center">
 										<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-100 text-primary-700">
 											<Icon name="credit-card" size={8} aria-hidden="true" />
 										</div>
 										<h3 class="font-bold text-warm-900">Bendahara</h3>
 										<p class="mt-1 text-sm text-warm-700">Bendahara Yayasan</p>
 									</Card>
-									<Card variant="default" class="p-6 text-center">
+									<Card variant="default" class="p-4 sm:p-6 text-center">
 										<div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-100 text-primary-700">
 											<Icon name="book" size={8} aria-hidden="true" />
 										</div>
@@ -250,7 +250,7 @@ try {
 
 		<!-- CTA: Hubungi Kami (replaces duplicate contact section) -->
 		<div class="mt-8 rounded-xl sm:rounded-2xl bg-primary-50 p-5 text-center sm:p-8 sm:p-12">
-			<h2 class="text-xl sm:text-2xl font-bold text-warm-900 sm:text-3xl">Ingin Tahu Lebih Lanjut?</h2>
+			<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-warm-900">Ingin Tahu Lebih Lanjut?</h2>
 			<p class="mx-auto mt-2 max-w-lg text-sm sm:text-base text-warm-700">
 				Hubungi kami untuk pertanyaan, konfirmasi donasi, atau informasi program Yayasan ASIB.
 			</p>

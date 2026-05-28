@@ -43,77 +43,9 @@ try {
 	/>
 
 	<Container class="py-8 sm:py-16">
-		<div class="grid gap-8 sm:gap-12 lg:grid-cols-5">
-			<!-- Info Cards -->
-			<div class="space-y-4 sm:space-y-6 lg:col-span-2">
-				<div class="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
-					<div class="mb-2 icon-box-sm">
-						<Icon name="location" size={5} aria-hidden="true" />
-					</div>
-					<h2 class="font-bold text-warm-900">Alamat Kantor</h2>
-					<p class="mt-1 text-sm leading-relaxed text-warm-700">
-						{address.street}, {address.village}, {address.district}<br />
-						{address.city}, {address.province}<br />
-						Kode Pos {address.postalCode}
-					</p>
-					<a
-						href={mapsUrl}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary-700 hover:text-primary-700 transition-colors"
-					>
-						Lihat di Google Maps
-						<Icon name="external-link" size={4} aria-hidden="true" />
-					</a>
-				</div>
-
-				<div class="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
-					<div class="mb-2 icon-box-sm">
-						<Icon name="phone" size={5} aria-hidden="true" />
-					</div>
-					<h2 class="font-bold text-warm-900">Telepon &amp; WhatsApp</h2>
-					<p class="mt-1 text-sm text-warm-700">
-						<a href={phoneUrl} class="text-primary-700 hover:underline">{phone}</a>
-					</p>
-					<Button variant="whatsapp" href={whatsapp} class="mt-2" target="_blank">
-						<Icon name="whatsapp" size={4} aria-hidden="true" />
-						Chat via WhatsApp
-					</Button>
-				</div>
-
-				<div class="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
-					<div class="mb-2 icon-box-sm">
-						<Icon name="email" size={5} aria-hidden="true" />
-					</div>
-					<h2 class="font-bold text-warm-900">Email</h2>
-					<p class="mt-1 text-sm">
-						<a href={`mailto:${email}`} class="text-primary-700 break-all hover:underline">
-							{email}
-						</a>
-					</p>
-				</div>
-
-				<div class="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
-					<h2 class="font-bold text-warm-900">Jam Operasional</h2>
-					<div class="mt-2 space-y-2 text-sm text-warm-700">
-						<div class="flex justify-between">
-							<span>Senin–Jumat</span>
-							<span class="font-medium text-warm-800">{hours.weekdays}</span>
-						</div>
-						<div class="flex justify-between">
-							<span>Sabtu</span>
-							<span class="font-medium text-warm-800">{hours.saturday}</span>
-						</div>
-						<div class="flex justify-between">
-							<span>Minggu</span>
-							<span class="font-medium text-warm-800">{hours.sunday}</span>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- Contact Form -->
-			<div class="lg:col-span-3">
+		<div class="grid gap-8 sm:gap-12 md:grid-cols-2 lg:grid-cols-5">
+			<!-- Contact Form — primary action, first on mobile -->
+			<div class="md:order-2 lg:col-span-3">
 				<div class="rounded-xl sm:rounded-2xl bg-white p-5 sm:p-8 shadow-sm">
 					<h2 class="text-xl sm:text-2xl font-bold text-warm-900">Kirim Pesan</h2>
 					<p class="mt-1 text-sm text-warm-700">
@@ -212,6 +144,75 @@ try {
 							Kirim Pesan
 						</button>
 					</form>
+				</div>
+				</div>
+			</div>
+
+			<!-- Info Cards — secondary, below form on mobile, left on md+ -->
+			<div class="space-y-4 sm:space-y-6 md:order-1 lg:col-span-2">
+				<div class="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+					<div class="mb-2 icon-box-sm">
+						<Icon name="location" size={5} aria-hidden="true" />
+					</div>
+					<h2 class="font-bold text-warm-900">Alamat Kantor</h2>
+					<p class="mt-1 text-sm leading-relaxed text-warm-700">
+						{address.street}, {address.village}, {address.district}<br />
+						{address.city}, {address.province}<br />
+						Kode Pos {address.postalCode}
+					</p>
+					<a
+						href={mapsUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary-700 hover:text-primary-700 transition-colors"
+					>
+						Lihat di Google Maps
+						<Icon name="external-link" size={4} aria-hidden="true" />
+					</a>
+				</div>
+
+				<div class="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+					<div class="mb-2 icon-box-sm">
+						<Icon name="phone" size={5} aria-hidden="true" />
+					</div>
+					<h2 class="font-bold text-warm-900">Telepon &amp; WhatsApp</h2>
+					<p class="mt-1 text-sm text-warm-700">
+						<a href={phoneUrl} class="text-primary-700 hover:underline">{phone}</a>
+					</p>
+					<Button variant="whatsapp" href={whatsapp} class="mt-2" target="_blank">
+						<Icon name="whatsapp" size={4} aria-hidden="true" />
+						Chat via WhatsApp
+					</Button>
+				</div>
+
+				<div class="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+					<div class="mb-2 icon-box-sm">
+						<Icon name="email" size={5} aria-hidden="true" />
+					</div>
+					<h2 class="font-bold text-warm-900">Email</h2>
+					<p class="mt-1 text-sm">
+						<a href={`mailto:${email}`} class="text-primary-700 break-all hover:underline">
+							{email}
+						</a>
+					</p>
+				</div>
+
+				<div class="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+					<h2 class="font-bold text-warm-900">Jam Operasional</h2>
+					<div class="mt-2 space-y-2 text-sm text-warm-700">
+						<div class="flex justify-between">
+							<span>Senin–Jumat</span>
+							<span class="font-medium text-warm-800">{hours.weekdays}</span>
+						</div>
+						<div class="flex justify-between">
+							<span>Sabtu</span>
+							<span class="font-medium text-warm-800">{hours.saturday}</span>
+						</div>
+						<div class="flex justify-between">
+							<span>Minggu</span>
+							<span class="font-medium text-warm-800">{hours.sunday}</span>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

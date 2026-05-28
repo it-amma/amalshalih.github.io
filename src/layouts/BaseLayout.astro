@@ -155,8 +155,9 @@ const { title, description, image, currentPage, pageType } = Astro.props;
 
 		<footer class="bg-primary-950 text-white">
 			<Container as="div" class="py-8 sm:py-12">
-				<div class="grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-4">
-					<div>
+				<div class="grid gap-6 sm:gap-8 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
+					<!-- About — spans 2 cols on mobile -->
+					<div class="col-span-2 sm:col-span-1">
 						<h3 class="mb-3 text-lg font-bold text-white">{SITE.shortName}</h3>
 						<p class="text-sm text-primary-200 leading-relaxed">
 							{SITE.description}
@@ -181,7 +182,8 @@ const { title, description, image, currentPage, pageType } = Astro.props;
 							<li><a href={`mailto:${CONTACT.email}`} class="hover:text-white transition-colors">{CONTACT.email}</a></li>
 						</ul>
 					</div>
-					<div>
+					<!-- Social — spans 2 cols on mobile -->
+					<div class="col-span-2 sm:col-span-1">
 						<h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-primary-300">Ikuti Kami</h3>
 						<div class="flex flex-wrap gap-3 text-primary-300">
 							<a href={SOCIAL.facebook.url} target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-lg hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950" aria-label={SOCIAL.facebook.ariaLabel}>
