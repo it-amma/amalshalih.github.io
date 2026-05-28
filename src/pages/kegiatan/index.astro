@@ -54,14 +54,14 @@ if (kegiatan.length === 0) {
 		description="Ikuti kegiatan terbaru dan laporan program Yayasan ASIB."
 	/>
 
-	<Container class="py-12 sm:py-16">
+	<Container class="py-8 sm:py-16">
 		{
 			kegiatan.length === 0 ? (
-				<div class="text-center py-12 sm:py-16">
+				<div class="text-center py-8 sm:py-16">
 					<p class="text-warm-700">Belum ada kegiatan terbaru. Kunjungi kembali nanti.</p>
 				</div>
 			) : (
-				<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 items-start">
+				<div class="grid gap-4 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 items-start">
 					{kegiatan.map((item) => (
 						<Card variant="hover" href={`/kegiatan/${item.id}`}>
 								<div class="mb-3 flex items-center gap-3">

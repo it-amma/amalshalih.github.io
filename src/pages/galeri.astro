@@ -37,15 +37,15 @@ const kategoriIcons = {
 		gradient="r"
 	/>
 
-	<Container class="py-12 sm:py-16">
-		<div class="flex flex-wrap gap-2 justify-center mb-12" data-filter-gallery>
+	<Container class="py-8 sm:py-16">
+		<div class="flex flex-wrap gap-2 justify-center mb-8" data-filter-gallery>
 			<button class="filter-btn rounded-full bg-primary-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-colors duration-300, shadow duration-300" data-filter="all">Semua</button>
 			{Object.entries(KATEGORI_LABELS).map(([key, label]) => (
 				<button class="filter-btn rounded-full bg-primary-50 px-5 py-2.5 text-sm font-semibold text-primary-700 transition-colors duration-300 hover:bg-primary-100" data-filter={key}>{label}</button>
 			))}
 		</div>
 
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" id="gallery-grid">
+		<div class="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3" id="gallery-grid">
 			{kegiatan.map((item) => (
 				<div class="gallery-item transition-opacity duration-500 ease-out, transform duration-500 ease-out" data-kategori={item.data.kategori}>
 					<Card variant="hover" href={`/kegiatan/${item.id}`} class="group overflow-hidden">
@@ -78,7 +78,7 @@ const kategoriIcons = {
 							</div>
 						</div>
 
-						<div class="p-6">
+						<div class="p-4 sm:p-6">
 							<div class="flex items-center gap-2 text-xs text-warm-500">
 								<Icon name="calendar" size={3.5} aria-hidden="true" />
 								<time datetime={item.data.date.toISOString()}>
@@ -89,7 +89,7 @@ const kategoriIcons = {
 									})}
 								</time>
 							</div>
-							<h2 class="mt-3 text-lg font-bold leading-tight text-warm-900 line-clamp-2 transition-colors group-hover:text-primary-700">
+							<h2 class="mt-2 text-base sm:text-lg font-bold leading-tight text-warm-900 line-clamp-2 transition-colors group-hover:text-primary-700">
 								{item.data.title}
 							</h2>
 						</div>

@@ -192,9 +192,9 @@ const breadcrumbJsonLd = {
 				<div class="absolute inset-0 bg-gradient-to-t from-primary-950/80 via-primary-950/30 to-transparent" />
 			</div>
 		) : (
-			<div class="mx-auto flex max-w-6xl items-center justify-center py-12 sm:py-20 px-4">
+			<div class="mx-auto flex max-w-6xl items-center justify-center py-8 sm:py-20 px-4">
 				<div class="text-center">
-					<div class="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full border-2 border-primary-400/30 bg-primary-800/40 backdrop-blur-sm">
+					<div class="mx-auto mb-4 flex h-16 w-16 sm:h-24 sm:w-24 items-center justify-center rounded-full border-2 border-primary-400/30 bg-primary-800/40 backdrop-blur-sm">
 						<Icon name="book" size={10} class="text-primary-300" aria-hidden="true" />
 					</div>
 					<p class="text-sm font-medium uppercase tracking-widest text-primary-400">Arsip Kegiatan</p>
@@ -207,7 +207,7 @@ const breadcrumbJsonLd = {
 	<!-- Article Content -->
 	<article class="mx-auto max-w-3xl px-4 sm:px-6" itemscope itemtype="https://schema.org/Article">
 		<!-- Breadcrumb Navigation -->
-		<nav class="py-6 text-sm" aria-label="Breadcrumb">
+		<nav class="py-4 sm:py-6 text-sm" aria-label="Breadcrumb">
 			<ol class="flex items-center gap-2 text-warm-500">
 				<li><a href="/" class="hover:text-primary-700 transition-colors">Beranda</a></li>
 				<li class="text-warm-400">/</li>
@@ -218,7 +218,7 @@ const breadcrumbJsonLd = {
 		</nav>
 
 		<!-- Archival Metadata Bar -->
-		<div class="mb-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-warm-200 pb-6">
+		<div class="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-warm-200 pb-4">
 			<span class="inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-semibold text-primary-700">
 				<Icon name="check-circle" size={3} class="text-primary-500" aria-hidden="true" />
 				{KATEGORI_LABELS[kategori] || kategori}
@@ -232,12 +232,12 @@ const breadcrumbJsonLd = {
 		</div>
 
 		<!-- Title -->
-		<h1 class="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-warm-900 sm:text-4xl lg:text-5xl" itemprop="name">
+		<h1 class="mb-3 text-2xl font-extrabold leading-tight tracking-tight text-warm-900 sm:text-3xl lg:text-4xl" itemprop="name">
 			{title}
 		</h1>
 
 		<!-- Lead / Description -->
-		<p class="mb-10 text-lg leading-relaxed text-warm-600 sm:text-xl" itemprop="description">
+		<p class="mb-8 text-base leading-relaxed text-warm-600 sm:text-lg" itemprop="description">
 			{description}
 		</p>
 
@@ -302,21 +302,21 @@ const breadcrumbJsonLd = {
 		</div>
 
 		<!-- CTA Donasi -->
-		<div class="mt-12 relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-700 to-primary-900 p-6 text-center shadow-xl sm:p-8 lg:p-10">
+		<div class="mt-8 relative overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-br from-primary-700 to-primary-900 p-5 text-center shadow-xl sm:p-8 lg:p-10">
 			<div class="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/5" />
 			<div class="absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-white/5" />
 			<div class="absolute right-8 top-8 h-2 w-2 rounded-full bg-gold-400/60" />
 			<div class="absolute bottom-12 left-12 h-1.5 w-1.5 rounded-full bg-gold-300/40" />
 
 			<div class="relative z-10">
-				<div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white/15">
+				<div class="mx-auto mb-3 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-white/15">
 					<Icon name="heart" size={7} class="text-gold-300" aria-hidden="true" />
 				</div>
-				<h2 class="text-2xl font-bold text-white sm:text-3xl">Dukung Program Kami</h2>
-				<p class="mx-auto mt-3 max-w-md text-base leading-relaxed text-primary-100">
+				<h2 class="text-xl sm:text-2xl font-bold text-white sm:text-3xl">Dukung Program Kami</h2>
+				<p class="mx-auto mt-2 max-w-md text-sm sm:text-base leading-relaxed text-primary-100">
 					Setiap donasi Anda membantu kami menjangkau lebih banyak penerima manfaat dan mewujudkan dampak nyata bagi umat.
 				</p>
-				<div class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+				<div class="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row sm:mt-6">
 					<a
 						href="/donasi"
 						class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-lg transition-colors duration-200, transform duration-200 hover:bg-primary-50 hover:scale-[1.02] active:scale-95"
