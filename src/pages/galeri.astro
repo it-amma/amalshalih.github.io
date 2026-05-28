@@ -51,12 +51,13 @@ const kategoriIcons = {
 					<Card variant="hover" href={`/kegiatan/${item.id}`} class="group overflow-hidden">
 						<div class="relative aspect-video w-full overflow-hidden">
 							{item.data.image ? (
-								<img 
-									src={item.data.image} 
-									alt={item.data.title}
-									class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-									loading="lazy"
-								/>
+									<img 
+										src={item.data.image} 
+										alt={item.data.title}
+										class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+										loading="lazy"
+										decoding="async"
+									/>
 							) : (
 								<div class={`flex h-full w-full items-center justify-center bg-gradient-to-br ${kategoriGradients[item.data.kategori] || 'from-primary-400 to-primary-600'}`}>
 									<Icon name={(kategoriIcons[item.data.kategori] ?? 'book') as 'book' | 'home' | 'heart' | 'globe'} size={12} class="text-white/30" aria-hidden="true" />
@@ -103,7 +104,7 @@ const kategoriIcons = {
 				<div class="mb-3 rounded-full bg-warm-50 p-4 sm:p-6 text-warm-300">
 					<Icon name="image" size={10} class="sm:size-16" aria-hidden="true" />
 				</div>
-				<h3 class="text-lg sm:text-xl font-bold text-warm-900">Belum Ada Dokumentasi</h3>
+				<h2 class="text-lg sm:text-xl font-bold text-warm-900">Belum Ada Dokumentasi</h2>
 				<p class="mt-2 max-w-xs text-sm sm:text-base text-warm-600">Dokumentasi kegiatan akan diperbarui secara berkala oleh tim yayasan.</p>
 			</div>
 		)}

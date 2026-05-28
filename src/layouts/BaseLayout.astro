@@ -28,7 +28,7 @@ const { title, description, image, currentPage, pageType } = Astro.props;
 		<header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-primary-100">
 			<nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-2.5 sm:py-3">
 				<a href="/" class="flex items-center gap-2 sm:gap-3">
-					<img src="/logo-yayasan-sm.webp" alt="Logo Yayasan ASIB" class="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover" width="48" height="48" fetchpriority="high" />
+					<img src="/logo-yayasan-sm.webp" alt="Logo Yayasan ASIB" class="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover" width="48" height="48" fetchpriority="high" decoding="async" />
 					<div class="hidden sm:block">
 						<p class="text-sm font-bold leading-tight text-primary-800">Yayasan Amal Shalih</p>
 						<p class="text-xs text-warm-700">Insan Bantul</p>
@@ -42,14 +42,15 @@ const { title, description, image, currentPage, pageType } = Astro.props;
 				<div class="hidden sm:flex items-center gap-1">
 					{NAV_ITEMS.map((item) => (
 						<a
-							href={item.href}
-							class={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-								currentPage === item.href
-									? 'bg-primary-50 text-primary-700'
-									: 'text-warm-700 hover:bg-warm-100 hover:text-warm-800'
-							}`}
-						>
-							{item.label}
+						href={item.href}
+						aria-current={currentPage === item.href ? 'page' : undefined}
+						class={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+							currentPage === item.href
+								? 'bg-primary-50 text-primary-700'
+								: 'text-warm-700 hover:bg-warm-100 hover:text-warm-800'
+						}`}
+					>
+						{item.label}
 						</a>
 					))}
 					<a
@@ -83,14 +84,15 @@ const { title, description, image, currentPage, pageType } = Astro.props;
 				<div class="flex flex-col p-4 space-y-1">
 					{NAV_ITEMS.map((item) => (
 						<a
-							href={item.href}
-							class={`rounded-lg px-4 py-3 text-base font-medium transition-colors ${
-								currentPage === item.href
-									? 'bg-primary-50 text-primary-700'
-									: 'text-warm-700 hover:bg-warm-100 hover:text-warm-800'
-							}`}
-						>
-							{item.label}
+						href={item.href}
+						aria-current={currentPage === item.href ? 'page' : undefined}
+						class={`rounded-lg px-4 py-3 text-base font-medium transition-colors ${
+							currentPage === item.href
+								? 'bg-primary-50 text-primary-700'
+								: 'text-warm-700 hover:bg-warm-100 hover:text-warm-800'
+						}`}
+					>
+						{item.label}
 						</a>
 					))}
 					<div class="pt-3 border-t border-primary-100">
@@ -111,6 +113,13 @@ const { title, description, image, currentPage, pageType } = Astro.props;
 			const menuIcon = menuButton?.querySelector('.menu-icon');
 			const closeIcon = menuButton?.querySelector('.close-icon');
 
+			function getFocusableElements() {
+				if (!mobileMenu) return [];
+				return Array.from(
+					mobileMenu.querySelectorAll('a[href], button:not([disabled])')
+				).filter((el) => el instanceof HTMLElement && el.offsetParent !== null) as HTMLElement[];
+			}
+
 			function toggleMenu() {
 				if (!menuButton || !mobileMenu || !menuIcon || !closeIcon) return;
 
@@ -123,20 +132,52 @@ const { title, description, image, currentPage, pageType } = Astro.props;
 					mobileMenu.classList.add('max-h-96', 'opacity-100');
 					menuIcon.classList.add('hidden');
 					closeIcon.classList.remove('hidden');
+					// Focus first link for keyboard users
+					const firstLink = mobileMenu.querySelector('a');
+					if (firstLink instanceof HTMLElement) {
+						firstLink.focus();
+					}
 				} else {
 					mobileMenu.classList.remove('max-h-96', 'opacity-100');
 					mobileMenu.classList.add('max-h-0', 'opacity-0');
 					menuIcon.classList.remove('hidden');
 					closeIcon.classList.add('hidden');
+					// Return focus to menu button
+					menuButton.focus();
 				}
 			}
 
 			menuButton?.addEventListener('click', toggleMenu);
 
-			// Close on Escape key
+			// Close on Escape key + focus trap
 			document.addEventListener('keydown', (e) => {
-				if (e.key === 'Escape' && menuButton?.getAttribute('aria-expanded') === 'true') {
+				if (!menuButton || menuButton.getAttribute('aria-expanded') !== 'true') return;
+
+				if (e.key === 'Escape') {
+					e.preventDefault();
 					toggleMenu();
+					return;
+				}
+
+				// Focus trap inside mobile menu
+				if (e.key === 'Tab') {
+					const focusables = getFocusableElements();
+					if (focusables.length === 0) return;
+					const first = focusables[0];
+					const last = focusables[focusables.length - 1];
+					const active = document.activeElement;
+
+					if (e.shiftKey) {
+						if (active === first || !mobileMenu?.contains(active as Node)) {
+							e.preventDefault();
+							last.focus();
+						}
+					} else {
+						if (active === last || !mobileMenu?.contains(active as Node)) {
+							e.preventDefault();
+							first.focus();
+						}
+					}
 				}
 			});
 
@@ -169,12 +210,12 @@ const { title, description, image, currentPage, pageType } = Astro.props;
 					<div class="min-w-0">
 						<h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-primary-300">Navigasi</h3>
 						<ul class="space-y-2 text-sm">
-							<li><a href="/" class="text-primary-200 hover:text-white transition-colors">Beranda</a></li>
-							<li><a href="/tentang" class="text-primary-200 hover:text-white transition-colors">Tentang Kami</a></li>
-							<li><a href="/program" class="text-primary-200 hover:text-white transition-colors">Program</a></li>
-							<li><a href="/kegiatan" class="text-primary-200 hover:text-white transition-colors">Kegiatan</a></li>
-							<li><a href="/donasi" class="text-primary-200 hover:text-white transition-colors">Donasi</a></li>
-							<li><a href="/kontak" class="text-primary-200 hover:text-white transition-colors">Kontak</a></li>
+						<li><a href="/" aria-current={currentPage === '/' ? 'page' : undefined} class="text-primary-200 hover:text-white transition-colors">Beranda</a></li>
+						<li><a href="/tentang" aria-current={currentPage === '/tentang' ? 'page' : undefined} class="text-primary-200 hover:text-white transition-colors">Tentang Kami</a></li>
+						<li><a href="/program" aria-current={currentPage === '/program' ? 'page' : undefined} class="text-primary-200 hover:text-white transition-colors">Program</a></li>
+						<li><a href="/kegiatan" aria-current={currentPage === '/kegiatan' ? 'page' : undefined} class="text-primary-200 hover:text-white transition-colors">Kegiatan</a></li>
+						<li><a href="/donasi" aria-current={currentPage === '/donasi' ? 'page' : undefined} class="text-primary-200 hover:text-white transition-colors">Donasi</a></li>
+						<li><a href="/kontak" aria-current={currentPage === '/kontak' ? 'page' : undefined} class="text-primary-200 hover:text-white transition-colors">Kontak</a></li>
 						</ul>
 					</div>
 				<div class="min-w-0">

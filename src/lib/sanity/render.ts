@@ -24,7 +24,7 @@ export function renderPortableText(body: unknown): string {
         const src = opts.value?.asset?.url ?? ''
         const alt = opts.value?.alt ?? ''
         if (!src) return ''
-        return `<figure class="my-6"><img src="${src}" alt="${alt}" class="rounded-xl max-w-full" loading="lazy" /><${''}/figure>`
+        return `<figure class="my-6"><img src="${src}" alt="${alt}" class="rounded-xl max-w-full" loading="lazy" decoding="async" /><${''}/figure>`
       },
     },
   }

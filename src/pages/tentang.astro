@@ -180,7 +180,7 @@ try {
 								{pengurus.length > 0 ? pengurus.map((p) => (
 									<Card variant="default" class="p-3 sm:p-4 lg:p-6 text-center">
 										{p.photoUrl ? (
-											<img src={p.photoUrl} alt={p.photoAlt ?? p.name} class="mx-auto mb-3 h-12 w-12 sm:h-14 sm:w-14 rounded-full object-cover" loading="lazy" width="64" height="64" />
+											<img src={p.photoUrl} alt={p.photoAlt ?? p.name} class="mx-auto mb-3 h-12 w-12 sm:h-14 sm:w-14 rounded-full object-cover" loading="lazy" decoding="async" width="64" height="64" />
 										) : (
 											<div class="mx-auto mb-3 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-primary-100 text-primary-700">
 												<Icon name="star" size={6} class="sm:size-7" aria-hidden="true" />
