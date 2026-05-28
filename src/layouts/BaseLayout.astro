@@ -34,7 +34,8 @@ const { title, description, image, currentPage } = Astro.props;
 					</div>
 				</a>
 
-				<div class="flex items-center gap-1">
+				<!-- Desktop Nav -->
+				<div class="hidden sm:flex items-center gap-1">
 					{NAV_ITEMS.map((item) => (
 						<a
 							href={item.href}
@@ -54,15 +55,105 @@ const { title, description, image, currentPage } = Astro.props;
 						Donasi
 					</a>
 				</div>
+
+				<!-- Mobile Menu Button -->
+				<button
+					id="mobile-menu-button"
+					type="button"
+					class="sm:hidden p-2 rounded-lg text-primary-800 hover:bg-primary-50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+					aria-expanded="false"
+					aria-controls="mobile-menu"
+					aria-label="Buka menu navigasi"
+				>
+					<Icon name="menu" size={6} class="menu-icon" />
+					<Icon name="close" size={6} class="close-icon hidden" />
+				</button>
 			</nav>
+
+			<!-- Mobile Nav Drawer -->
+			<div
+				id="mobile-menu"
+				class="sm:hidden absolute top-full left-0 w-full bg-white border-b border-primary-100 shadow-lg transition-all duration-300 ease-in-out max-h-0 overflow-hidden opacity-0"
+				aria-hidden="true"
+			>
+				<div class="flex flex-col p-4 space-y-1">
+					{NAV_ITEMS.map((item) => (
+						<a
+							href={item.href}
+							class={`rounded-lg px-4 py-3 text-base font-medium transition-colors ${
+								currentPage === item.href
+									? 'bg-primary-50 text-primary-700'
+									: 'text-warm-700 hover:bg-warm-100 hover:text-warm-800'
+							}`}
+						>
+							{item.label}
+						</a>
+					))}
+					<div class="pt-3 border-t border-primary-100">
+						<a
+							href="/donasi"
+							class="block w-full text-center rounded-lg bg-primary-700 px-4 py-3 text-base font-semibold text-white hover:bg-primary-800 transition-colors"
+						>
+							Donasi Sekarang
+						</a>
+					</div>
+				</div>
+			</div>
 		</header>
+
+		<script>
+			const menuButton = document.getElementById('mobile-menu-button');
+			const mobileMenu = document.getElementById('mobile-menu');
+			const menuIcon = menuButton?.querySelector('.menu-icon');
+			const closeIcon = menuButton?.querySelector('.close-icon');
+
+			function toggleMenu() {
+				if (!menuButton || !mobileMenu || !menuIcon || !closeIcon) return;
+
+				const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+				menuButton.setAttribute('aria-expanded', String(!isExpanded));
+				mobileMenu.setAttribute('aria-hidden', String(isExpanded));
+
+				if (!isExpanded) {
+					mobileMenu.classList.remove('max-h-0', 'opacity-0');
+					mobileMenu.classList.add('max-h-96', 'opacity-100');
+					menuIcon.classList.add('hidden');
+					closeIcon.classList.remove('hidden');
+				} else {
+					mobileMenu.classList.remove('max-h-96', 'opacity-100');
+					mobileMenu.classList.add('max-h-0', 'opacity-0');
+					menuIcon.classList.remove('hidden');
+					closeIcon.classList.add('hidden');
+				}
+			}
+
+			menuButton?.addEventListener('click', toggleMenu);
+
+			// Close on Escape key
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape' && menuButton?.getAttribute('aria-expanded') === 'true') {
+					toggleMenu();
+				}
+			});
+
+			// Close when clicking outside
+			document.addEventListener('click', (e) => {
+				if (
+					menuButton?.getAttribute('aria-expanded') === 'true' &&
+					!mobileMenu?.contains(e.target as Node) &&
+					!menuButton?.contains(e.target as Node)
+				) {
+					toggleMenu();
+				}
+			});
+		</script>
 
 		<main id="main-content" class="flex-1" tabindex="-1">
 			<slot />
 		</main>
 
 		<footer class="bg-primary-950 text-white">
-			<Container as="div" class="py-12">
+			<Container as="div" class="py-10 sm:py-12">
 				<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
 					<div>
 						<h3 class="mb-3 text-lg font-bold text-white">{SITE.shortName}</h3>
@@ -92,22 +183,22 @@ const { title, description, image, currentPage } = Astro.props;
 					<div>
 						<h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-primary-300">Ikuti Kami</h3>
 						<div class="flex flex-wrap gap-3 text-primary-300">
-							<a href={SOCIAL.facebook.url} target="_blank" rel="noopener noreferrer" class="p-1.5 hover:text-white transition-colors" aria-label={SOCIAL.facebook.ariaLabel}>
+							<a href={SOCIAL.facebook.url} target="_blank" rel="noopener noreferrer" class="p-2.5 hover:text-white transition-colors" aria-label={SOCIAL.facebook.ariaLabel}>
 								<Icon name="facebook" size={5} />
 							</a>
-							<a href={SOCIAL.instagram.url} target="_blank" rel="noopener noreferrer" class="p-1.5 hover:text-white transition-colors" aria-label={SOCIAL.instagram.ariaLabel}>
+							<a href={SOCIAL.instagram.url} target="_blank" rel="noopener noreferrer" class="p-2.5 hover:text-white transition-colors" aria-label={SOCIAL.instagram.ariaLabel}>
 								<Icon name="instagram" size={5} />
 							</a>
-							<a href={SOCIAL.tiktok.url} target="_blank" rel="noopener noreferrer" class="p-1.5 hover:text-white transition-colors" aria-label={SOCIAL.tiktok.ariaLabel}>
+							<a href={SOCIAL.tiktok.url} target="_blank" rel="noopener noreferrer" class="p-2.5 hover:text-white transition-colors" aria-label={SOCIAL.tiktok.ariaLabel}>
 								<Icon name="tiktok" size={5} />
 							</a>
-							<a href={SOCIAL.youtube.url} target="_blank" rel="noopener noreferrer" class="p-1.5 hover:text-white transition-colors" aria-label={SOCIAL.youtube.ariaLabel}>
+							<a href={SOCIAL.youtube.url} target="_blank" rel="noopener noreferrer" class="p-2.5 hover:text-white transition-colors" aria-label={SOCIAL.youtube.ariaLabel}>
 								<Icon name="youtube" size={5} />
 							</a>
-							<a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer" class="p-1.5 hover:text-white transition-colors" aria-label="WhatsApp">
+							<a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer" class="p-2.5 hover:text-white transition-colors" aria-label="WhatsApp">
 								<Icon name="whatsapp" size={5} />
 							</a>
-							<a href={SOCIAL.linktree.url} target="_blank" rel="noopener noreferrer" class="p-1.5 hover:text-white transition-colors" aria-label="Linktree">
+							<a href={SOCIAL.linktree.url} target="_blank" rel="noopener noreferrer" class="p-2.5 hover:text-white transition-colors" aria-label="Linktree">
 								<Icon name="external-link" size={5} />
 							</a>
 						</div>
