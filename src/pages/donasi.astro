@@ -56,14 +56,14 @@ const firstBank = banks[0];
 	/>
 
 	<!-- Donation Channels -->
-	<Container class="py-12 sm:py-16">
-		<div class="grid gap-8 grid-cols-1 lg:grid-cols-3 items-start">
+	<Container class="py-8 sm:py-16">
+		<div class="grid gap-5 sm:gap-8 grid-cols-1 lg:grid-cols-3 items-start">
 			<!-- Bank Transfer -->
-			<Card variant="hover" class="sm:p-8">
-				<div class="mb-4 icon-box">
+			<Card variant="hover" class="sm:p-6">
+				<div class="mb-3 icon-box">
 					<Icon name="credit-card" size={7} aria-hidden="true" />
 				</div>
-				<h2 class="text-xl font-bold text-warm-900">Transfer Bank</h2>
+				<h2 class="text-lg sm:text-xl font-bold text-warm-900">Transfer Bank</h2>
 				<p class="mt-2 text-sm text-warm-700">Salurkan donasi melalui rekening resmi Yayasan ASIB di bawah ini.</p>
 
 				<!-- Pilih Bank via Dropdown -->
@@ -84,8 +84,8 @@ const firstBank = banks[0];
 					<div class="mt-4">
 						{banks.map((bank, i) => (
 							<div class={`bank-detail ${i === 0 ? '' : 'hidden'}`} data-index={i}>
-								<div class="rounded-2xl border border-primary-100 bg-white p-5">
-									<div class="flex items-center justify-between mb-4">
+								<div class="rounded-xl sm:rounded-2xl border border-primary-100 bg-white p-4 sm:p-5">
+									<div class="flex items-center justify-between mb-3 sm:mb-4">
 										<div class="flex items-center gap-2">
 											<div class="rounded-lg bg-primary-50 p-2 text-primary-700">
 												<Icon name="credit-card" size={5} aria-hidden="true" />
@@ -95,10 +95,10 @@ const firstBank = banks[0];
 										<span class="text-[10px] font-semibold uppercase tracking-wider text-warm-800">Rekening Resmi</span>
 									</div>
 
-									<div class="flex items-center justify-between rounded-xl bg-warm-50 p-4">
+									<div class="flex items-center justify-between rounded-lg sm:rounded-xl bg-warm-50 p-3 sm:p-4">
 										<div>
 											<p class="text-[11px] font-semibold uppercase tracking-wide text-warm-500">Nomor Rekening</p>
-											<p class="mt-0.5 text-xl font-extrabold tracking-wider text-primary-700 font-mono">{bank.accountNumber}</p>
+											<p class="mt-0.5 text-lg sm:text-xl font-extrabold tracking-wider text-primary-700 font-mono">{bank.accountNumber}</p>
 										</div>
 										<button
 											type="button"
@@ -111,7 +111,7 @@ const firstBank = banks[0];
 										</button>
 									</div>
 
-									<p class="mt-3 text-center text-sm text-warm-600">
+									<p class="mt-2 text-center text-sm text-warm-600">
 										a.n. <span class="font-semibold text-warm-900">{bank.accountName}</span>
 									</p>
 								</div>
@@ -120,50 +120,50 @@ const firstBank = banks[0];
 					</div>
 				</div>
 
-				<div class="mt-4 rounded-xl bg-gold-50 px-4 py-3 text-sm text-gold-800">
+				<div class="mt-3 rounded-lg sm:rounded-xl bg-gold-50 px-4 py-3 text-sm text-gold-800">
 					<strong>Konfirmasi donasi:</strong> Setelah transfer, kirim bukti ke WhatsApp <strong>{contactPhone}</strong>.
 				</div>
 			</Card>
 
 			<!-- QRIS -->
-			<Card variant="hover" class="sm:p-8">
-				<div class="mb-4 icon-box">
+			<Card variant="hover" class="sm:p-6">
+				<div class="mb-3 icon-box">
 					<Icon name="qrcode" size={7} aria-hidden="true" />
 				</div>
-				<h2 class="text-xl font-bold text-warm-900">QRIS</h2>
+				<h2 class="text-lg sm:text-xl font-bold text-warm-900">QRIS</h2>
 				<p class="mt-2 text-sm text-warm-700">
 					Scan kode QRIS berikut menggunakan aplikasi mobile banking atau e-wallet Anda.
 				</p>
-				<div class="mt-6 flex justify-center">
+				<div class="mt-4 flex justify-center">
 					<img
 						src={qrisImage}
 						alt="QRIS Yayasan Amal Shalih Insan Bantul"
-						class="h-64 w-auto max-w-full rounded-xl border border-primary-100"
+						class="h-52 sm:h-64 w-auto max-w-full rounded-lg sm:rounded-xl border border-primary-100"
 						width="778"
 						height="800"
 						loading="lazy"
 					/>
 				</div>
-				<div class="mt-4 rounded-lg bg-primary-50 p-4 text-sm text-primary-800">
+				<div class="mt-3 rounded-lg bg-primary-50 p-3 sm:p-4 text-sm text-primary-800">
 					<strong>Cara:</strong> Buka aplikasi berlogo QRIS → Scan kode → Cek nominal → Donasi/Bayar
 				</div>
 			</Card>
 
 			<!-- Kitabisa & Online -->
-			<Card variant="hover" class="sm:p-8">
-				<div class="mb-4 icon-box">
+			<Card variant="hover" class="sm:p-6">
+				<div class="mb-3 icon-box">
 					<Icon name="globe" size={7} aria-hidden="true" />
 				</div>
-				<h2 class="text-xl font-bold text-warm-900">Donasi Online</h2>
+				<h2 class="text-lg sm:text-xl font-bold text-warm-900">Donasi Online</h2>
 				<p class="mt-2 text-sm text-warm-700">
 					Kunjungi platform donasi online kami melalui link berikut.
 				</p>
-				<div class="mt-6 space-y-4">
+				<div class="mt-4 space-y-3">
 					<a
 						href={linktreeUrl}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="flex items-center gap-3 rounded-xl border border-primary-200 bg-white p-4 transition-colors duration-200, border-color duration-200, shadow duration-200 hover:border-primary-400 hover:bg-primary-50 hover:shadow-sm"
+						class="flex items-center gap-3 rounded-lg sm:rounded-xl border border-primary-200 bg-white p-3 sm:p-4 transition-colors duration-200, border-color duration-200, shadow duration-200 hover:border-primary-400 hover:bg-primary-50 hover:shadow-sm"
 					>
 						<div class="rounded-lg bg-primary-100 p-2 text-primary-700 shrink-0">
 							<Icon name="external-link" size={6} aria-hidden="true" />
@@ -175,12 +175,12 @@ const firstBank = banks[0];
 						<Icon name="external-link" size={5} class="shrink-0 text-warm-600" aria-hidden="true" />
 					</a>
 				</div>
-				<div class="mt-6 rounded-xl bg-warm-50 p-5">
+				<div class="mt-4 rounded-lg sm:rounded-xl bg-warm-50 p-4 sm:p-5">
 					<h3 class="font-semibold text-warm-800">Butuh bantuan?</h3>
 					<p class="mt-1 text-sm text-warm-700">
 						Hubungi admin kami melalui WhatsApp:
 					</p>
-					<Button variant="whatsapp" href={contactWhatsapp} class="mt-3" target="_blank" rel="noopener noreferrer">
+					<Button variant="whatsapp" href={contactWhatsapp} class="mt-2" target="_blank" rel="noopener noreferrer">
 						<Icon name="whatsapp" size={4} aria-hidden="true" />
 						Chat WhatsApp
 					</Button>
@@ -191,17 +191,17 @@ const firstBank = banks[0];
 
 	<!-- Ayat Motivasi -->
 	<section class="bg-gradient-to-r from-gold-50 to-primary-50">
-		<Container as="div" class="py-12 sm:py-16">
-			<div class="rounded-2xl bg-white p-6 shadow-md ring-1 ring-primary-100/50 text-center sm:p-8 lg:p-12">
-				<Icon name="book" size={12} class="mx-auto text-gold-500" aria-hidden="true" />
-				<blockquote class="mt-6">
-					<p class="text-xl font-semibold leading-relaxed text-warm-800 sm:text-2xl">
+		<Container as="div" class="py-8 sm:py-16">
+			<div class="rounded-xl sm:rounded-2xl bg-white p-5 sm:p-8 shadow-md ring-1 ring-primary-100/50 text-center lg:p-12">
+				<Icon name="book" size={10} class="mx-auto text-gold-500 sm:size-12" aria-hidden="true" />
+				<blockquote class="mt-4 sm:mt-6">
+					<p class="text-lg sm:text-xl font-semibold leading-relaxed text-warm-800 sm:text-2xl">
 						&ldquo;Perumpamaan orang yang menginfakkan hartanya di jalan Allah
 						seperti sebutir biji yang menumbuhkan tujuh bulir, pada tiap-tiap bulir
 						terdapat seratus biji.&rdquo;
 					</p>
 				</blockquote>
-				<p class="mt-4 text-sm font-medium text-primary-700">— QS. Al-Baqarah: 261</p>
+				<p class="mt-3 text-sm font-medium text-primary-700">— QS. Al-Baqarah: 261</p>
 			</div>
 		</Container>
 	</section>
