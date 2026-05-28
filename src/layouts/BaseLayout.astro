@@ -26,15 +26,15 @@ const { title, description, image, currentPage, pageType } = Astro.props;
 			Langsung ke konten utama
 		</a>
 		<header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-primary-100">
-			<nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-				<a href="/" class="flex items-center gap-3">
-					<img src="/logo-yayasan-sm.webp" alt="Logo Yayasan ASIB" class="h-12 w-12 rounded-full object-cover" width="48" height="48" fetchpriority="high" />
+			<nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-2.5 sm:py-3">
+				<a href="/" class="flex items-center gap-2 sm:gap-3">
+					<img src="/logo-yayasan-sm.webp" alt="Logo Yayasan ASIB" class="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover" width="48" height="48" fetchpriority="high" />
 					<div class="hidden sm:block">
 						<p class="text-sm font-bold leading-tight text-primary-800">Yayasan Amal Shalih</p>
 						<p class="text-xs text-warm-700">Insan Bantul</p>
 					</div>
 					<div class="sm:hidden">
-						<p class="text-base font-bold text-primary-800">ASIB</p>
+						<p class="text-sm font-bold text-primary-800">ASIB</p>
 					</div>
 				</a>
 
@@ -64,13 +64,13 @@ const { title, description, image, currentPage, pageType } = Astro.props;
 				<button
 					id="mobile-menu-button"
 					type="button"
-					class="sm:hidden p-2 rounded-lg text-primary-800 hover:bg-primary-50 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+					class="sm:hidden p-1.5 rounded-lg text-primary-800 hover:bg-primary-50 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
 					aria-expanded="false"
 					aria-controls="mobile-menu"
 					aria-label="Buka menu navigasi"
 				>
-					<Icon name="menu" size={6} class="menu-icon" aria-hidden="true" />
-					<Icon name="close" size={6} class="close-icon hidden" aria-hidden="true" />
+					<Icon name="menu" size={5} class="menu-icon" aria-hidden="true" />
+					<Icon name="close" size={5} class="close-icon hidden" aria-hidden="true" />
 				</button>
 			</nav>
 
