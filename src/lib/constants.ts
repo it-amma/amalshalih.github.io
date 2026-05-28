@@ -3,6 +3,7 @@ export const NAV_ITEMS = [
 	{ label: 'Tentang', href: '/tentang' },
 	{ label: 'Program', href: '/program' },
 	{ label: 'Kegiatan', href: '/kegiatan' },
+	{ label: 'Galeri', href: '/galeri' },
 	{ label: 'Kontak', href: '/kontak' },
 ];
 

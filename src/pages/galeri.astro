@@ -1,0 +1,111 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/sections/PageHeader.astro';
+import Card from '../components/ui/Card.astro';
+import Icon from '../components/ui/Icon.astro';
+import { KATEGORI_LABELS } from '../lib/constants';
+
+const kegiatan = await getCollection('kegiatan');
+kegiatan.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const kategoriGradients: Record<string, string> = {
+	pendidikan: 'from-primary-400 to-primary-600',
+	keagamaan: 'from-gold-400 to-gold-600',
+	sosial: 'from-primary-500 to-gold-500',
+	umum: 'from-warm-400 to-warm-600',
+};
+
+const kategoriIcons = {
+	pendidikan: 'book' as const,
+	keagamaan: 'home' as const,
+	sosial: 'heart' as const,
+	umum: 'globe' as const,
+};
+---
+
+<BaseLayout
+	title="Galeri Dokumentasi"
+	description="Dokumentasi foto kegiatan Yayasan Amal Shalih Insan Bantul — pendidikan, keagamaan, sosial kemanusiaan, dan berbagai program yayasan."
+	currentPage="/galeri"
+>
+	<PageHeader
+		label="Galeri"
+		title="Dokumentasi Kegiatan"
+		description="Foto dan dokumentasi kegiatan Yayasan ASIB dalam setiap program dan aktivitas."
+		gradient="r"
+	/>
+
+	<section class="mx-auto max-w-6xl px-4 py-16">
+		<div class="flex flex-wrap gap-2 justify-center mb-12" data-filter-gallery>
+			<button class="filter-btn rounded-full bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-md transition-all duration-200" data-filter="all">Semua</button>
+			{Object.entries(KATEGORI_LABELS).map(([key, label]) => (
+				<button class="filter-btn rounded-full bg-primary-50 px-4 py-2 text-sm font-medium text-primary-700 transition-all duration-200 hover:bg-primary-100" data-filter={key}>{label}</button>
+			))}
+		</div>
+
+		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+			{kegiatan.map((item) => (
+				<div data-kategori={item.data.kategori}>
+					<Card variant="hover" href={`/kegiatan/${item.id}`}>
+						<div class={`flex h-48 items-center justify-center bg-gradient-to-br ${kategoriGradients[item.data.kategori] || 'from-primary-400 to-primary-600'}`}>
+							<Icon name={(kategoriIcons[item.data.kategori] ?? 'book') as 'book' | 'home' | 'heart' | 'globe'} size={12} class="text-white/90" />
+						</div>
+						<div class="p-6">
+							<span class="inline-block rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-600">
+								{KATEGORI_LABELS[item.data.kategori] || item.data.kategori}
+							</span>
+							<time datetime={item.data.date.toISOString()} class="ml-2 text-xs text-warm-500">
+								{item.data.date.toLocaleDateString('id-ID', {
+									year: 'numeric',
+									month: 'long',
+									day: 'numeric',
+								})}
+							</time>
+							<h2 class="mt-3 text-lg font-bold leading-snug text-warm-900 line-clamp-2 transition-colors">
+								{item.data.title}
+							</h2>
+						</div>
+					</Card>
+				</div>
+			))}
+		</div>
+
+		{kegiatan.length === 0 && (
+			<div class="py-20 text-center">
+				<p class="text-warm-700">Belum ada dokumentasi kegiatan. Kunjungi kembali nanti.</p>
+			</div>
+		)}
+	</section>
+</BaseLayout>
+
+<script is:inline>
+(() => {
+	const root = document.querySelector('[data-filter-gallery]');
+	if (!root) return;
+
+	const items = document.querySelectorAll('[data-kategori]');
+	const buttons = root.querySelectorAll('.filter-btn');
+
+	buttons.forEach((btn) => {
+		btn.addEventListener('click', () => {
+			const filter = btn.getAttribute('data-filter');
+
+			buttons.forEach((b) => {
+				b.classList.remove('bg-primary-600', 'text-white', 'shadow-md');
+				b.classList.add('bg-primary-50', 'text-primary-700', 'hover:bg-primary-100');
+			});
+			btn.classList.remove('bg-primary-50', 'text-primary-700', 'hover:bg-primary-100');
+			btn.classList.add('bg-primary-600', 'text-white', 'shadow-md');
+
+			items.forEach((item) => {
+				if (filter === 'all' || item.getAttribute('data-kategori') === filter) {
+					item.classList.remove('hidden');
+				} else {
+					item.classList.add('hidden');
+				}
+			});
+		});
+	});
+})();
+</script>
