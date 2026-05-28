@@ -1,4 +1,6 @@
 ---
+import Container from '../ui/Container.astro';
+
 interface Props {
 	label: string;
 	title: string;
@@ -20,7 +22,7 @@ const gradientMap: Record<string, string> = {
 ---
 
 <section class:list={[gradientMap[gradient], 'text-white', className]}>
-	<div class="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+	<Container as="div" class="py-16 sm:py-20">
 		<p class="mb-2 text-sm font-semibold uppercase tracking-widest text-gold-300">
 			{label}
 		</p>
@@ -29,5 +31,5 @@ const gradientMap: Record<string, string> = {
 			<p class="mt-4 max-w-2xl text-lg text-primary-100">{description}</p>
 		)}
 		<slot name="after" />
-	</div>
+	</Container>
 </section>

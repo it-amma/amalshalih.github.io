@@ -1,5 +1,6 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
+import Container from '../components/ui/Container.astro';
 import Icon from '../components/ui/Icon.astro';
 import { CONTACT, SITE, SOCIAL } from '../data/site';
 import { NAV_ITEMS } from '../lib/constants';
@@ -61,7 +62,7 @@ const { title, description, image, currentPage } = Astro.props;
 		</main>
 
 		<footer class="bg-primary-950 text-white">
-			<div class="mx-auto max-w-6xl px-4 py-12">
+			<Container as="div" class="py-12">
 				<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
 					<div>
 						<h3 class="mb-3 text-lg font-bold text-white">{SITE.shortName}</h3>
@@ -115,7 +116,7 @@ const { title, description, image, currentPage } = Astro.props;
 				<div class="mt-10 border-t border-primary-800 pt-6 text-center text-sm text-primary-400">
 					&copy; {new Date().getFullYear()} {SITE.name}. Seluruh hak cipta dilindungi.
 				</div>
-			</div>
+			</Container>
 		</footer>
 	</body>
 </html>
