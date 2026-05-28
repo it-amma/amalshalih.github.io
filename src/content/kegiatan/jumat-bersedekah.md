@@ -3,6 +3,7 @@ title: 'Jumat Bersedekah: Nasi Kotak untuk Dhuafa Jogja'
 description: 'Program Jumat Bersedekah Yayasan ASIB — membagikan nasi kotak kepada tukang becak, pemulung, dan pengemis di sepanjang jalan Yogyakarta setiap hari Jumat.'
 date: 2026-05-22
 kategori: 'sosial'
+image: '/dampak-nyata.webp'
 ---
 
 Setiap hari Jumat, relawan Yayasan Amal Shalih Insan Bantul turun ke jalan untuk menjalankan program **Jumat Bersedekah**. Program ini membagikan nasi kotak kepada kaum dhuafa yang bekerja di jalanan, seperti:

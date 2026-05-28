@@ -55,6 +55,7 @@ Pendidikan Islam, Sosial Kemanusiaan, dan Keagamaan. Website ini dibangun untuk:
 | **Content** | Astro Content Collections | Markdown/MDX untuk konten kegiatan |
 | **Sitemap** | `@astrojs/sitemap` | Auto-generate sitemap.xml |
 | **Deployment** | [Cloudflare Pages](https://pages.cloudflare.com) | Edge deployment, CDN global |
+| **Monitoring** | [Sentry](https://sentry.io) + [Spotlight](https://spotlightjs.com) | Error tracking & debugging |
 | **Kualitas Gambar** | WebP | Semua aset gambar dikompresi ke format WebP |
 
 ### Persyaratan Sistem
@@ -151,6 +152,10 @@ yayasan-amal-shalih-insan-bantul/
 │   ├── audit-komprehensif.md
 │   └── commit-strategy.md
 ├── .sisyphus/                       # Work plans Sisyphus AI agent
+├── sentry.client.config.js          # Sentry client-side initialization
+├── sentry.server.config.js          # Sentry server-side initialization
+├── .env.example                     # Contoh environment variables
+├── wrangler.toml                    # Cloudflare Pages config
 ├── astro.config.mjs
 ├── package.json
 ├── tsconfig.json
@@ -177,10 +182,20 @@ bun install
 > **Catatan:** Project ini menggunakan **Bun** sebagai package manager.
 > Jangan gunakan `npm install` atau `yarn` — lockfile (`bun.lock`) hanya kompatibel dengan Bun.
 
-### 3. Environment Variables (jika diperlukan)
+### 3. Environment Variables
 
-Project ini saat ini **tidak** memerlukan `.env` untuk development.
-Environment variable akan ditambahkan jika integrasi eksternal (Formspree, API) dikonfigurasi.
+Salin `.env.example` ke `.env` dan isi nilai yang diperlukan:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Wajib | Deskripsi |
+|----------|-------|-----------|
+| `SENTRY_AUTH_TOKEN` | ✅ Production | Auth token Sentry untuk source maps & release tracking. Generate di [sentry.io](https://sentry.io/settings/account/api/auth-tokens/). Scope: `org:read`, `project:releases`, `project:write` |
+| `SANITY_API_READ_TOKEN` | ❌ Opsional | Read-only token Sanity. Tidak diperlukan untuk development karena konten di-fetch publik |
+
+> **Catatan:** Sentry hanya aktif di production. Spotlight aktif di development mode untuk debugging lokal.
 
 ---
 
@@ -237,11 +252,76 @@ Project ini dideploy ke **Cloudflare Pages** dengan konfigurasi:
 
 **Manual (via Wrangler CLI):**
 ```bash
-bunx wrangler pages deploy dist/ --project-name=amalshalih-id
+bunx wrangler pages deploy dist/ --project-name=amalshalih
 ```
 
 > **Catatan:** Untuk deployment production, pastikan environment variables
 > sudah dikonfigurasi di dashboard Cloudflare Pages.
+
+---
+
+## Observability & Monitoring
+
+### Sentry — Error Tracking
+
+Project menggunakan [Sentry](https://sentry.io) untuk memantau error di production.
+
+**Inisialisasi:**
+
+DSN dan konfigurasi ada di:
+- `sentry.client.config.js` — konfigurasi client-side (browser)
+- `sentry.server.config.js` — konfigurasi server-side (SSR/API)
+
+**Integrasi Astro:**
+
+`@sentry/astro` terdaftar sebagai integration di `astro.config.mjs`:
+```js
+sentry({
+	project: 'amalshalih',
+	org: 'yayasan-amal-shalih-insan-bant',
+	authToken: process.env.SENTRY_AUTH_TOKEN,
+})
+```
+
+**Environment Variables:**
+
+| Variable | Required | Source |
+|----------|----------|--------|
+| `SENTRY_AUTH_TOKEN` | ✅ Production | [sentry.io → Settings → API → Auth Tokens](https://sentry.io/settings/account/api/auth-tokens/) |
+
+Scopes yang dibutuhkan: `org:read`, `project:releases`, `project:write`
+
+### Spotlight — Debugging Sidecar
+
+[Spotlight](https://spotlightjs.com) adalah sidecar debugger yang menampilkan log Sentry secara real-time di localhost.
+
+**Aktivasi:**
+
+```bash
+bunx spotlight
+```
+
+Kemudian akses `http://localhost:4321` — panel Spotlight akan muncul di pojok kanan bawah.
+
+**Konfigurasi:**
+
+Spotlight terdaftar sebagai integration di `astro.config.mjs`. Urutan penting:
+```js
+integrations: [
+	sentry(),      // 1. Sentry dulu
+	spotlightjs(), // 2. Spotlight setelah Sentry
+]
+```
+
+Spotlight **hanya aktif** di development — tidak akan muncul di production.
+
+### Struktur File
+
+```
+sentry.client.config.js    # Inisialisasi Sentry untuk browser
+sentry.server.config.js    # Inisialisasi Sentry untuk server
+.env.example               # Contoh environment variables (token, dll)
+```
 
 ---
 

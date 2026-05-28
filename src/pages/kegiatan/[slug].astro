@@ -166,6 +166,7 @@ const breadcrumbJsonLd = {
 <BaseLayout
 	title={`${title} — Kegiatan Yayasan ASIB`}
 	description={description}
+	pageType="article"
 >
 	<!-- JSON-LD Structured Data -->
 	<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
@@ -209,9 +210,9 @@ const breadcrumbJsonLd = {
 		<!-- Breadcrumb Navigation -->
 		<nav class="py-6 text-sm" aria-label="Breadcrumb">
 			<ol class="flex items-center gap-2 text-warm-500">
-				<li><a href="/" class="hover:text-primary-600 transition-colors">Beranda</a></li>
+				<li><a href="/" class="hover:text-primary-700 transition-colors">Beranda</a></li>
 				<li class="text-warm-400">/</li>
-				<li><a href="/kegiatan" class="hover:text-primary-600 transition-colors">Kegiatan</a></li>
+				<li><a href="/kegiatan" class="hover:text-primary-700 transition-colors">Kegiatan</a></li>
 				<li class="text-warm-400">/</li>
 				<li class="text-warm-700 font-medium" aria-current="page" itemprop="headline">{title}</li>
 			</ol>
@@ -244,7 +245,7 @@ const breadcrumbJsonLd = {
 		<!-- Article Body with Prose Typography -->
 		<div class="prose prose-warm prose-lg max-w-none
 			prose-headings:font-display prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-warm-900
-			prose-a:text-primary-600 prose-a:no-underline prose-a:font-medium hover:prose-a:text-primary-700 hover:prose-a:underline
+			prose-a:text-primary-700 prose-a:no-underline prose-a:font-medium hover:prose-a:text-primary-700 hover:prose-a:underline
 			prose-blockquote:border-l-4 prose-blockquote:border-primary-400 prose-blockquote:bg-primary-50/50 prose-blockquote:px-4 prose-blockquote:py-2.5 prose-blockquote:rounded-r-xl prose-blockquote:not-italic prose-blockquote:text-warm-700 prose-blockquote:leading-relaxed prose-blockquote:font-normal
 			prose-img:rounded-xl prose-img:shadow-md
 			prose-table:overflow-x-auto prose-table:block prose-table:w-full prose-table:border prose-table:border-warm-200 prose-table:rounded-lg
@@ -294,7 +295,7 @@ const breadcrumbJsonLd = {
 			</div>
 			<a
 				href="/kegiatan"
-				class="inline-flex items-center gap-1.5 text-sm font-medium text-warm-500 hover:text-primary-600 transition-colors"
+				class="inline-flex items-center gap-1.5 text-sm font-medium text-warm-500 hover:text-primary-700 transition-colors"
 			>
 				<Icon name="arrow-left" size={4} />
 				Kembali ke Daftar Kegiatan
@@ -346,7 +347,7 @@ const breadcrumbJsonLd = {
 					{relatedItems.map((related) => (
 						<Card variant="hover" href={`/kegiatan/${related.slug}`}>
 							<div class="mb-3 flex items-center gap-3">
-								<span class="inline-block rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-600">
+								<span class="inline-block rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-700">
 									{KATEGORI_LABELS[related.kategori] || related.kategori}
 								</span>
 								<time datetime={related.date.toISOString()} class="text-xs text-warm-500">

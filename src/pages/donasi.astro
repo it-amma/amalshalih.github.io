@@ -56,8 +56,8 @@ const firstBank = banks[0];
 	/>
 
 	<!-- Donation Channels -->
-	<Container>
-		<div class="grid gap-8 lg:grid-cols-3">
+	<Container class="py-16">
+		<div class="grid gap-8 lg:grid-cols-3 items-start">
 			<!-- Bank Transfer -->
 			<Card variant="hover" class="p-8">
 				<div class="mb-4 icon-box">
@@ -87,12 +87,12 @@ const firstBank = banks[0];
 								<div class="rounded-2xl border border-primary-100 bg-white p-5">
 									<div class="flex items-center justify-between mb-4">
 										<div class="flex items-center gap-2">
-											<div class="rounded-lg bg-primary-50 p-2 text-primary-600">
+											<div class="rounded-lg bg-primary-50 p-2 text-primary-700">
 												<Icon name="credit-card" size={5} />
 											</div>
 											<span class="text-sm font-semibold text-warm-900">{bank.fullName}</span>
 										</div>
-										<span class="text-[10px] font-semibold uppercase tracking-wider text-warm-400">Rekening Resmi</span>
+										<span class="text-[10px] font-semibold uppercase tracking-wider text-warm-800">Rekening Resmi</span>
 									</div>
 
 									<div class="flex items-center justify-between rounded-xl bg-warm-50 p-4">
@@ -102,7 +102,7 @@ const firstBank = banks[0];
 										</div>
 										<button
 											type="button"
-											class="copy-btn inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white text-primary-600 shadow-sm transition-all hover:bg-primary-50 active:scale-90"
+											class="copy-btn inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white text-primary-700 shadow-sm transition-all hover:bg-primary-50 active:scale-90"
 											data-copy={bank.accountNumber}
 											aria-label="Salin nomor rekening"
 										>
@@ -165,14 +165,14 @@ const firstBank = banks[0];
 						rel="noopener noreferrer"
 						class="flex items-center gap-3 rounded-xl border border-primary-200 bg-white p-4 transition-all hover:border-primary-400 hover:bg-primary-50 hover:shadow-sm"
 					>
-						<div class="rounded-lg bg-primary-100 p-2 text-primary-600 shrink-0">
+						<div class="rounded-lg bg-primary-100 p-2 text-primary-700 shrink-0">
 							<Icon name="external-link" size={6} />
 						</div>
 						<div class="min-w-0">
 							<p class="truncate font-semibold text-warm-900">{linktreeUrl.replace('https://', '')}</p>
-							<p class="text-xs text-warm-700">Semua program donasi dalam satu tautan</p>
+							<p class="text-xs text-warm-900">Semua program donasi dalam satu tautan</p>
 						</div>
-						<Icon name="external-link" size={5} class="shrink-0 text-warm-400" />
+						<Icon name="external-link" size={5} class="shrink-0 text-warm-600" />
 					</a>
 				</div>
 				<div class="mt-6 rounded-xl bg-warm-50 p-5">
@@ -201,7 +201,7 @@ const firstBank = banks[0];
 						terdapat seratus biji.&rdquo;
 					</p>
 				</blockquote>
-				<p class="mt-4 text-sm font-medium text-primary-600">— QS. Al-Baqarah: 261</p>
+				<p class="mt-4 text-sm font-medium text-primary-700">— QS. Al-Baqarah: 261</p>
 			</div>
 		</Container>
 	</section>

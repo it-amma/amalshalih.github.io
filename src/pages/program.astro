@@ -32,10 +32,10 @@ const FALLBACK: Record<string, Item[]> = {
     { title: 'Pesantren Ramadhan', variant: 'default', description: 'Program intensif bulan Ramadhan meliputi pengajian, buka puasa bersama, sholat berjamaah, tahfidz, dan wisuda Juz 30.' },
   ],
   sosial: [
-    { title: 'Santunan Sembako Bulanan', badge: 'Penerima Binaan', variant: 'overflow', description: 'Santunan untuk anak yatim, fakir miskin, dan dhuafa dalam bentuk sembako yang disalurkan setiap bulan. Program ini telah meringankan beban ekonomi masyarakat, terutama yang terdampak Covid-19.', stats: [{ number: '110', label: 'Penerima Binaan Tetap' }] },
-    { title: 'Jumat Bersedekah', badge: 'Setiap Hari Jumat', variant: 'overflow', description: 'Pembagian nasi kotak kepada dhuafa — tukang becak, pemulung, pengemis, dan kaum yang membutuhkan di sepanjang jalan wilayah Yogyakarta.' },
-    { title: 'Sedekah Barang Bekas', badge: 'Program Barkas', variant: 'overflow', description: 'Menerima sedekah berupa barang bekas layak jual. Kami siap menjemput donasi atau Anda bisa menyetorkan langsung ke kantor. Hasil penjualan untuk membiayai kegiatan yayasan.' },
-    { title: 'Panti Asuhan', badge: 'Yatim & Dhuafa', variant: 'overflow', description: 'Panti asuhan bagi anak yatim dan dhuafa yang dikelola secara profesional. Program pembinaan meliputi pendidikan formal, tahfidz, dan life skills untuk mempersiapkan masa depan mereka.' },
+    { title: 'Santunan Sembako Bulanan', badge: 'Penerima Binaan', variant: 'overflow', description: 'Santunan untuk anak yatim, fakir miskin, dan dhuafa dalam bentuk sembako yang disalurkan <strong>setiap bulan</strong>. Program ini telah meringankan beban ekonomi masyarakat, terutama yang terdampak Covid-19.', stats: [{ number: '110', label: 'Penerima Binaan Tetap' }] },
+    { title: 'Jumat Bersedekah', badge: 'Setiap Hari Jumat', variant: 'overflow', description: 'Pembagian <strong>nasi kotak</strong> kepada dhuafa — tukang becak, pemulung, pengemis, dan kaum yang membutuhkan di sepanjang jalan wilayah Yogyakarta.' },
+    { title: 'Sedekah Barang Bekas', badge: 'Program Barkas', variant: 'overflow', description: 'Menerima sedekah berupa <strong>barang bekas layak jual</strong>. Kami siap menjemput donasi atau Anda bisa menyetorkan langsung ke kantor. Hasil penjualan untuk membiayai kegiatan yayasan.' },
+    { title: 'Panti Asuhan', badge: 'Yatim & Dhuafa', variant: 'overflow', description: 'Panti asuhan bagi <strong>anak yatim dan dhuafa</strong> yang dikelola secara profesional. Program pembinaan meliputi pendidikan formal, tahfidz, dan life skills untuk mempersiapkan masa depan mereka.' },
     { title: 'Relawan AMMA', badge: 'Terbuka untuk Umum', variant: 'overflow', description: 'Jaringan relawan yang siap bergerak dalam setiap kegiatan sosial dan kemanusiaan yayasan. Terbuka bagi masyarakat umum yang ingin berkontribusi langsung dalam aksi-aksi kebaikan.' },
   ],
 };
@@ -94,234 +94,76 @@ const sections: SectionConfig[] = [
 		gradient="tr"
 	/>
 
-	<!-- Pendidikan -->
-	<Container id="pendidikan" class="py-16">
-		<div class="mb-8 flex items-center gap-4">
-			<div class="icon-box">
-				<Icon name="book" size={7} />
-			</div>
-			<div>
-				<h2 class="text-3xl font-bold text-warm-900">Bidang Pendidikan</h2>
-				<p class="mt-1 text-warm-700">Membangun generasi Qur'ani sejak usia dini</p>
-			</div>
-		</div>
-
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-			<Card variant="default">
-				<h3 class="text-xl font-bold text-primary-700">PKBM Bina Insan Mulia</h3>
-				<span class="mt-2 inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600">Pendidikan Diniyah</span>
-				<p class="mt-4 text-sm leading-relaxed text-warm-700">
-					Pusat Kegiatan Belajar Masyarakat dengan materi Diniyah untuk mempersiapkan generasi
-					milenial yang beraqidah kuat dan berakhlak mulia.
-				</p>
-				<div class="mt-4 grid grid-cols-2 gap-3 text-sm">
-					<div class="rounded-lg bg-warm-50 p-3 text-center">
-						<p class="font-bold text-primary-600">21</p>
-						<p class="text-xs text-warm-700">Ustadz/Ustadzah</p>
+	<!-- Dynamic sections from Sanity/FALLBACK -->
+	{sections.map((section) => {
+		const items = programsByCategory[section.id] ?? [];
+		const sectionContent = (
+			<>
+				<div class="mb-8 flex items-center gap-4">
+					<div class="icon-box">
+						<Icon name={section.icon} size={7} />
 					</div>
-					<div class="rounded-lg bg-warm-50 p-3 text-center">
-						<p class="font-bold text-primary-600">70</p>
-						<p class="text-xs text-warm-700">Santri</p>
+					<div>
+						<h2 class="text-3xl font-bold text-warm-900">{section.title}</h2>
+						<p class="mt-1 text-warm-700">{section.subtitle}</p>
 					</div>
 				</div>
-			</Card>
 
-			<Card variant="default">
-				<h3 class="text-xl font-bold text-primary-700">PAUD Bina Tunas Mulia</h3>
-				<span class="mt-2 inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600">Usia 1–6 Tahun</span>
-				<p class="mt-4 text-sm leading-relaxed text-warm-700">
-					Program pendidikan non-formal untuk taman pengasuhan anak dan kelompok bermain.
-					Membuka layanan untuk anak usia 1 hingga 6 tahun.
-				</p>
-				<div class="mt-4 grid grid-cols-2 gap-3 text-sm">
-					<div class="rounded-lg bg-warm-50 p-3 text-center">
-						<p class="font-bold text-primary-600">4</p>
-						<p class="text-xs text-warm-700">Guru</p>
-					</div>
-					<div class="rounded-lg bg-warm-50 p-3 text-center">
-						<p class="font-bold text-primary-600">8</p>
-						<p class="text-xs text-warm-700">Siswa</p>
-					</div>
+				<div class:list={['grid gap-6 items-start', section.gridCols]}>
+					{items.map((item) => (
+						item.variant === 'overflow' ? (
+							<Card variant="overflow">
+								<div class="rounded-t-2xl bg-primary-700 p-4 text-white">
+									<h3 class="text-lg font-bold text-white">{item.title}</h3>
+								</div>
+								<div class="p-6">
+									{item.badge && <span class="inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700">{item.badge}</span>}
+									{item.stats && item.stats.length > 0 && item.stats.map(s => (
+										<div class="mt-4 rounded-xl bg-warm-50 p-4 text-center">
+											<p class="text-4xl font-extrabold text-primary-700">{s.number}</p>
+											<p class="mt-1 text-sm font-medium text-warm-700">{s.label}</p>
+										</div>
+									))}
+									<p class="mt-4 text-sm leading-relaxed text-warm-700" set:html={item.description} />
+								</div>
+							</Card>
+						) : (
+							<Card variant="default">
+								<h3 class:list={['font-bold', section.id === 'keagamaan' ? 'text-warm-900' : 'text-xl text-primary-700']}>{item.title}</h3>
+								{item.badge && <span class="mt-2 inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700">{item.badge}</span>}
+								<p class="mt-4 text-sm leading-relaxed text-warm-700" set:html={item.description} />
+								{item.stats && item.stats.length > 0 && (
+									<div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+										{item.stats.map(s => (
+											<div class="rounded-lg bg-warm-50 p-3 text-center">
+												<p class="font-bold text-primary-700">{s.number}</p>
+												<p class="text-xs text-warm-700">{s.label}</p>
+											</div>
+										))}
+									</div>
+								)}
+							</Card>
+						)
+					))}
 				</div>
-			</Card>
+			</>
+		);
 
-			<Card variant="default">
-				<h3 class="text-xl font-bold text-primary-700">Rumah Tahfidz</h3>
-				<span class="mt-2 inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600">Tahfidz &amp; Tahsin</span>
-				<p class="mt-4 text-sm leading-relaxed text-warm-700">
-					Pesantren tahfidz yang diselenggarakan di kantor yayasan. Program tahfidz dan tahsin
-					Al-Qur'an bagi para santriwati dengan bimbingan ustadzah berpengalaman.
-				</p>
-				<div class="mt-4 grid grid-cols-2 gap-3 text-sm">
-					<div class="rounded-lg bg-warm-50 p-3 text-center">
-						<p class="font-bold text-primary-600">2</p>
-						<p class="text-xs text-warm-700">Ustadzah</p>
-					</div>
-					<div class="rounded-lg bg-warm-50 p-3 text-center">
-						<p class="font-bold text-primary-600">25</p>
-						<p class="text-xs text-warm-700">Santriwati</p>
-					</div>
-				</div>
-			</Card>
-
-			<Card variant="default">
-				<h3 class="text-xl font-bold text-primary-700">Bimbel Proton</h3>
-				<span class="mt-2 inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600">Bimbingan Belajar</span>
-				<p class="mt-4 text-sm leading-relaxed text-warm-700">
-					Program bimbingan belajar untuk anak-anak binaan yayasan. Membantu
-					meningkatkan prestasi akademik dan pemahaman agama secara terpadu.
-				</p>
-			</Card>
-		</div>
-	</section>
-
-	<!-- Keagamaan -->
-	<section id="keagamaan" class="bg-warm-50 ring-1 ring-primary-100/30">
-		<Container as="div" class="py-16">
-			<div class="mb-8 flex items-center gap-4">
-				<div class="icon-box">
-					<Icon name="home" size={7} />
-				</div>
-				<div>
-					<h2 class="text-3xl font-bold text-warm-900">Bidang Keagamaan</h2>
-					<p class="mt-1 text-warm-700">Memperkuat iman dan ibadah umat</p>
-				</div>
-			</div>
-
-			<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-				<Card variant="default">
-					<h3 class="font-bold text-warm-900">Wakaf Lahan Tahfidz</h3>
-					<p class="mt-2 text-sm leading-relaxed text-warm-700">
-						Penggalangan wakaf jariyah untuk pengadaan lahan 2.000 m² guna pembangunan
-						Pesantren Tahfidz dan Madrasah.
-					</p>
-				</Card>
-				<Card variant="default">
-					<h3 class="font-bold text-warm-900">Qurban</h3>
-					<p class="mt-2 text-sm leading-relaxed text-warm-700">
-						Penerimaan dan penyaluran daging qurban kepada yatim, dhuafa, dan masyarakat
-						yang membutuhkan di Bantul dan sekitarnya.
-					</p>
-				</Card>
-				<Card variant="default">
-					<h3 class="font-bold text-warm-900">Zakat, Infaq &amp; Shadaqah</h3>
-					<span class="mt-2 inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600">LAZIS ASIB</span>
-					<p class="mt-2 text-sm leading-relaxed text-warm-700">
-						Dikelola oleh <strong>LAZIS ASIB</strong> (Lembaga Amil Zakat Infaq Shadaqah), menerima dan
-						menyalurkan ZIS kepada mustahiq yang berhak. Termasuk zakat fitrah pada bulan Ramadhan.
-					</p>
-				</Card>
-				<Card variant="default">
-					<h3 class="font-bold text-warm-900">Kafarat</h3>
-					<p class="mt-2 text-sm leading-relaxed text-warm-700">
-						Layanan pembayaran kafarat sesuai syariat Islam bagi masyarakat yang membutuhkan.
-					</p>
-				</Card>
-				<Card variant="default">
-					<h3 class="font-bold text-warm-900">Hari Besar Islam</h3>
-					<p class="mt-2 text-sm leading-relaxed text-warm-700">
-						Maulid Bersedekah, Nuzulul Qur'an, Syawalan, Bazar &amp; Buka Puasa Bersama,
-						serta berbagai peringatan hari besar Islam.
-					</p>
-				</Card>
-				<Card variant="default">
-					<h3 class="font-bold text-warm-900">Pesantren Ramadhan</h3>
-					<p class="mt-2 text-sm leading-relaxed text-warm-700">
-						Program intensif bulan Ramadhan meliputi pengajian, buka puasa bersama,
-						sholat berjamaah, tahfidz, dan wisuda Juz 30.
-					</p>
-				</Card>
-			</div>
-		</Container>
-	</section>
-
-	<!-- Sosial -->
-	<Container id="sosial" class="py-16">
-		<div class="mb-8 flex items-center gap-4">
-			<div class="icon-box">
-				<Icon name="heart" size={7} />
-			</div>
-			<div>
-				<h2 class="text-3xl font-bold text-warm-900">Bidang Sosial Kemanusiaan</h2>
-				<p class="mt-1 text-warm-700">Meringankan beban saudara-saudara kita</p>
-			</div>
-		</div>
-
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			<Card variant="overflow">
-				<div class="rounded-t-2xl bg-primary-600 p-4 text-white">
-					<h3 class="text-lg font-bold text-white">Santunan Sembako Bulanan</h3>
-				</div>
-				<div class="p-6">
-					<span class="inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600">Penerima Binaan</span>
-					<div class="mt-4 rounded-xl bg-warm-50 p-4 text-center">
-						<p class="text-4xl font-extrabold text-primary-600">110</p>
-						<p class="mt-1 text-sm font-medium text-warm-700">Penerima Binaan Tetap</p>
-					</div>
-					<p class="mt-4 text-sm leading-relaxed text-warm-700">
-						Santunan untuk anak yatim, fakir miskin, dan dhuafa dalam bentuk sembako
-						yang disalurkan <strong>setiap bulan</strong>. Program ini telah meringankan
-						beban ekonomi masyarakat, terutama yang terdampak Covid-19.
-					</p>
-				</div>
-			</Card>
-
-			<Card variant="overflow">
-				<div class="rounded-t-2xl bg-primary-600 p-4 text-white">
-					<h3 class="text-lg font-bold text-white">Jumat Bersedekah</h3>
-				</div>
-				<div class="p-6">
-					<span class="inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600">Setiap Hari Jumat</span>
-					<p class="mt-4 text-sm leading-relaxed text-warm-700">
-						Pembagian <strong>nasi kotak</strong> kepada dhuafa — tukang becak, pemulung,
-						pengemis, dan kaum yang membutuhkan di sepanjang jalan wilayah Yogyakarta.
-					</p>
-				</div>
-			</Card>
-
-			<Card variant="overflow">
-				<div class="rounded-t-2xl bg-primary-600 p-4 text-white">
-					<h3 class="text-lg font-bold text-white">Sedekah Barang Bekas</h3>
-				</div>
-				<div class="p-6">
-					<span class="inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600">Program Barkas</span>
-					<p class="mt-4 text-sm leading-relaxed text-warm-700">
-						Menerima sedekah berupa <strong>barang bekas layak jual</strong>.
-						Kami siap menjemput donasi atau Anda bisa menyetorkan langsung ke kantor.
-						Hasil penjualan untuk membiayai kegiatan yayasan.
-					</p>
-				</div>
-			</Card>
-
-			<Card variant="overflow">
-				<div class="rounded-t-2xl bg-primary-600 p-4 text-white">
-					<h3 class="text-lg font-bold text-white">Panti Asuhan</h3>
-				</div>
-				<div class="p-6">
-					<span class="inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600">Yatim &amp; Dhuafa</span>
-					<p class="mt-4 text-sm leading-relaxed text-warm-700">
-						Panti asuhan bagi <strong>anak yatim dan dhuafa</strong> yang dikelola secara profesional.
-						Program pembinaan meliputi pendidikan formal, tahfidz, dan life skills untuk
-						mempersiapkan masa depan mereka.
-					</p>
-				</div>
-			</Card>
-
-			<Card variant="overflow">
-				<div class="rounded-t-2xl bg-primary-600 p-4 text-white">
-					<h3 class="text-lg font-bold text-white">Relawan AMMA</h3>
-				</div>
-				<div class="p-6">
-					<span class="inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600">Terbuka untuk Umum</span>
-					<p class="mt-4 text-sm leading-relaxed text-warm-700">
-						Jaringan relawan yang siap bergerak dalam setiap kegiatan sosial dan kemanusiaan
-						yayasan. Terbuka bagi masyarakat umum yang ingin berkontribusi langsung
-						dalam aksi-aksi kebaikan.
-					</p>
-				</div>
-			</Card>
-		</div>
-	</section>
+		if (section.bgClass) {
+			return (
+				<section class:list={[section.bgClass]}>
+					<Container as="div" id={section.id} class="py-16">
+						{sectionContent}
+					</Container>
+				</section>
+			);
+		}
+		return (
+			<Container id={section.id} class="py-16">
+				{sectionContent}
+			</Container>
+		);
+	})}
 
 <section class="bg-primary-800 text-white">
 		<Container as="div" class="py-16 text-center">
@@ -331,7 +173,7 @@ const sections: SectionConfig[] = [
 			</p>
 			<div class="mt-8 flex flex-wrap justify-center gap-4">
 				<Button variant="gold" size="lg" href="/donasi">Donasi Sekarang</Button>
-				<Button variant="outline" size="lg" href="/tentang">Tentang Kami</Button>
+				<Button variant="outline-light" size="lg" href="/tentang">Tentang Kami</Button>
 			</div>
 		</Container>
 	</section>

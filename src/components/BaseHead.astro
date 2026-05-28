@@ -6,18 +6,47 @@ interface Props {
 	title: string;
 	description: string;
 	image?: string;
+	pageType?: 'website' | 'article';
 }
 
-const { title, description, image = '/logo-yayasan.webp' } = Astro.props;
+const { title, description, image = '/logo-yayasan.webp', pageType = 'website' } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// Generate breadcrumb items from URL path
+const pathParts = Astro.url.pathname.split('/').filter(Boolean);
+const breadcrumbItems = [
+	{ "@type": "ListItem", "position": 1, "name": "Beranda", "item": SITE.url },
+];
+const labels: Record<string, string> = {
+	tentang: 'Tentang Kami',
+	program: 'Program',
+	kegiatan: 'Kegiatan',
+	donasi: 'Donasi',
+	kontak: 'Kontak',
+	galeri: 'Galeri',
+};
+let currentPath = '';
+pathParts.forEach((part) => {
+	currentPath += `/${part}`;
+	breadcrumbItems.push({
+		"@type": "ListItem",
+		"position": breadcrumbItems.length + 1,
+		"name": labels[part] || part.charAt(0).toUpperCase() + part.slice(1),
+		"item": `${SITE.url}${currentPath}`,
+	});
+});
+const ogImageURL = new URL(image, Astro.url);
 ---
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="theme-color" content="#052e16" />
 <meta name="robots" content="index, follow" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="icon" href="/favicon.ico" />
+<meta name="application-name" content={SITE.shortName} />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any" />
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32" />
+<link rel="apple-touch-icon" href="/logo-yayasan-sm.webp" sizes="256x256" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,34 +55,55 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 <link rel="canonical" href={canonicalURL} />
 
-<title>{title} — Yayasan ASIB</title>
-<meta name="title" content={`${title} — Yayasan ASIB`} />
+<title>{title} — {SITE.shortName}</title>
+<meta name="title" content={`${title} — ${SITE.shortName}`} />
 <meta name="description" content={description} />
 
-<meta property="og:type" content="website" />
+<meta property="og:type" content={pageType} />
 <meta property="og:locale" content="id_ID" />
-<meta property="og:site_name" content="Yayasan ASIB" />
+<meta property="og:site_name" content={SITE.shortName} />
 <meta property="og:url" content={Astro.url} />
-<meta property="og:title" content={`${title} — Yayasan ASIB`} />
+<meta property="og:title" content={`${title} — ${SITE.shortName}`} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:image" content={ogImageURL} />
+<meta property="og:image:width" content="512" />
+<meta property="og:image:height" content="512" />
+<meta property="og:image:alt" content={SITE.shortName} />
 
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={`${title} — Yayasan ASIB`} />
+<meta property="twitter:title" content={`${title} — ${SITE.shortName}`} />
 <meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image, Astro.url)} />
+<meta property="twitter:image" content={ogImageURL} />
+<meta property="twitter:image:alt" content={SITE.shortName} />
+
+<script type="application/ld+json" set:html={JSON.stringify({
+	"@context": "https://schema.org",
+	"@type": "WebSite",
+	"@id": `${SITE.url}/#website`,
+	"url": SITE.url,
+	"name": SITE.shortName,
+	"description": SITE.description,
+	"potentialAction": {
+		"@type": "SearchAction",
+		"target": {
+			"@type": "EntryPoint",
+			"urlTemplate": `${SITE.url}/?q={search_term_string}`
+		},
+		"query-input": "required name=search_term_string"
+	}
+})} /></script>
 
 <script type="application/ld+json" set:html={JSON.stringify({
 	"@context": "https://schema.org",
 	"@type": "Organization",
-	"@id": "https://amalshalih.id",
+	"@id": `${SITE.url}/#organization`,
 	"name": SITE.name,
 	"alternateName": SITE.shortName,
 	"description": SITE.description,
 	"url": SITE.url,
-	"foundingDate": SITE.foundedDate,
 	"logo": `${SITE.url}/logo-yayasan.webp`,
+	"foundingDate": SITE.foundedDate,
 	"address": {
 		"@type": "PostalAddress",
 		"streetAddress": CONTACT.address.street + ', ' + CONTACT.address.village + ', ' + CONTACT.address.district,
@@ -77,3 +127,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 		SOCIAL.tiktok.url,
 	],
 })} /></script>
+
+{breadcrumbItems.length > 1 && (
+	<script type="application/ld+json" set:html={JSON.stringify({
+		"@context": "https://schema.org",
+		"@type": "BreadcrumbList",
+		"@id": `${canonicalURL}#breadcrumb`,
+		"itemListElement": breadcrumbItems,
+	})} />
+)}

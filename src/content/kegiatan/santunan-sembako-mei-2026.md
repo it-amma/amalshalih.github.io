@@ -3,6 +3,7 @@ title: 'Santunan Sembako Bulanan untuk 110 Penerima Manfaat'
 description: 'Penyaluran santunan sembako rutin bulanan kepada anak yatim, fakir miskin, dan dhuafa binaan Yayasan ASIB di wilayah Bantul.'
 date: 2026-05-15
 kategori: 'sosial'
+image: '/dampak-nyata.webp'
 ---
 
 Yayasan Amal Shalih Insan Bantul kembali menyalurkan santunan sembako bulanan kepada 110 penerima manfaat binaan. Program ini merupakan bentuk kepedulian yayasan terhadap masyarakat kurang mampu di wilayah Bantul dan sekitarnya.

@@ -19,6 +19,7 @@
     "@sanity/astro": "^3.4.0",
     "@sanity/client": "^7.22.0",
     "@sanity/image-url": "^2.1.1",
+    "@sentry/astro": "^10.54.0",
     "@spotlightjs/astro": "^3.2.6",
     "@tailwindcss/typography": "^0.5.19",
     "astro": "^6.3.8",
@@ -27,5 +28,8 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.0",
     "sanity": "^5.27.0"
-  }
+  },
+  "trustedDependencies": [
+    "@sentry/cli"
+  ]
 }

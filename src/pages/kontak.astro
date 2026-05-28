@@ -42,7 +42,7 @@ try {
 		gradient="bl"
 	/>
 
-	<Container>
+	<Container class="py-16">
 		<div class="grid gap-12 lg:grid-cols-5">
 			<!-- Info Cards -->
 			<div class="space-y-6 lg:col-span-2">
@@ -50,7 +50,7 @@ try {
 					<div class="mb-3 icon-box-sm">
 						<Icon name="location" size={5} />
 					</div>
-					<h3 class="font-bold text-warm-900">Alamat Kantor</h3>
+					<h2 class="font-bold text-warm-900">Alamat Kantor</h2>
 					<p class="mt-2 text-sm leading-relaxed text-warm-700">
 						{address.street}, {address.village}, {address.district}<br />
 						{address.city}, {address.province}<br />
@@ -60,7 +60,7 @@ try {
 						href={mapsUrl}
 						target="_blank"
 						rel="noopener noreferrer"
-						class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+						class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary-700 hover:text-primary-700 transition-colors"
 					>
 						Lihat di Google Maps
 						<Icon name="external-link" size={4} />
@@ -71,9 +71,9 @@ try {
 					<div class="mb-3 icon-box-sm">
 						<Icon name="phone" size={5} />
 					</div>
-					<h3 class="font-bold text-warm-900">Telepon &amp; WhatsApp</h3>
+					<h2 class="font-bold text-warm-900">Telepon &amp; WhatsApp</h2>
 					<p class="mt-2 text-sm text-warm-700">
-						<a href={phoneUrl} class="text-primary-600 hover:underline">{phone}</a>
+						<a href={phoneUrl} class="text-primary-700 hover:underline">{phone}</a>
 					</p>
 					<Button variant="whatsapp" href={whatsapp} class="mt-3" target="_blank">
 						<Icon name="whatsapp" size={4} />
@@ -85,16 +85,16 @@ try {
 					<div class="mb-3 icon-box-sm">
 						<Icon name="email" size={5} />
 					</div>
-					<h3 class="font-bold text-warm-900">Email</h3>
+					<h2 class="font-bold text-warm-900">Email</h2>
 					<p class="mt-2 text-sm">
-						<a href={`mailto:${email}`} class="text-primary-600 break-all hover:underline">
+						<a href={`mailto:${email}`} class="text-primary-700 break-all hover:underline">
 							{email}
 						</a>
 					</p>
 				</div>
 
 				<div class="rounded-xl border border-primary-100 bg-white p-6">
-					<h3 class="font-bold text-warm-900">Jam Operasional</h3>
+					<h2 class="font-bold text-warm-900">Jam Operasional</h2>
 					<div class="mt-3 space-y-2 text-sm text-warm-700">
 						<div class="flex justify-between">
 							<span>Senin–Jumat</span>
@@ -206,7 +206,7 @@ try {
 
 						<button
 							type="submit"
-							class="w-full rounded-lg bg-primary-600 px-6 py-3 font-semibold text-white hover:bg-primary-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+							class="w-full rounded-lg bg-primary-700 px-6 py-3 font-semibold text-white hover:bg-primary-800 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
 						>
 							Kirim Pesan
 						</button>

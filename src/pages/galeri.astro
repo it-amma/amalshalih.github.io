@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/ui/Container.astro';
 import PageHeader from '../components/sections/PageHeader.astro';
 import Card from '../components/ui/Card.astro';
 import Icon from '../components/ui/Icon.astro';
@@ -36,33 +37,59 @@ const kategoriIcons = {
 		gradient="r"
 	/>
 
-	<section class="mx-auto max-w-6xl px-4 py-16">
+	<Container class="py-16">
 		<div class="flex flex-wrap gap-2 justify-center mb-12" data-filter-gallery>
-			<button class="filter-btn rounded-full bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-md transition-all duration-200" data-filter="all">Semua</button>
+			<button class="filter-btn rounded-full bg-primary-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-300" data-filter="all">Semua</button>
 			{Object.entries(KATEGORI_LABELS).map(([key, label]) => (
-				<button class="filter-btn rounded-full bg-primary-50 px-4 py-2 text-sm font-medium text-primary-700 transition-all duration-200 hover:bg-primary-100" data-filter={key}>{label}</button>
+				<button class="filter-btn rounded-full bg-primary-50 px-5 py-2.5 text-sm font-semibold text-primary-700 transition-all duration-300 hover:bg-primary-100" data-filter={key}>{label}</button>
 			))}
 		</div>
 
-		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" id="gallery-grid">
 			{kegiatan.map((item) => (
-				<div data-kategori={item.data.kategori}>
-					<Card variant="hover" href={`/kegiatan/${item.id}`}>
-						<div class={`flex h-48 items-center justify-center bg-gradient-to-br ${kategoriGradients[item.data.kategori] || 'from-primary-400 to-primary-600'}`}>
-							<Icon name={(kategoriIcons[item.data.kategori] ?? 'book') as 'book' | 'home' | 'heart' | 'globe'} size={12} class="text-white/90" />
+				<div class="gallery-item transition-all duration-500 ease-out" data-kategori={item.data.kategori}>
+					<Card variant="hover" href={`/kegiatan/${item.id}`} class="group overflow-hidden">
+						<div class="relative aspect-video w-full overflow-hidden">
+							{item.data.image ? (
+								<img 
+									src={item.data.image} 
+									alt={item.data.title}
+									class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+									loading="lazy"
+								/>
+							) : (
+								<div class={`flex h-full w-full items-center justify-center bg-gradient-to-br ${kategoriGradients[item.data.kategori] || 'from-primary-400 to-primary-600'}`}>
+									<Icon name={(kategoriIcons[item.data.kategori] ?? 'book') as 'book' | 'home' | 'heart' | 'globe'} size={12} class="text-white/30" />
+								</div>
+							)}
+							
+							<!-- Overlay -->
+							<div class="absolute inset-0 flex items-center justify-center bg-primary-900/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+								<div class="translate-y-4 rounded-full bg-white px-5 py-2.5 text-sm font-bold text-primary-700 shadow-xl transition-transform duration-300 group-hover:translate-y-0">
+									Lihat Detail
+								</div>
+							</div>
+
+							<!-- Category Tag -->
+							<div class="absolute top-4 left-4">
+								<span class="rounded-lg bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-700 shadow-sm backdrop-blur-sm">
+									{KATEGORI_LABELS[item.data.kategori] || item.data.kategori}
+								</span>
+							</div>
 						</div>
+
 						<div class="p-6">
-							<span class="inline-block rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-600">
-								{KATEGORI_LABELS[item.data.kategori] || item.data.kategori}
-							</span>
-							<time datetime={item.data.date.toISOString()} class="ml-2 text-xs text-warm-500">
-								{item.data.date.toLocaleDateString('id-ID', {
-									year: 'numeric',
-									month: 'long',
-									day: 'numeric',
-								})}
-							</time>
-							<h2 class="mt-3 text-lg font-bold leading-snug text-warm-900 line-clamp-2 transition-colors">
+							<div class="flex items-center gap-2 text-xs text-warm-500">
+								<Icon name="calendar" size={3.5} />
+								<time datetime={item.data.date.toISOString()}>
+									{item.data.date.toLocaleDateString('id-ID', {
+										year: 'numeric',
+										month: 'long',
+										day: 'numeric',
+									})}
+								</time>
+							</div>
+							<h2 class="mt-3 text-lg font-bold leading-tight text-warm-900 line-clamp-2 transition-colors group-hover:text-primary-700">
 								{item.data.title}
 							</h2>
 						</div>
@@ -72,37 +99,74 @@ const kategoriIcons = {
 		</div>
 
 		{kegiatan.length === 0 && (
-			<div class="py-20 text-center">
-				<p class="text-warm-700">Belum ada dokumentasi kegiatan. Kunjungi kembali nanti.</p>
+			<div class="flex flex-col items-center justify-center py-24 text-center">
+				<div class="mb-4 rounded-full bg-warm-50 p-6 text-warm-300">
+					<Icon name="image" size={16} />
+				</div>
+				<h3 class="text-xl font-bold text-warm-900">Belum Ada Dokumentasi</h3>
+				<p class="mt-2 max-w-xs text-warm-600">Dokumentasi kegiatan akan diperbarui secara berkala oleh tim yayasan.</p>
 			</div>
 		)}
-	</section>
+	</Container>
 </BaseLayout>
+
+<style>
+	.gallery-item.hidden-item {
+		display: none;
+	}
+	
+	.gallery-item.fade-out {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+
+	.gallery-item.fade-in {
+		opacity: 1;
+		transform: scale(1);
+	}
+</style>
 
 <script is:inline>
 (() => {
-	const root = document.querySelector('[data-filter-gallery]');
-	if (!root) return;
+	const filterRoot = document.querySelector('[data-filter-gallery]');
+	if (!filterRoot) return;
 
-	const items = document.querySelectorAll('[data-kategori]');
-	const buttons = root.querySelectorAll('.filter-btn');
+	const items = document.querySelectorAll('.gallery-item');
+	const buttons = filterRoot.querySelectorAll('.filter-btn');
 
 	buttons.forEach((btn) => {
 		btn.addEventListener('click', () => {
 			const filter = btn.getAttribute('data-filter');
 
+			// Update active button state
 			buttons.forEach((b) => {
-				b.classList.remove('bg-primary-600', 'text-white', 'shadow-md');
+				b.classList.remove('bg-primary-700', 'text-white', 'shadow-md');
 				b.classList.add('bg-primary-50', 'text-primary-700', 'hover:bg-primary-100');
 			});
 			btn.classList.remove('bg-primary-50', 'text-primary-700', 'hover:bg-primary-100');
-			btn.classList.add('bg-primary-600', 'text-white', 'shadow-md');
+			btn.classList.add('bg-primary-700', 'text-white', 'shadow-md');
 
+			// Animate filtering
 			items.forEach((item) => {
-				if (filter === 'all' || item.getAttribute('data-kategori') === filter) {
-					item.classList.remove('hidden');
+				const category = item.getAttribute('data-kategori');
+				const matches = filter === 'all' || category === filter;
+
+				if (matches) {
+					item.classList.remove('hidden-item');
+					// Small delay to trigger animation
+					setTimeout(() => {
+						item.classList.remove('fade-out');
+						item.classList.add('fade-in');
+					}, 10);
 				} else {
-					item.classList.add('hidden');
+					item.classList.add('fade-out');
+					item.classList.remove('fade-in');
+					// Wait for transition before hiding completely
+					setTimeout(() => {
+						if (item.classList.contains('fade-out')) {
+							item.classList.add('hidden-item');
+						}
+					}, 300);
 				}
 			});
 		});

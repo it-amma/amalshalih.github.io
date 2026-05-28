@@ -3,6 +3,7 @@ title: 'Wisuda Juz 30 dan Milad ke-3 Yayasan ASIB'
 description: 'Perayaan wisuda Juz 30 santri Rumah Tahfidz dan milad ke-3 Yayasan Amal Shalih Insan Bantul dalam rangkaian Semarak Ramadhan 1444 H.'
 date: 2023-03-20
 kategori: 'keagamaan'
+image: '/dampak-nyata.webp'
 ---
 
 Dalam rangkaian kegiatan Semarak Ramadhan 1444 H, Yayasan Amal Shalih Insan Bantul menggelar acara **Wisuda Juz 30** sekaligus **Milad ke-3 Yayasan ASIB**. Acara ini dihadiri oleh 200 peserta yang terdiri dari santri, ustadz/ustadzah, orang tua, dan para donatur.
