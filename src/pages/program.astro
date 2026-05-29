@@ -74,8 +74,9 @@ type SectionConfig = {
   gridCols: string;
 };
 
+// Optimasi Pendidikan: lg:grid-cols-3 xl:grid-cols-4 untuk ruang lapang laptop cilik (1024px)
 const sections: SectionConfig[] = [
-  { id: 'pendidikan', icon: 'book', title: 'Bidang Pendidikan', subtitle: 'Membangun generasi Qur\'ani sejak usia dini', gridCols: 'sm:grid-cols-2 lg:grid-cols-4' },
+  { id: 'pendidikan', icon: 'book', title: 'Bidang Pendidikan', subtitle: 'Membangun generasi Qur\'ani sejak usia dini', gridCols: 'sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' },
   { id: 'keagamaan', icon: 'home', title: 'Bidang Keagamaan', subtitle: 'Memperkuat iman dan ibadah umat', gridCols: 'sm:grid-cols-2 lg:grid-cols-3' },
   { id: 'sosial', icon: 'heart', title: 'Bidang Sosial Kemanusiaan', subtitle: 'Meringankan beban saudara-saudara kita', gridCols: 'sm:grid-cols-2 lg:grid-cols-3' },
 ];
@@ -92,6 +93,23 @@ const tabLabels: Record<string, string> = {
 	description="Program Yayasan Amal Shalih Insan Bantul — Pendidikan Islam, Keagamaan, dan Sosial Kemanusiaan. PKBM, PAUD, Tahfidz, Wakaf, Santunan, dan banyak lagi."
 	currentPage="/program"
 >
+	<style>
+		/* Animasi transisi halus (Lift Fade-In) saat berganti tab panel */
+		[role="tabpanel"] {
+			animation: panelFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		}
+		@keyframes panelFadeIn {
+			from {
+				opacity: 0;
+				transform: translateY(6px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+	</style>
+
 	<PageHeader
 		label="Program"
 		title="Program &amp; Kegiatan"
@@ -99,9 +117,9 @@ const tabLabels: Record<string, string> = {
 		gradient="tr"
 	/>
 
-	<Container class="py-8 sm:py-16">
-		<!-- Tab List — edge-to-edge on mobile -->
-		<div role="tablist" aria-label="Pilar program" data-program-tabs class="-mx-4 sm:mx-0 flex gap-2 overflow-x-auto scrollbar-hide rounded-none sm:rounded-lg bg-warm-100 py-1.5 px-4 sm:px-1.5">
+	<Container class="pb-8 sm:pb-16">
+		<!-- Tab List — edge-to-edge on mobile, max-width & centered on tablet/desktop -->
+		<div role="tablist" aria-label="Pilar program" data-program-tabs class="-mx-4 sm:mx-auto sm:max-w-md flex gap-2 overflow-x-auto scrollbar-hide rounded-none sm:rounded-xl bg-warm-100 py-1.5 px-4 sm:px-1.5 shadow-inner">
 			{sections.map((section, i) => (
 				<button
 					role="tab"
@@ -111,10 +129,10 @@ const tabLabels: Record<string, string> = {
 					tabindex={i === 0 ? 0 : -1}
 					data-tab={section.id}
 					class:list={[
-						'flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
+						'flex-1 flex justify-center items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2',
 						i === 0
 							? 'bg-primary-700 text-white shadow-sm'
-							: 'text-warm-700 hover:bg-white hover:text-primary-700',
+							: 'text-warm-700 hover:bg-white/60 hover:text-primary-700',
 					]}
 				>
 					<Icon name={section.icon} size={5} aria-hidden="true" />
@@ -132,47 +150,55 @@ const tabLabels: Record<string, string> = {
 					id={`panel-${section.id}`}
 					aria-labelledby={`tab-${section.id}`}
 					data-panel={section.id}
-					class:list={['mt-6', i !== 0 && 'hidden']}
+					class:list={['mt-8 sm:mt-12', i !== 0 && 'hidden']}
 				>
-					<div class="mb-6 flex items-center gap-3">
-						<div class="icon-box">
+					<div class="mb-6 sm:mb-8 flex items-center gap-3.5">
+						<div class="icon-box shadow-sm shrink-0">
 							<Icon name={section.icon} size={7} aria-hidden="true" />
 						</div>
 						<div>
-							<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-warm-900">{section.title}</h2>
+							<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-warm-900 leading-tight">{section.title}</h2>
 							<p class="mt-1 text-sm sm:text-base text-warm-700">{section.subtitle}</p>
 						</div>
 					</div>
 
-					<div class:list={['grid gap-4 sm:gap-6 items-start', section.gridCols]}>
+					<!-- Grid program cards — height aligned (default flex stretch) -->
+					<div class:list={['grid gap-4 sm:gap-6', section.gridCols]}>
 						{items.map((item) => (
 							item.variant === 'overflow' ? (
-								<Card variant="overflow">
-									<div class="rounded-t-xl sm:rounded-t-2xl bg-primary-700 p-3 sm:p-4 text-white">
+								<Card variant="overflow" class="h-full flex flex-col">
+									<div class="rounded-t-xl sm:rounded-t-2xl bg-primary-700 p-4 sm:p-5 text-white shrink-0">
 										<h3 class="text-base sm:text-lg font-bold text-white">{item.title}</h3>
 									</div>
-									<div class="p-4 sm:p-6">
-										{item.badge && <span class="inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700">{item.badge}</span>}
+									<div class="p-5 sm:p-6 flex-1 flex flex-col justify-between">
+										<div class="flex-1">
+											{item.badge && <span class="inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700">{item.badge}</span>}
+											<p class="mt-3.5 text-sm leading-relaxed text-warm-700" set:html={item.description} />
+										</div>
 										{item.stats && item.stats.length > 0 && item.stats.map(s => (
-											<div class="mt-3 rounded-lg sm:rounded-xl bg-warm-50 p-3 sm:p-4 text-center">
+											<div class="mt-5 rounded-lg sm:rounded-xl bg-warm-50 p-3 sm:p-4 text-center shrink-0 border border-primary-50/50">
 												<p class="text-3xl sm:text-4xl font-extrabold text-primary-700 tabular-nums">{s.number}</p>
-												<p class="mt-1 text-sm font-medium text-warm-700">{s.label}</p>
+												<p class="mt-1 text-xs sm:text-sm font-semibold text-warm-700 tracking-wide uppercase">{s.label}</p>
 											</div>
 										))}
-										<p class="mt-4 text-sm leading-relaxed text-warm-700" set:html={item.description} />
 									</div>
 								</Card>
 							) : (
-								<Card variant="default">
-									<h3 class:list={['font-bold', section.id === 'keagamaan' ? 'text-warm-900' : 'text-lg sm:text-xl text-primary-700']}>{item.title}</h3>
-									{item.badge && <span class="mt-2 inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700">{item.badge}</span>}
-									<p class="mt-3 text-sm leading-relaxed text-warm-700" set:html={item.description} />
+								<Card variant="default" class="h-full flex flex-col justify-between">
+									<div class="flex-1">
+										<!-- Unifikasi ukuran & layout judul (keagamaan tetap warna netral, tapi ukurannya konsisten besar) -->
+										<h3 class:list={['font-bold text-lg sm:text-xl', section.id === 'keagamaan' ? 'text-warm-900' : 'text-primary-700']}>
+											{item.title}
+										</h3>
+										{item.badge && <span class="mt-2.5 inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700">{item.badge}</span>}
+										<p class="mt-3.5 text-sm leading-relaxed text-warm-700" set:html={item.description} />
+									</div>
 									{item.stats && item.stats.length > 0 && (
-										<div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+										<div class="mt-5 grid grid-cols-2 gap-3 text-sm shrink-0">
 											{item.stats.map(s => (
-												<div class="rounded-lg bg-warm-50 p-3 text-center">
-													<p class="font-bold text-primary-700 tabular-nums">{s.number}</p>
-													<p class="text-xs text-warm-700">{s.label}</p>
+												<div class="rounded-lg bg-warm-50 p-3 text-center border border-primary-50/50">
+													<p class="font-extrabold text-primary-700 tabular-nums text-lg">{s.number}</p>
+													<p class="text-[10px] sm:text-xs font-medium text-warm-700 uppercase mt-0.5">{s.label}</p>
 												</div>
 											))}
 										</div>
@@ -186,19 +212,61 @@ const tabLabels: Record<string, string> = {
 		})}
 	</Container>
 
-	<section class="bg-primary-800 text-white">
-		<Container as="div" class="py-8 sm:py-16 text-center">
-			<h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">Dukung Program Kami</h2>
-			<p class="mx-auto mt-3 max-w-2xl text-base sm:text-lg text-primary-200">
-				Setiap donasi Anda, sekecil apapun, berarti besar bagi mereka yang membutuhkan.
-			</p>
-			<div class="mt-6 flex flex-wrap justify-center gap-3 sm:gap-4">
-				<Button variant="gold" size="lg" href="/donasi">Donasi Sekarang</Button>
-				<Button variant="outline-light" size="lg" href="/tentang">Tentang Kami</Button>
-			</div>
-		</Container>
-	</section>
+	<Fragment slot="after-main">
+		<!-- Constellation Night Sky — organic asymmetric star field -->
+		<section class="relative overflow-hidden bg-gradient-to-b from-primary-800 via-primary-900 to-primary-950 text-white">
+			<!-- Soft bottom nebula glow -->
+			<div class="absolute bottom-0 left-1/2 h-48 w-96 -translate-x-1/2 translate-y-1/3 rounded-full bg-primary-700/20 blur-3xl" aria-hidden="true"></div>
 
+			<!-- Scattered constellation stars — asymmetric, organic, varying sizes & opacities -->
+			<div class="absolute top-4 left-[12%] text-gold-300/20" aria-hidden="true"><Icon name="star" size={4} /></div>
+			<div class="absolute top-8 left-[22%] text-gold-400/10" aria-hidden="true"><Icon name="star" size={2.5} /></div>
+			<div class="absolute top-6 right-[18%] text-white/10" aria-hidden="true"><Icon name="star" size={3} /></div>
+			<div class="absolute top-3 right-[35%] text-gold-300/15" aria-hidden="true"><Icon name="star" size={5} /></div>
+			<div class="absolute top-10 right-[8%] text-gold-400/8" aria-hidden="true"><Icon name="star" size={2} /></div>
+			<div class="absolute top-[45%] left-[6%] text-gold-300/12" aria-hidden="true"><Icon name="star" size={3.5} /></div>
+			<div class="absolute top-[38%] right-[5%] text-white/8" aria-hidden="true"><Icon name="star" size={2.5} /></div>
+			<div class="absolute bottom-14 left-[18%] text-gold-400/15" aria-hidden="true"><Icon name="star" size={4} /></div>
+			<div class="absolute bottom-10 right-[22%] text-gold-300/10" aria-hidden="true"><Icon name="star" size={3} /></div>
+			<div class="absolute bottom-16 right-[12%] text-white/8" aria-hidden="true"><Icon name="star" size={2} /></div>
+			<div class="absolute bottom-6 left-[40%] text-gold-400/10" aria-hidden="true"><Icon name="star" size={2.5} /></div>
+
+			<!-- Interspersed diamond "planets" -->
+			<div class="absolute top-5 left-[32%] w-2 h-2 rotate-45 rounded-[1px] bg-gold-400/20" aria-hidden="true"></div>
+			<div class="absolute top-12 right-[28%] w-1.5 h-1.5 rotate-45 rounded-[1px] bg-white/15" aria-hidden="true"></div>
+			<div class="absolute bottom-12 left-[28%] w-2 h-2 rotate-45 rounded-[1px] bg-gold-300/15" aria-hidden="true"></div>
+			<div class="absolute top-[35%] left-[15%] w-1.5 h-1.5 rotate-45 rounded-[1px] bg-gold-400/12" aria-hidden="true"></div>
+			<div class="absolute bottom-8 right-[38%] w-2 h-2 rotate-45 rounded-[1px] bg-white/10" aria-hidden="true"></div>
+
+			<Container as="div" class="relative z-10 py-5 sm:py-6 lg:py-8 text-center">
+				<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight font-display">
+					Dukung Program Kami
+				</h2>
+				<p class="mx-auto mt-2 max-w-xl text-sm sm:text-base text-primary-200/80">
+					Setiap donasi Anda, sekecil apapun, berarti besar bagi mereka yang membutuhkan.
+				</p>
+				<div class="mt-4 sm:mt-5 flex flex-wrap justify-center gap-3">
+					<Button
+						variant="gold"
+						size="md"
+						href="/donasi"
+						class="shadow-lg shadow-primary-950/30 hover:shadow-xl hover:shadow-gold-500/20 hover:-translate-y-0.5 transition-all duration-300"
+					>
+						<Icon name="heart" size={4} aria-hidden="true" />
+						Donasi Sekarang
+					</Button>
+					<Button
+						variant="outline-light"
+						size="md"
+						href="/tentang"
+						class="border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5"
+					>
+						Tentang Kami
+					</Button>
+				</div>
+			</Container>
+		</section>
+	</Fragment>
 </BaseLayout>
 
 <!-- Tab switching + keyboard navigation + URL hash -->
@@ -206,7 +274,7 @@ const tabLabels: Record<string, string> = {
 (() => {
 	const tablist = document.querySelector('[data-program-tabs]');
 	if (!tablist) return;
-
+ 
 	const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
 	const panels = Array.from(document.querySelectorAll('[data-panel]'));
 	const sectionIds = tabs.map(t => t.getAttribute('data-tab'));
@@ -223,7 +291,7 @@ const tabLabels: Record<string, string> = {
 			tab.classList.toggle('text-white', isActive);
 			tab.classList.toggle('shadow-sm', isActive);
 			tab.classList.toggle('text-warm-700', !isActive);
-			tab.classList.toggle('hover:bg-white', !isActive);
+			tab.classList.toggle('hover:bg-white/60', !isActive);
 			tab.classList.toggle('hover:text-primary-700', !isActive);
 		});
 
