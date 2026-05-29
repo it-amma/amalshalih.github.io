@@ -37,7 +37,7 @@ const kategoriIcons = {
 		gradient="r"
 	/>
 
-	<Container class="py-8 sm:py-16">
+	<Container class="pt-4 sm:pt-6 pb-8 sm:pb-16">
 		<div class="flex flex-wrap gap-2 justify-center mb-6 sm:mb-8" data-filter-gallery>
 			<button class="filter-btn rounded-full bg-primary-700 px-4 py-2 text-xs sm:text-sm sm:px-5 sm:py-2.5 font-semibold text-white shadow-sm sm:shadow-md transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" data-filter="all">Semua</button>
 			{Object.entries(KATEGORI_LABELS).map(([key, label]) => (
@@ -48,8 +48,8 @@ const kategoriIcons = {
 		<div class="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3" id="gallery-grid">
 			{kegiatan.map((item) => (
 				<div class="gallery-item transition-opacity duration-500 ease-out" data-kategori={item.data.kategori}>
-					<Card variant="hover" href={`/kegiatan/${item.id}`} class="group overflow-hidden">
-						<div class="relative aspect-video w-full overflow-hidden">
+					<Card variant="hover" href={`/kegiatan/${item.id}`} class="group overflow-hidden !p-0">
+						<div class="relative aspect-video w-full overflow-hidden rounded-t-xl sm:rounded-t-2xl">
 							{item.data.image ? (
 									<img 
 										src={item.data.image} 
