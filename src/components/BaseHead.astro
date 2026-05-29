@@ -7,9 +7,13 @@ interface Props {
 	description: string;
 	image?: string;
 	pageType?: 'website' | 'article';
+	/** ISO 8601 date string for article:published_time */
+	publishedTime?: string;
+	/** ISO 8601 date string for article:modified_time */
+	modifiedTime?: string;
 }
 
-const { title, description, image = '/logo-yayasan.webp', pageType = 'website' } = Astro.props;
+const { title, description, image = '/logo-yayasan.webp', pageType = 'website', publishedTime, modifiedTime } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 // Generate breadcrumb items from URL path
@@ -41,18 +45,31 @@ const ogImageURL = new URL(image, Astro.url);
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="theme-color" content="#052e16" />
+<meta name="color-scheme" content="light" />
 <meta name="robots" content="index, follow" />
+<meta name="author" content={SITE.name} />
 <meta name="application-name" content={SITE.shortName} />
 <meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="referrer" content="origin-when-cross-origin" />
+<meta name="msapplication-TileColor" content="#052e16" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any" />
-<link rel="icon" href="/favicon.ico" sizes="16x16 32x32" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
 <link rel="apple-touch-icon" href="/logo-yayasan-sm.webp" sizes="256x256" />
+<link rel="manifest" href="/site.webmanifest" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://cdn.sanity.io" crossorigin />
 <link rel="dns-prefetch" href="https://cdn.sanity.io" />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" fetchpriority="high" />
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" as="style" />
 <meta name="generator" content={Astro.generator} />
 
 <link rel="canonical" href={canonicalURL} />
@@ -71,13 +88,14 @@ const ogImageURL = new URL(image, Astro.url);
 <meta property="og:image:width" content="512" />
 <meta property="og:image:height" content="512" />
 <meta property="og:image:alt" content={SITE.shortName} />
+<meta property="og:image:type" content="image/webp" />
 
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={`${title} — ${SITE.shortName}`} />
-<meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={ogImageURL} />
-<meta property="twitter:image:alt" content={SITE.shortName} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={Astro.url} />
+<meta name="twitter:title" content={`${title} — ${SITE.shortName}`} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageURL} />
+<meta name="twitter:image:alt" content={SITE.shortName} />
 
 <script type="application/ld+json" set:html={JSON.stringify({
 	"@context": "https://schema.org",
@@ -136,5 +154,30 @@ const ogImageURL = new URL(image, Astro.url);
 		"@type": "BreadcrumbList",
 		"@id": `${canonicalURL}#breadcrumb`,
 		"itemListElement": breadcrumbItems,
+	})} />
+)}
+
+{pageType === 'article' && publishedTime && (
+	<script type="application/ld+json" set:html={JSON.stringify({
+		"@context": "https://schema.org",
+		"@type": "Article",
+		"@id": `${canonicalURL}#article`,
+		"headline": title,
+		"description": description,
+		"image": ogImageURL,
+		"datePublished": publishedTime,
+		"dateModified": modifiedTime || publishedTime,
+		"author": {
+			"@type": "Organization",
+			"@id": `${SITE.url}/#organization`,
+		},
+		"publisher": {
+			"@type": "Organization",
+			"@id": `${SITE.url}/#organization`,
+		},
+		"mainEntityOfPage": {
+			"@type": "WebPage",
+			"@id": canonicalURL,
+		},
 	})} />
 )}

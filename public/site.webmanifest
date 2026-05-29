@@ -1,0 +1,43 @@
+{
+	"name": "Yayasan Amal Shalih Insan Bantul",
+	"short_name": "Yayasan ASIB",
+	"description": "Yayasan Amal Shalih Insan Bantul (ASIB) — Lembaga profesional berkarakter, maslahat bagi umat.",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#fafaf9",
+	"theme_color": "#052e16",
+	"orientation": "portrait-primary",
+	"categories": ["education", "religion", "charity"],
+	"lang": "id-ID",
+	"icons": [
+		{
+			"src": "/favicon.ico",
+			"sizes": "48x48 32x32 16x16",
+			"type": "image/x-icon"
+		},
+		{
+			"src": "/favicon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/favicon-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any"
+		},
+		{
+			"src": "/logo-yayasan-sm.webp",
+			"sizes": "256x256",
+			"type": "image/webp",
+			"purpose": "maskable"
+		},
+		{
+			"src": "/logo-yayasan.webp",
+			"sizes": "512x512",
+			"type": "image/webp",
+			"purpose": "any"
+		}
+	]
+}

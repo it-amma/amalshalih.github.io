@@ -1,4 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <rect width="128" height="128" rx="24" fill="#166534"/>
-  <text x="64" y="88" font-family="system-ui,-apple-system,sans-serif" font-size="72" font-weight="800" text-anchor="middle" fill="#fcd34d">A</text>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#15803d"/>
+      <stop offset="100%" stop-color="#14532d"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fcd34d" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#fcd34d" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+  <rect width="128" height="128" rx="28" fill="url(#shine)"/>
+  <!-- 8-pointed star accent -->
+  <g transform="translate(96, 28)" opacity="0.4">
+    <rect x="-1" y="-5" width="2" height="10" rx="1" fill="#fcd34d" transform="rotate(45)"/>
+    <rect x="-1" y="-5" width="2" height="10" rx="1" fill="#fcd34d" transform="rotate(-45)"/>
+  </g>
+  <!-- Letter A -->
+  <text x="64" y="90" font-family="'Plus Jakarta Sans','Inter',system-ui,sans-serif" font-size="76" font-weight="800" text-anchor="middle" fill="#fcd34d" letter-spacing="-2">A</text>
 </svg>
