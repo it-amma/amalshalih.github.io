@@ -3,7 +3,7 @@
 [![Astro](https://img.shields.io/badge/Astro-6.x-BC52EE?logo=astro)](https://astro.build)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.x-06B6D4?logo=tailwindcss)](https://tailwindcss.com)
 [![Bun](https://img.shields.io/badge/Bun-1.x-000000?logo=bun)](https://bun.sh)
-[![Cloudflare Pages](https://img.shields.io/badge/Cloudflare%20Pages-F38020?logo=cloudflare)](https://pages.cloudflare.com)
+[![Cloudflare Workers](https://img.shields.io/badge/Cloudflare%20Workers-F38020?logo=cloudflare)](https://workers.cloudflare.com)
 [![WCAG AA](https://img.shields.io/badge/WCAG-AA-1a7f37)](https://www.w3.org/WAI/standards-guidelines/wcag/)
 
 > **Repository internal — PT Koneksi Jaringan Indonesia**
@@ -54,7 +54,7 @@ Pendidikan Islam, Sosial Kemanusiaan, dan Keagamaan. Website ini dibangun untuk:
 | **Icons** | Inline SVG via komponen `<Icon />` | Zero dependency icon system |
 | **Content** | Astro Content Collections | Markdown/MDX untuk konten kegiatan |
 | **Sitemap** | `@astrojs/sitemap` | Auto-generate sitemap.xml |
-| **Deployment** | [Cloudflare Pages](https://pages.cloudflare.com) | Edge deployment, CDN global |
+| **Deployment** | [Cloudflare Workers](https://workers.cloudflare.com) | SSR via Workers + Assets |
 | **Monitoring** | [Sentry](https://sentry.io) + [Spotlight](https://spotlightjs.com) | Error tracking & debugging |
 | **Kualitas Gambar** | WebP | Semua aset gambar dikompresi ke format WebP |
 
@@ -233,30 +233,37 @@ bun run preview
 
 ## Build & Deploy
 
-### Cloudflare Pages
+### Cloudflare Workers (SSR)
 
-Project ini dideploy ke **Cloudflare Pages** dengan konfigurasi:
+Project ini menggunakan **Astro SSR** dengan adapter `@astrojs/cloudflare` dan dideploy ke **Cloudflare Workers**.
 
-| Parameter | Value |
-|-----------|-------|
-| **Framework preset** | Astro |
-| **Build command** | `bun run build` |
-| **Build output** | `dist/` |
-| **Node version** | 22.x |
+**Kenapa Workers, bukan Pages?**
+- `@astrojs/cloudflare` v13+ menghasilkan output Workers (`entry.mjs` dengan `export default { fetch }`)
+- Workers mendukung `nodejs_compat` untuk library seperti `@sentry/cloudflare`
+- Static assets ditangani via **Workers Assets** binding
 
-### Cara Deploy
+### Deployment Pipeline
 
-**Automatic (via Git):**
-1. Push ke branch `main` di GitHub
-2. Cloudflare Pages auto-detect perubahan dan trigger build
+**Automatic (via GitHub Actions):**
+Push ke branch `main` → GitHub Actions workflow (`.github/workflows/deploy.yml`):
+1. Install dependencies (`bun install`)
+2. Build (`bun run build`)
+3. Generate Workers config (`scripts/generate-wrangler-config.mjs`)
+4. Deploy ke Workers (`wrangler deploy --config dist/wrangler.json`)
 
 **Manual (via Wrangler CLI):**
 ```bash
-bunx wrangler pages deploy dist/ --project-name=amalshalih
+bun run build
+bun run scripts/generate-wrangler-config.mjs
+npx wrangler deploy --config dist/wrangler.json
 ```
 
-> **Catatan:** Untuk deployment production, pastikan environment variables
-> sudah dikonfigurasi di dashboard Cloudflare Pages.
+**Environment variables (untuk build & deploy):**
+| Variable | Required | Source |
+|----------|----------|--------|
+| `CLOUDFLARE_API_TOKEN` | ✅ Deploy | [Cloudflare dashboard → API Tokens](https://dash.cloudflare.com/profile/api-tokens) |
+| `CLOUDFLARE_ACCOUNT_ID` | ✅ Deploy | Cloudflare dashboard → Workers overview |
+| `SENTRY_AUTH_TOKEN` | ✅ Build (source maps) | [sentry.io → Auth Tokens](https://sentry.io/settings/account/api/auth-tokens/) |
 
 ---
 

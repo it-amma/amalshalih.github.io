@@ -1,0 +1,8 @@
+// Build-time configuration for @astrojs/cloudflare + @cloudflare/vite-plugin
+//
+// File ini di-refer oleh adapter via configPath di astro.config.mjs.
+// Tidak digunakan untuk deployment — lihat wrangler.jsonc untuk itu.
+{
+	"compatibility_date": "2026-05-28",
+	"compatibility_flags": ["nodejs_compat"]
+}
