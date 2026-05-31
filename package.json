@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "npx astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy:pages": "wrangler pages deploy dist",
+    "deploy:workers": "wrangler deploy --config dist/wrangler.json"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
