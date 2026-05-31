@@ -1,6 +1,5 @@
-// This file is used during local development and Cloudflare Workers production.
-// For Workers production, the @sentry/astro integration wraps the SSR handler
-// with withSentry() from @sentry/cloudflare.
+// This file configures Sentry for the server-side Astro application.
+// The @sentry/astro integration handles server-side error tracking automatically.
 
 import * as Sentry from '@sentry/astro';
 

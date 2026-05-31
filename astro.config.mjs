@@ -5,7 +5,6 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import sanity from '@sanity/astro';
 import sentry from '@sentry/astro';
-import spotlightjs from '@spotlightjs/astro';
 import cloudflare from '@astrojs/cloudflare';
 import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
@@ -23,26 +22,26 @@ export default defineConfig({
 		configPath: 'wrangler.build.jsonc',
 	}),
 	integrations: [
-		mdx(),
-		sitemap(),
-		spotlightjs(),
-		sentry({
+		// Sentry disabled in dev to avoid CJS issues with Cloudflare Workerd runtime
+		// Sentry will still initialize from sentry.client.config.js and sentry.server.config.js
+		process.env.NODE_ENV !== 'development' && sentry({
 			authToken: process.env.SENTRY_AUTH_TOKEN,
 			org: 'yayasan-amal-shalih-insan-bant',
 			project: 'amalshalih',
 			telemetry: false,
-			enabled: {
-				server: false,
-				client: true,
-			},
 		}),
+		mdx(),
+		sitemap(),
 		sanity({
 			projectId: '9yj0dq9v',
 			dataset: 'production',
 			useCdn: false,
 		}),
-	],
+	].filter(Boolean),
 	vite: {
+		optimizeDeps: {
+			exclude: ['@sentry/astro', '@sanity/astro', 'jose', 'audit'],
+		},
 		build: {
 			sourcemap: true,
 		},
