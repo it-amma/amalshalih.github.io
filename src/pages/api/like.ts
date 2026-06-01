@@ -1,10 +1,9 @@
 import type { APIRoute } from 'astro';
-import { getFirebaseAdminToken } from '../../lib/firebase/admin';
+import { env } from 'cloudflare:workers';
 
-const isDev = process.env.NODE_ENV === 'development' || import.meta.env.DEV;
-
-// In-memory store for dev mode: { slug: { photoId: count } }
-const devPhotoLikes = new Map<string, Map<string, number>>();
+function getPhotoLikeKey(slug: string, photoId: string): string {
+	return `photo:${slug}:${photoId}`;
+}
 
 export const GET: APIRoute = async ({ request }) => {
 	const url = new URL(request.url);
@@ -14,27 +13,20 @@ export const GET: APIRoute = async ({ request }) => {
 		return new Response(JSON.stringify({ error: 'Missing slug' }), { status: 400 });
 	}
 
-	if (isDev) {
-		const galleryLikes = devPhotoLikes.get(slug);
-		const result: Record<string, number> = {};
-		if (galleryLikes) {
-			galleryLikes.forEach((count, photoId) => {
-				result[photoId] = count;
-			});
-		}
-		return new Response(JSON.stringify(result), { status: 200, headers: { 'Content-Type': 'application/json' } });
-	}
-
 	try {
-		const token = await getFirebaseAdminToken();
-		const response = await fetch(`${process.env.FIREBASE_RTDB_URL}/photoLikes/${slug}.json?access_token=${token}`);
+		const likes = env.LIKES;
 
-		if (!response.ok) {
-			throw new Error(`Firebase error: ${response.statusText}`);
+		const prefix = `photo:${slug}:`;
+		const keys = await likes.list({ prefix });
+		
+		const result: Record<string, number> = {};
+		for (const key of keys.keys) {
+			const photoId = key.name.replace(prefix, '');
+			const count = await likes.get(key.name);
+			result[photoId] = parseInt(count || '0');
 		}
 
-		const data = await response.json();
-		return new Response(JSON.stringify(data || {}), {
+		return new Response(JSON.stringify(result), {
 			status: 200,
 			headers: { 'Content-Type': 'application/json' },
 		});
@@ -53,34 +45,12 @@ export const POST: APIRoute = async ({ request }) => {
 			return new Response(JSON.stringify({ error: 'Missing slug or photoId' }), { status: 400 });
 		}
 
-		if (isDev) {
-			let galleryLikes = devPhotoLikes.get(slug);
-			if (!galleryLikes) {
-				galleryLikes = new Map();
-				devPhotoLikes.set(slug, galleryLikes);
-			}
-			const current = galleryLikes.get(photoId) || 0;
-			const updated = current + 1;
-			galleryLikes.set(photoId, updated);
-			return new Response(JSON.stringify({ likes: updated }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-		}
-
-		const token = await getFirebaseAdminToken();
-		const refUrl = `${process.env.FIREBASE_RTDB_URL}/photoLikes/${slug}/${photoId}.json?access_token=${token}`;
-
-		const getResponse = await fetch(refUrl);
-		const currentLikes = (await getResponse.json()) || 0;
-		const newLikes = currentLikes + 1;
-
-		const updateResponse = await fetch(refUrl, {
-			method: 'PUT',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(newLikes),
-		});
-
-		if (!updateResponse.ok) {
-			throw new Error(`Failed to update likes: ${updateResponse.statusText}`);
-		}
+		const likes = env.LIKES;
+		const key = getPhotoLikeKey(slug, photoId);
+		const current = await likes.get(key);
+		const newLikes = parseInt(current || '0') + 1;
+		
+		await likes.put(key, newLikes.toString());
 
 		return new Response(JSON.stringify({ likes: newLikes }), {
 			status: 200,
