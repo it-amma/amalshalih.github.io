@@ -1,3 +1,4 @@
+import { env } from 'cloudflare:workers';
 import {
   listImagesInFolder,
   listSubfolders,
@@ -7,6 +8,10 @@ import {
   type DriveImage,
   type DriveFolder,
 } from '../lib/google-drive';
+
+function getGoogleDriveCredentials(): string | undefined {
+  return (env as any).GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY;
+}
 
 export interface GalleryImage {
   id: string;
@@ -84,7 +89,7 @@ async function transformDriveFolder(folder: DriveFolder): Promise<GalleryEntry |
 // Fetch all galleries from Google Drive (REAL-TIME)
 export async function fetchAllGalleries(): Promise<GalleryEntry[]> {
   // Return empty array if Google Drive credentials not configured
-  if (!process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY) {
+  if (!getGoogleDriveCredentials()) {
     console.log('⏭️ GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY not set — returning empty galleries');
     return [];
   }
@@ -119,7 +124,7 @@ export async function fetchAllGalleries(): Promise<GalleryEntry[]> {
 
 // Fetch single gallery by slug (REAL-TIME)
 export async function fetchGalleryBySlug(slug: string): Promise<GalleryEntry | null> {
-  if (!process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY) {
+  if (!getGoogleDriveCredentials()) {
     return null;
   }
 

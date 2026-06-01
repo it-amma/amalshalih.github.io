@@ -1,6 +1,4 @@
-import { createPrivateKey, createSign } from 'node:crypto';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { env } from 'cloudflare:workers';
 
 interface ServiceAccount {
 	type: string;
@@ -15,20 +13,16 @@ interface ServiceAccount {
 	client_x509_cert_url: string;
 }
 
-let cachedServiceAccount: ServiceAccount | null = null;
-
 function getServiceAccount(): ServiceAccount {
-	if (cachedServiceAccount) return cachedServiceAccount;
-	
-	const path = resolve(process.cwd(), 'amalshalih-fd1bd-firebase-adminsdk-fbsvc-624be20267.json');
-	const content = readFileSync(path, 'utf-8');
-	cachedServiceAccount = JSON.parse(content);
-	return cachedServiceAccount!;
+	const credentials = (env as any).FIREBASE_SERVICE_ACCOUNT_KEY;
+	if (!credentials) {
+		throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY env var is not set');
+	}
+	return JSON.parse(credentials);
 }
 
 function base64UrlEncode(str: string): string {
-	return Buffer.from(str)
-		.toString('base64')
+	return btoa(str)
 		.replace(/\+/g, '-')
 		.replace(/\//g, '_')
 		.replace(/=/g, '');
@@ -36,7 +30,7 @@ function base64UrlEncode(str: string): string {
 
 export async function getFirebaseAdminToken(): Promise<string> {
 	const serviceAccount = getServiceAccount();
-	
+
 	if (!serviceAccount.private_key || !serviceAccount.client_email) {
 		throw new Error('Missing Firebase Service Account credentials');
 	}
@@ -54,22 +48,40 @@ export async function getFirebaseAdminToken(): Promise<string> {
 		aud: 'https://oauth2.googleapis.com/token',
 		iat: now,
 		exp: exp,
+		scope: 'https://www.googleapis.com/auth/cloud-platform',
 	};
 
 	const encodedHeader = base64UrlEncode(JSON.stringify(header));
 	const encodedPayload = base64UrlEncode(JSON.stringify(payload));
 	const signingInput = `${encodedHeader}.${encodedPayload}`;
 
-	const key = createPrivateKey(privateKey);
-	const signer = createSign('RSA-SHA256');
-	signer.update(signingInput);
-	const signature = signer.sign(key, 'base64');
-	const encodedSignature = signature
+	const pemContents = privateKey
+		.replace('-----BEGIN PRIVATE KEY-----', '')
+		.replace('-----END PRIVATE KEY-----', '')
+		.replace(/\n/g, '');
+
+	const binaryDer = Uint8Array.from(atob(pemContents), (c) => c.charCodeAt(0));
+
+	const key = await crypto.subtle.importKey(
+		'pkcs8',
+		binaryDer,
+		{ name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+		false,
+		['sign'],
+	);
+
+	const signatureBuffer = await crypto.subtle.sign(
+		{ name: 'RSASSA-PKCS1-v1_5' },
+		key,
+		new TextEncoder().encode(signingInput),
+	);
+
+	const signature = btoa(String.fromCharCode(...new Uint8Array(signatureBuffer)))
 		.replace(/\+/g, '-')
 		.replace(/\//g, '_')
-		.replace(/=/g, '');
+		.replace(/=+$/, '');
 
-	const jwt = `${signingInput}.${encodedSignature}`;
+	const jwt = `${signingInput}.${signature}`;
 
 	const response = await fetch('https://oauth2.googleapis.com/token', {
 		method: 'POST',

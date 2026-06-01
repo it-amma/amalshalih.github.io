@@ -1,6 +1,11 @@
 import type { APIRoute } from 'astro';
+import { env } from 'cloudflare:workers';
 
 export const prerender = false;
+
+function getCredentials(): string | undefined {
+  return (env as any).GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY;
+}
 
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const GOOGLE_DRIVE_API_URL = 'https://www.googleapis.com/drive/v3/files';
@@ -83,7 +88,7 @@ export const GET: APIRoute = async ({ params, request }) => {
 		return new Response('Missing file ID', { status: 400 });
 	}
 
-	const credentials = process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY;
+	const credentials = getCredentials();
 	if (!credentials) {
 		return new Response(null, { status: 404 });
 	}
