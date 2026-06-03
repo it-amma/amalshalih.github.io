@@ -36,6 +36,7 @@ export default defineConfig({
 		build: {
 			sourcemap: true,
 		},
+		// @ts-expect-error — Vite version mismatch between Astro bundled & project dep
 		plugins: [tailwindcss()],
 	},
 });

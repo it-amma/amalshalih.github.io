@@ -16,7 +16,40 @@ export const SITE = {
 	},
 };
 
-export const CONTACT = {
+interface ContactEmails {
+	info: string;
+	donasi: string;
+	admin: string;
+	humas: string;
+	gmail: string;
+}
+
+interface ContactAddress {
+	street: string;
+	village: string;
+	district: string;
+	city: string;
+	province: string;
+	postalCode: string;
+	full: string;
+	mapsUrl: string;
+}
+
+interface Contact {
+	address: ContactAddress;
+	phone: string;
+	phoneUrl: string;
+	whatsapp: string;
+	email: string;
+	emails: ContactEmails;
+	hours: {
+		weekdays: string;
+		saturday: string;
+		sunday: string;
+	};
+}
+
+export const CONTACT: Contact = {
 	address: {
 		street: 'Juron',
 		village: 'Pendowoharjo',

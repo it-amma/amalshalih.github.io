@@ -14,10 +14,19 @@
     "wrangler:dev": "cd dist/server && wrangler dev",
     "wrangler:deploy": "wrangler deploy",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:changed": "vitest run --changed",
+    "typecheck": "astro check",
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,astro}": ["vitest run --changed --coverage=false"],
+    "*.{cjs,mjs,js}": ["vitest run --changed --coverage=false"]
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.16.10",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7",
     "vite": "^6.0.0",
     "vitest": "2.1.8"
   },

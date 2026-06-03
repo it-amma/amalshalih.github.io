@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { env } from 'cloudflare:test';
 
 const BASE_URL = 'http://localhost:8787';
 

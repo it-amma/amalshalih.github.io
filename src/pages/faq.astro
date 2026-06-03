@@ -6,7 +6,16 @@ import Icon from '../components/ui/Icon.astro';
 import Button from '../components/ui/Button.astro';
 import { CONTACT, SITE } from '../data/site';
 
-const faqData = [
+const ICON_NAMES = ['heart', 'arrow-right', 'arrow-left', 'book', 'home', 'location', 'phone', 'email', 'globe', 'whatsapp', 'external-link', 'star', 'check-circle', 'credit-card', 'qrcode', 'facebook', 'instagram', 'tiktok', 'youtube', 'copy', 'check', 'camera', 'calendar', 'image', 'menu', 'clock', 'chevron-right', 'close'] as const;
+type FaqIcon = (typeof ICON_NAMES)[number];
+
+interface FaqGroup {
+  category: string;
+  icon: FaqIcon;
+  items: { q: string; a: string }[];
+}
+
+const faqData: FaqGroup[] = [
   {
     category: 'Tentang Yayasan',
     icon: 'heart',

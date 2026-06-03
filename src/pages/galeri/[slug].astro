@@ -31,22 +31,16 @@ const { slug } = Astro.params;
 
 // Fetch gallery in real-time
 let gallery: GalleryWithImages | null = null;
-let error: string | null = null;
 
 if (slug) {
   try {
     const fetched = await fetchGalleryBySlug(slug);
     if (fetched) {
       gallery = fetched as GalleryWithImages;
-    } else {
-      error = 'Gallery not found';
     }
   } catch (e) {
-    error = 'Failed to load gallery';
     console.error('Error fetching gallery:', e);
   }
-} else {
-  error = 'Invalid gallery URL';
 }
 
 // Return 404 if gallery not found
