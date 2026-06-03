@@ -1,19 +1,35 @@
 # Email Yayasan Amal Shalih Insan Bantul
 
-> Status: ✅ **LIVE** — 3 Juni 2026
-> Teknologi: Cloudflare Email Routing → Gmail (timitasib@gmail.com)
+> Status: 🔄 **RESTRUCTURING** — 4 Juni 2026
+> Teknologi: Cloudflare Email Routing → 3 Gmail Inboxes (IT / Admin / Media)
+> 
+> **Dokumen ini bagian dari `workspace-management.md` — baca dulu untuk konteks penuh.**
 
-## Daftar Email Aktif
+## Daftar Email & Target Routing
 
-| Email | Fungsi | Status |
-|---|---|---|
-| **info@amalshalih.or.id** | Kontak umum, pertanyaan publik | ✅ Aktif |
-| **donasi@amalshalih.or.id** | Donasi, zakat, infak, sedekah | ✅ Aktif |
-| **admin@amalshalih.or.id** | Administrasi, pendaftaran program | ✅ Aktif |
-| **humas@amalshalih.or.id** | Media, mitra, kerjasama | ✅ Aktif |
-| **Catch-all** (*@amalshalih.or.id) | Semua alamat lain otomatis masuk | ✅ Aktif |
+Ada dua kondisi yang kita kelola: **Kondisi Transisi (Saat Ini)** demi kelancaran operasional pengurus yang ada, dan **Arsitektur Ideal (Target Akhir)** yang akan diwujudkan setelah sosialisasi oleh Head IT.
 
-Semua email masuk ke **satu inbox**: `timitasib@gmail.com`
+### 1. Target Akhir (Arsitektur Ideal)
+> Ini adalah goal akhir manajemen workspace yayasan. Transisi ke sini membutuhkan rapat sosialisasi karena akun Gmail yang ada terlanjur dibuat mandiri oleh masing-masing personil.
+
+| Email @amalshalih.or.id | Diteruskan Ke | Fokus | Status |
+|---|---|---|---|
+| **info@** | `it.amalshalih@gmail.com` | [IT] | 🟡 Perlu update routing (goal akhir) |
+| **donasi@** | `admin.amalshalih@gmail.com` | [ADM] | 🟡 Perlu update routing (goal akhir) |
+| **admin@** | `admin.amalshalih@gmail.com` | [ADM] | 🟡 Perlu update routing (goal akhir) |
+| **humas@** | `media.amalshalih@gmail.com` | [MED] | 🟡 Perlu update routing (goal akhir) |
+| **Catch-all** | `it.amalshalih@gmail.com` | [IT] | 🟡 Perlu update routing (goal akhir) |
+
+### 2. Kondisi Transisi (Sementara - Aktif)
+> Status penyesuaian saat ini menggunakan email existing pengurus agar roda organisasi tetap berjalan selama masa transisi.
+
+| Email @amalshalih.or.id | Diteruskan Ke | Fokus | Status |
+|---|---|---|---|
+| **info@** | `timitasib@gmail.com` | [IT] | ✅ Aktif |
+| **donasi@** | `amalshalih.insanbantul@gmail.com` | [ADM] | 🟡 Menunggu Verifikasi di Cloudflare |
+| **admin@** | `amalshalih.insanbantul@gmail.com` | [ADM] | 🟡 Menunggu Verifikasi di Cloudflare |
+| **humas@** | `[Email Media Sementara]` | [MED] | 🟡 Menunggu Pembuatan/Pemberian Email |
+| **Catch-all** | `timitasib@gmail.com` | [IT] | ✅ Aktif |
 
 ---
 
