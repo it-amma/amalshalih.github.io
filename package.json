@@ -18,6 +18,11 @@
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.16.10",
+    "vite": "^6.0.0",
     "vitest": "2.1.8"
+  },
+  "dependencies": {
+    "astro": "6.4.2",
+    "zod": "^4.0.0"
   }
 }
