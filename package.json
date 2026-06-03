@@ -22,7 +22,19 @@
     "vitest": "2.1.8"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "13.6.0",
+    "@astrojs/mdx": "6.0.1",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "3.7.3",
+    "@portabletext/to-html": "^5.0.2",
+    "@sanity/astro": "3.4.0",
+    "@sentry/astro": "10.55.0",
+    "@sentry/cloudflare": "^10.56.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "4.3.0",
     "astro": "6.4.2",
+    "sanity": "^5.30.0",
+    "tailwindcss": "4.3.0",
     "zod": "^4.0.0"
   }
 }
