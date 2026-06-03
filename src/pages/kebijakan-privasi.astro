@@ -1,0 +1,167 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/ui/Container.astro';
+import PageHeader from '../components/sections/PageHeader.astro';
+import Icon from '../components/ui/Icon.astro';
+import { CONTACT } from '../data/site';
+---
+
+<BaseLayout
+	title="Kebijakan Privasi"
+	description="Kebijakan privasi Yayasan Amal Shalih Insan Bantul — bagaimana kami mengumpulkan, menggunakan, dan melindungi data pribadi Anda."
+	currentPage="/kebijakan-privasi"
+>
+	<PageHeader
+		label="Kebijakan Privasi"
+		title="Perlindungan Data Pribadi"
+		description="Komitmen Yayasan ASIB dalam melindungi privasi dan data pribadi Anda."
+		gradient="b"
+	/>
+
+	<Container class="py-12 sm:py-20">
+		<div class="mx-auto max-w-3xl space-y-8 text-warm-700">
+			<p class="text-lg leading-relaxed">
+				Kami di <strong>Yayasan Amal Shalih Insan Bantul</strong> (&ldquo;kami&rdquo;, &ldquo;ASIB&rdquo;, atau &ldquo;Yayasan&rdquo;) menghargai privasi Anda. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, mengungkapkan, dan melindungi informasi pribadi Anda saat mengunjungi situs web kami di <strong>amalshalih.or.id</strong>.
+			</p>
+
+			<section class="space-y-4">
+				<h2 class="flex items-center gap-3 text-2xl font-bold text-warm-900">
+					<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50 text-primary-700">
+						<Icon name="check-circle" size={4} />
+					</span>
+					Data yang Kami Kumpulkan
+				</h2>
+				<p>Kami dapat mengumpulkan informasi berikut ketika Anda berinteraksi dengan situs web kami:</p>
+				<ul class="list-disc space-y-2 pl-6">
+					<li><strong>Informasi Identitas Pribadi:</strong> Nama lengkap, alamat email, nomor telepon, dan alamat yang Anda berikan secara sukarela melalui formulir kontak, donasi, atau pendaftaran program.</li>
+					<li><strong>Informasi Donasi:</strong> Detail transaksi seperti jumlah donasi, metode pembayaran, dan catatan yang Anda sertakan.</li>
+					<li><strong>Data Teknis:</strong> Alamat IP, jenis browser, sistem operasi, halaman yang dikunjungi, waktu akses, dan data analitik lainnya yang dikumpulkan secara otomatis.</li>
+					<li><strong>Cookie:</strong> Kami menggunakan cookie dan teknologi pelacakan serupa untuk meningkatkan pengalaman browsing Anda dan menganalisis lalu lintas situs web.</li>
+				</ul>
+			</section>
+
+			<section class="space-y-4">
+				<h2 class="flex items-center gap-3 text-2xl font-bold text-warm-900">
+					<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50 text-primary-700">
+						<Icon name="check-circle" size={4} />
+					</span>
+					Penggunaan Data
+				</h2>
+				<p>Data yang kami kumpulkan digunakan untuk:</p>
+				<ul class="list-disc space-y-2 pl-6">
+					<li>Memproses dan mengonfirmasi donasi Anda</li>
+					<li>Menanggapi pertanyaan dan permintaan melalui formulir kontak</li>
+					<li>Mengirim informasi tentang program, kegiatan, dan perkembangan yayasan (hanya jika Anda memberikan izin)</li>
+					<li>Meningkatkan layanan dan pengalaman pengguna di situs web kami</li>
+					<li>Memenuhi kewajiban hukum dan pelaporan transparansi</li>
+				</ul>
+			</section>
+
+			<section class="space-y-4">
+				<h2 class="flex items-center gap-3 text-2xl font-bold text-warm-900">
+					<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50 text-primary-700">
+						<Icon name="check-circle" size={4} />
+					</span>
+					Perlindungan Data
+				</h2>
+				<p>
+					Kami menerapkan langkah-langkah keamanan teknis dan organisasional yang memadai untuk melindungi data pribadi Anda dari akses tidak sah, perubahan, pengungkapan, atau perusakan. Data donasi dan informasi sensitif lainnya dikirimkan melalui koneksi terenkripsi (HTTPS/SSL).
+				</p>
+			</section>
+
+			<section class="space-y-4">
+				<h2 class="flex items-center gap-3 text-2xl font-bold text-warm-900">
+					<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50 text-primary-700">
+						<Icon name="check-circle" size={4} />
+					</span>
+					Berbagi Data dengan Pihak Ketiga
+				</h2>
+				<p>
+					Kami tidak menjual, memperdagangkan, atau menyewakan data pribadi Anda kepada pihak ketiga. Kami dapat membagikan data Anda dengan:
+				</p>
+				<ul class="list-disc space-y-2 pl-6">
+					<li>Penyedia layanan tepercaya yang membantu operasional situs web (hosting, pemrosesan donasi, email) — dengan perjanjian kerahasiaan yang ketat</li>
+					<li>Pihak berwenang jika diwajibkan oleh hukum atau peraturan yang berlaku</li>
+				</ul>
+			</section>
+
+			<section class="space-y-4">
+				<h2 class="flex items-center gap-3 text-2xl font-bold text-warm-900">
+					<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50 text-primary-700">
+						<Icon name="check-circle" size={4} />
+					</span>
+					Hak Anda
+				</h2>
+				<p>Anda berhak untuk:</p>
+				<ul class="list-disc space-y-2 pl-6">
+					<li>Mengakses data pribadi yang kami simpan</li>
+					<li>Meminta koreksi data yang tidak akurat</li>
+					<li>Meminta penghapusan data pribadi Anda</li>
+					<li>Menolak atau membatasi pemrosesan data Anda</li>
+					<li>Menarik izin yang telah diberikan sebelumnya</li>
+					<li>Mengajukan keluhan kepada otoritas perlindungan data terkait</li>
+				</ul>
+				<p>Untuk menggunakan hak-hak Anda, hubungi kami melalui kontak yang tersedia di bawah.</p>
+			</section>
+
+			<section class="space-y-4">
+				<h2 class="flex items-center gap-3 text-2xl font-bold text-warm-900">
+					<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50 text-primary-700">
+						<Icon name="check-circle" size={4} />
+					</span>
+					Perubahan Kebijakan
+				</h2>
+				<p>
+					Kebijakan privasi ini dapat diperbarui sewaktu-waktu. Perubahan akan diumumkan melalui halaman ini dengan tanggal revisi terbaru yang tercantum. Kami mendorong Anda untuk meninjau halaman ini secara berkala.
+				</p>
+			</section>
+
+			<section class="space-y-4">
+				<h2 class="flex items-center gap-3 text-2xl font-bold text-warm-900">
+					<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50 text-primary-700">
+						<Icon name="check-circle" size={4} />
+					</span>
+					Kontak
+				</h2>
+				<p>
+					Jika Anda memiliki pertanyaan, kekhawatiran, atau permintaan terkait kebijakan privasi ini, silakan hubungi kami:
+				</p>
+				<div class="rounded-xl bg-warm-50 p-5 text-sm text-warm-700 space-y-1">
+					<p class="font-semibold text-warm-900">{CONTACT.address.full}</p>
+					<p>Email: <a href={`mailto:${CONTACT.email}`} class="text-primary-700 hover:underline">{CONTACT.email}</a></p>
+					<p>Telepon: <a href={CONTACT.phoneUrl} class="text-primary-700 hover:underline">{CONTACT.phone}</a></p>
+				</div>
+			</section>
+
+			<div class="border-t border-warm-200 pt-4 text-xs text-warm-500">
+				<p>Terakhir diperbarui: 4 Juni 2026</p>
+			</div>
+		</div>
+	</Container>
+
+	<Fragment slot="after-main">
+		<section class="relative overflow-hidden bg-gradient-to-b from-primary-800 via-primary-900 to-primary-950 text-white">
+			<div class="absolute top-1/2 right-0 h-40 w-40 translate-x-1/3 rounded-full bg-primary-600/15 blur-3xl" aria-hidden="true"></div>
+			<div class="absolute top-4 left-[12%] w-2 h-2 rotate-45 rounded-[1px] bg-gold-400/20" aria-hidden="true"></div>
+			<div class="absolute top-8 right-[18%] w-1.5 h-1.5 rotate-45 rounded-[1px] bg-white/15" aria-hidden="true"></div>
+			<div class="absolute bottom-12 left-[28%] w-2 h-2 rotate-45 rounded-[1px] bg-gold-300/15" aria-hidden="true"></div>
+
+			<Container as="div" class="relative z-10 py-5 sm:py-6 lg:py-8 text-center">
+				<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight font-display">
+					Ada Pertanyaan?
+				</h2>
+				<p class="mx-auto mt-2 max-w-xl text-sm sm:text-base text-primary-200/80">
+					Hubungi kami jika ada yang kurang jelas atau jika Anda ingin mengetahui lebih lanjut.
+				</p>
+				<div class="mt-4 sm:mt-5">
+					<a
+						href="/kontak"
+						class="inline-flex items-center gap-2 rounded-lg bg-gold-500 px-5 py-3 text-sm font-semibold text-primary-950 shadow-lg shadow-primary-950/30 transition-all duration-300 hover:bg-gold-400 hover:shadow-xl hover:shadow-gold-500/20 hover:-translate-y-0.5"
+					>
+						Hubungi Kami
+					</a>
+				</div>
+			</Container>
+		</section>
+	</Fragment>
+</BaseLayout>
