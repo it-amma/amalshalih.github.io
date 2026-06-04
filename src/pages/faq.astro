@@ -1,175 +1,308 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Container from '../components/ui/Container.astro';
-import PageHeader from '../components/sections/PageHeader.astro';
-import Icon from '../components/ui/Icon.astro';
-import Button from '../components/ui/Button.astro';
-import { CONTACT, SITE } from '../data/site';
+import PageHeader from '../components/sections/PageHeader.astro'
+import Button from '../components/ui/Button.astro'
+import Container from '../components/ui/Container.astro'
+import Icon from '../components/ui/Icon.astro'
+import { CONTACT, SITE } from '../data/site'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { getFaqList } from '../lib/sanity/client'
 
-const ICON_NAMES = ['heart', 'arrow-right', 'arrow-left', 'book', 'home', 'location', 'phone', 'email', 'globe', 'whatsapp', 'external-link', 'star', 'check-circle', 'credit-card', 'qrcode', 'facebook', 'instagram', 'tiktok', 'youtube', 'copy', 'check', 'camera', 'calendar', 'image', 'menu', 'clock', 'chevron-right', 'close'] as const;
-type FaqIcon = (typeof ICON_NAMES)[number];
+const ICON_NAMES = [
+	'heart',
+	'arrow-right',
+	'arrow-left',
+	'book',
+	'home',
+	'location',
+	'phone',
+	'email',
+	'globe',
+	'whatsapp',
+	'external-link',
+	'star',
+	'check-circle',
+	'credit-card',
+	'qrcode',
+	'facebook',
+	'instagram',
+	'tiktok',
+	'youtube',
+	'copy',
+	'check',
+	'camera',
+	'calendar',
+	'image',
+	'menu',
+	'clock',
+	'chevron-right',
+	'close',
+] as const
+
+type FaqIcon = (typeof ICON_NAMES)[number]
 
 interface FaqGroup {
-  category: string;
-  icon: FaqIcon;
-  items: { q: string; a: string }[];
+	category: string
+	icon: FaqIcon
+	items: { q: string; a: string }[]
 }
 
-const faqData: FaqGroup[] = [
-  {
-    category: 'Tentang Yayasan',
-    icon: 'heart',
-    items: [
-      { q: 'Apa itu Yayasan Amal Shalih Insan Bantul (ASIB)?', a: SITE.name + ' (ASIB) adalah organisasi nirlaba yang berdiri sejak ' + SITE.foundedDate + ' berdasarkan SK Kemenkumham RI No. ' + SITE.legal.sk + '. Kami bergerak di bidang Pendidikan Islam, Sosial Kemanusiaan, dan Keagamaan untuk masyarakat Bantul dan sekitarnya.' },
-      { q: 'Di mana alamat kantor yayasan?', a: 'Kantor kami berlokasi di ' + CONTACT.address.full + '. Kami buka pada hari Senin–Jumat pukul ' + CONTACT.hours.weekdays + ' dan Sabtu pukul ' + CONTACT.hours.saturday + '.' },
-      { q: 'Apakah yayasan memiliki legalitas resmi?', a: 'Ya, ASIB memiliki legalitas lengkap: SK Kemenkumham ' + SITE.legal.sk + ', NIB ' + SITE.legal.nib + ', NPWP ' + SITE.legal.npwp + ', dan KBLI ' + SITE.legal.kbli + '. Kami berkomitmen pada transparansi dan akuntabilitas penuh.' },
-    ],
-  },
-  {
-    category: 'Donasi',
-    icon: 'star',
-    items: [
-      { q: 'Bagaimana cara berdonasi ke ASIB?', a: 'Anda bisa berdonasi melalui transfer ke rekening resmi yayasan (BSI, BRI, Mandiri, BNI, BCA), melalui QRIS, atau melalui platform online Linktree. Semua informasi lengkap ada di halaman Donasi kami.' },
-      { q: 'Apakah donasi saya akan digunakan dengan tepat?', a: 'Kami berkomitmen penuh pada transparansi. Setiap donasi tercatat dan disalurkan sesuai program yang dipilih.' },
-      { q: 'Bagaimana cara konfirmasi donasi?', a: 'Setelah melakukan transfer, silakan kirim bukti transfer ke WhatsApp ' + CONTACT.phone + ' atau email ke ' + CONTACT.email + '. Tim kami akan mengonfirmasi donasi Anda.' },
-    ],
-  },
-  {
-    category: 'Program Pendidikan',
-    icon: 'book',
-    items: [
-      { q: 'Apa itu PKBM Bina Insan Mulia?', a: 'PKBM Bina Insan Mulia adalah program pendidikan non-formal dengan materi Diniyah. Saat ini memiliki 21 ustadz/ustadzah dan 70 santri.' },
-      { q: 'Apakah ASIB menerima santri baru?', a: 'Ya, setiap tahun ajaran baru kami membuka pendaftaran untuk PKBM, PAUD, dan Rumah Tahfidz. Informasi pendaftaran bisa didapatkan melalui kontak resmi yayasan.' },
-      { q: 'Apa itu Rumah Tahfidz?', a: 'Rumah Tahfidz Al-Qur\'an adalah program pesantren tahfidz dengan bimbingan ustadzah berpengalaman. Saat ini memiliki 2 ustadzah dan 25 santriwati.' },
-    ],
-  },
-  {
-    category: 'Sosial & Kemanusiaan',
-    icon: 'globe',
-    items: [
-      { q: 'Siapa saja penerima manfaat santunan sembako?', a: 'Santunan sembako diberikan setiap bulan kepada 110+ penerima binaan tetap yang terdiri dari anak yatim, fakir miskin, dan dhuafa di wilayah Bantul dan sekitarnya.' },
-      { q: 'Apa itu program Jumat Bersedekah?', a: 'Program pembagian nasi kotak setiap hari Jumat kepada dhuafa di sepanjang jalan wilayah Yogyakarta.' },
-      { q: 'Bagaimana cara menjadi relawan AMMA?', a: 'Relawan AMMA terbuka untuk masyarakat umum. Hubungi kami melalui WhatsApp atau datang ke kantor untuk informasi pendaftaran.' },
-    ],
-  },
-  {
-    category: 'Website & Teknis',
-    icon: 'external-link',
-    items: [
-      { q: 'Apakah data saya aman di situs ini?', a: 'Ya. Kami menggunakan enkripsi SSL/HTTPS untuk melindungi data Anda. Informasi lebih lengkap dapat dilihat di halaman Kebijakan Privasi.' },
-      { q: 'Bagaimana cara menghubungi pengelola website?', a: 'Untuk pertanyaan teknis, silakan hubungi kami melalui halaman Kontak.' },
-    ],
-  },
-];
+const CATEGORY_ICONS: Record<string, FaqIcon> = {
+	'tentang-yayasan': 'heart',
+	donasi: 'star',
+	'program-pendidikan': 'book',
+	'sosial-kemanusiaan': 'globe',
+	'website-teknis': 'external-link',
+	umum: 'book',
+}
+
+const CATEGORY_LABELS: Record<string, string> = {
+	'tentang-yayasan': 'Tentang Yayasan',
+	donasi: 'Donasi',
+	'program-pendidikan': 'Program Pendidikan',
+	'sosial-kemanusiaan': 'Sosial & Kemanusiaan',
+	'website-teknis': 'Website & Teknis',
+	umum: 'Umum',
+}
+
+// HYBRID: Try Sanity first, fallback to hardcoded data
+let faqData: FaqGroup[]
+try {
+	const sanityFaq = await getFaqList()
+	if (sanityFaq && sanityFaq.length > 0) {
+		faqData = sanityFaq.map((group) => ({
+			category: CATEGORY_LABELS[group.category] || group.category,
+			icon: CATEGORY_ICONS[group.category] || 'heart',
+			items: group.items.map((item) => ({
+				q: item.tanya,
+				a: typeof item.jawab === 'string' ? item.jawab : 'Jawaban sedang diperbarui.',
+			})),
+		}))
+	} else {
+		throw new Error('No FAQ data from Sanity')
+	}
+} catch {
+	// Fallback to hardcoded data
+	faqData = [
+		{
+			category: 'Tentang Yayasan',
+			icon: 'heart',
+			items: [
+				{
+					q: 'Apa itu Yayasan Amal Shalih Insan Bantul (ASIB)?',
+					a:
+						SITE.name +
+						' (ASIB) adalah organisasi nirlaba yang berdiri sejak ' +
+						SITE.foundedDate +
+						' berdasarkan SK Kemenkumham RI No. ' +
+						SITE.legal.sk +
+						'. Kami bergerak di bidang Pendidikan Islam, Sosial Kemanusiaan, dan Keagamaan untuk masyarakat Bantul dan sekitarnya.',
+				},
+				{
+					q: 'Di mana alamat kantor yayasan?',
+					a:
+						'Kantor kami berlokasi di ' +
+						CONTACT.address.full +
+						'. Kami buka pada hari Senin\u2013Jumat pukul ' +
+						CONTACT.hours.weekdays +
+						' dan Sabtu pukul ' +
+						CONTACT.hours.saturday +
+						'.',
+				},
+				{
+					q: 'Apakah yayasan memiliki legalitas resmi?',
+					a:
+						'Ya, ASIB memiliki legalitas lengkap: SK Kemenkumham ' +
+						SITE.legal.sk +
+						', NIB ' +
+						SITE.legal.nib +
+						', NPWP ' +
+						SITE.legal.npwp +
+						', dan KBLI ' +
+						SITE.legal.kbli +
+						'. Kami berkomitmen pada transparansi dan akuntabilitas penuh.',
+				},
+			],
+		},
+		{
+			category: 'Donasi',
+			icon: 'star',
+			items: [
+				{
+					q: 'Bagaimana cara berdonasi ke ASIB?',
+					a: 'Anda bisa berdonasi melalui transfer ke rekening resmi yayasan (BSI, BRI, Mandiri, BNI, BCA), melalui QRIS, atau melalui platform online Linktree. Semua informasi lengkap ada di halaman Donasi kami.',
+				},
+				{
+					q: 'Apakah donasi saya akan digunakan dengan tepat?',
+					a: 'Kami berkomitmen penuh pada transparansi. Setiap donasi tercatat dan disalurkan sesuai program yang dipilih.',
+				},
+				{
+					q: 'Bagaimana cara konfirmasi donasi?',
+					a:
+						'Setelah melakukan transfer, silakan kirim bukti transfer ke WhatsApp ' +
+						CONTACT.phone +
+						' atau email ke ' +
+						CONTACT.email +
+						'. Tim kami akan mengonfirmasi donasi Anda.',
+				},
+			],
+		},
+		{
+			category: 'Program Pendidikan',
+			icon: 'book',
+			items: [
+				{
+					q: 'Apa itu PKBM Bina Insan Mulia?',
+					a: 'PKBM Bina Insan Mulia adalah program pendidikan non-formal dengan materi Diniyah. Saat ini memiliki 21 ustadz/ustadzah dan 70 santri.',
+				},
+				{
+					q: 'Apakah ASIB menerima santri baru?',
+					a: 'Ya, setiap tahun ajaran baru kami membuka pendaftaran untuk PKBM, PAUD, dan Rumah Tahfidz. Informasi pendaftaran bisa didapatkan melalui kontak resmi yayasan.',
+				},
+				{
+					q: 'Apa itu Rumah Tahfidz?',
+					a: "Rumah Tahfidz Al-Qur'an adalah program pesantren tahfidz dengan bimbingan ustadzah berpengalaman. Saat ini memiliki 2 ustadzah dan 25 santriwati.",
+				},
+			],
+		},
+		{
+			category: 'Sosial & Kemanusiaan',
+			icon: 'globe',
+			items: [
+				{
+					q: 'Siapa saja penerima manfaat santunan sembako?',
+					a: 'Santunan sembako diberikan setiap bulan kepada 110+ penerima binaan tetap yang terdiri dari anak yatim, fakir miskin, dan dhuafa di wilayah Bantul dan sekitarnya.',
+				},
+				{
+					q: 'Apa itu program Jumat Bersedekah?',
+					a: 'Program pembagian nasi kotak setiap hari Jumat kepada dhuafa di sepanjang jalan wilayah Yogyakarta.',
+				},
+				{
+					q: 'Bagaimana cara menjadi relawan AMMA?',
+					a: 'Relawan AMMA terbuka untuk masyarakat umum. Hubungi kami melalui WhatsApp atau datang ke kantor untuk informasi pendaftaran.',
+				},
+			],
+		},
+		{
+			category: 'Website & Teknis',
+			icon: 'external-link',
+			items: [
+				{
+					q: 'Apakah data saya aman di situs ini?',
+					a: 'Ya. Kami menggunakan enkripsi SSL/HTTPS untuk melindungi data Anda. Informasi lebih lengkap dapat dilihat di halaman Kebijakan Privasi.',
+				},
+				{
+					q: 'Bagaimana cara menghubungi pengelola website?',
+					a: 'Untuk pertanyaan teknis, silakan hubungi kami melalui halaman Kontak.',
+				},
+			],
+		},
+	]
+}
 ---
 
 <BaseLayout
-	title="FAQ"
-	description="Pertanyaan yang sering diajukan tentang Yayasan Amal Shalih Insan Bantul."
-	currentPage="/faq"
+  title="FAQ"
+  description="Pertanyaan yang sering diajukan tentang Yayasan Amal Shalih Insan Bantul."
+  currentPage="/faq"
 >
-	<PageHeader
-		label="FAQ"
-		title="Pertanyaan Umum"
-		description="Temukan jawaban atas pertanyaan yang sering diajukan tentang Yayasan ASIB."
-		gradient="bl"
-	/>
+  <PageHeader
+    label="FAQ"
+    title="Pertanyaan Umum"
+    description="Temukan jawaban atas pertanyaan yang sering diajukan tentang Yayasan ASIB."
+    gradient="bl"
+  />
 
-	<Container class="py-12 sm:py-20">
-		<div class="mx-auto max-w-3xl">
-			{
-				faqData.map(function(group) {
-					return (
-						<section class="mb-10 last:mb-0">
-							<div class="mb-6 flex items-center gap-3">
-								<span class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-50 text-primary-700">
-									<Icon name={group.icon} size={5} />
-								</span>
-								<h2 class="text-xl sm:text-2xl font-bold text-warm-900">{group.category}</h2>
-							</div>
-							<div class="space-y-3">
-								{
-									group.items.map(function(item) {
-										return (
-											<details class="group rounded-xl bg-white shadow-sm border border-warm-100 open:border-primary-200 transition-all duration-200">
-												<summary class="faq-summary flex cursor-pointer items-center justify-between gap-4 p-4 sm:p-5 font-medium text-warm-900 select-none">
-													<span class="text-sm sm:text-base">{item.q}</span>
-													<svg class="w-5 h-5 text-warm-400 shrink-0 transition-transform duration-300 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-														<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-													</svg>
-												</summary>
-												<div class="faq-reveal border-t border-warm-100 px-4 sm:px-5 pb-4 sm:pb-5 pt-3 sm:pt-4 text-sm sm:text-base text-warm-700 leading-relaxed">
-													<p>{item.a}</p>
-												</div>
-											</details>
-										);
-									})
-								}
-							</div>
-						</section>
-					);
-				})
-			}
-		</div>
-	</Container>
+  <Container class="py-12 sm:py-20">
+    <div class="mx-auto max-w-3xl">
+      {
+        faqData.map((group: FaqGroup) => (
+          <section class="mb-10 last:mb-0">
+            <div class="mb-6 flex items-center gap-3">
+              <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-50 text-primary-700">
+                <Icon name={group.icon} size={5} />
+              </span>
+              <h2 class="text-xl sm:text-2xl font-bold text-warm-900">{group.category}</h2>
+            </div>
+            <div class="space-y-3">
+              {
+                group.items.map((item: { q: string; a: string }) => (
+                  <details class="group rounded-xl bg-white shadow-sm border border-warm-100 open:border-primary-200 transition-all duration-200">
+                    <summary class="faq-summary flex cursor-pointer items-center justify-between gap-4 p-4 sm:p-5 font-medium text-warm-900 select-none">
+                      <span class="text-sm sm:text-base">{item.q}</span>
+                      <svg class="w-5 h-5 text-warm-400 shrink-0 transition-transform duration-300 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </summary>
+                    <div class="faq-reveal border-t border-warm-100 px-4 sm:px-5 pb-4 sm:pb-5 pt-3 sm:pt-4 text-sm sm:text-base text-warm-700 leading-relaxed">
+                      <p>{item.a}</p>
+                    </div>
+                  </details>
+                ))
+              }
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </Container>
 
-	<Fragment slot="after-main">
-		<section class="relative overflow-hidden bg-gradient-to-b from-primary-800 via-primary-900 to-primary-950 text-white">
-			<div class="absolute top-1/2 left-1/4 h-36 w-36 -translate-y-1/2 rounded-full bg-gold-500/8 blur-3xl" aria-hidden="true"></div>
-			<div class="absolute top-6 right-[14%] w-2 h-2 rotate-45 rounded-[1px] bg-gold-400/25" aria-hidden="true"></div>
-			<div class="absolute top-10 right-[18%] w-1.5 h-1.5 rotate-45 rounded-[1px] bg-white/15" aria-hidden="true"></div>
-			<div class="absolute bottom-8 left-[16%] w-2 h-2 rotate-45 rounded-[1px] bg-gold-400/20" aria-hidden="true"></div>
+  <Fragment slot="after-main">
+    <section class="relative overflow-hidden bg-gradient-to-b from-primary-800 via-primary-900 to-primary-950 text-white">
+      <div class="absolute top-1/2 left-1/4 h-36 w-36 -translate-y-1/2 rounded-full bg-gold-500/8 blur-3xl" aria-hidden="true"></div>
+      <div class="absolute top-6 right-[14%] w-2 h-2 rotate-45 rounded-[1px] bg-gold-400/25" aria-hidden="true"></div>
+      <div class="absolute top-10 right-[18%] w-1.5 h-1.5 rotate-45 rounded-[1px] bg-white/15" aria-hidden="true"></div>
+      <div class="absolute bottom-8 left-[16%] w-2 h-2 rotate-45 rounded-[1px] bg-gold-400/20" aria-hidden="true"></div>
 
-			<Container as="div" class="relative z-10 py-5 sm:py-6 lg:py-8 text-center">
-				<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight font-display">
-					Tidak Menemukan Jawaban?
-				</h2>
-				<p class="mx-auto mt-2 max-w-xl text-sm sm:text-base text-primary-200/80">
-					Hubungi kami langsung — tim kami siap membantu menjawab pertanyaan Anda.
-				</p>
-				<div class="mt-4 sm:mt-5 flex flex-wrap justify-center gap-3">
-					<Button
-						variant="gold"
-						size="md"
-						href="/kontak"
-						class="shadow-lg shadow-primary-950/30 hover:shadow-xl hover:shadow-gold-500/20 hover:-translate-y-0.5 transition-all duration-300"
-					>
-						<Icon name="whatsapp" size={4} aria-hidden="true" />
-						Hubungi Kami
-					</Button>
-					<Button
-						variant="outline-light"
-						size="md"
-						href="/donasi"
-						class="border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5"
-					>
-						Donasi Sekarang
-					</Button>
-				</div>
-			</Container>
-		</section>
-	</Fragment>
+      <Container as="div" class="relative z-10 py-5 sm:py-6 lg:py-8 text-center">
+        <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight font-display">
+          Tidak Menemukan Jawaban?
+        </h2>
+        <p class="mx-auto mt-2 max-w-xl text-sm sm:text-base text-primary-200/80">
+          Hubungi kami langsung — tim kami siap membantu menjawab pertanyaan Anda.
+        </p>
+        <div class="mt-4 sm:mt-5 flex flex-wrap justify-center gap-3">
+          <Button
+            variant="gold"
+            size="md"
+            href="/kontak"
+            class="shadow-lg shadow-primary-950/30 hover:shadow-xl hover:shadow-gold-500/20 hover:-translate-y-0.5 transition-all duration-300"
+          >
+            <Icon name="whatsapp" size={4} aria-hidden="true" />
+            Hubungi Kami
+          </Button>
+          <Button
+            variant="outline-light"
+            size="md"
+            href="/donasi"
+            class="border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5"
+          >
+            Donasi Sekarang
+          </Button>
+        </div>
+      </Container>
+    </section>
+  </Fragment>
 </BaseLayout>
 
 <style is:global>
-	.faq-summary::marker,
-	.faq-summary::-webkit-details-marker {
-		display: none;
-		content: '';
-	}
+  .faq-summary::marker,
+  .faq-summary::-webkit-details-marker {
+    display: none;
+    content: '';
+  }
 
-	@keyframes faq-reveal {
-		from {
-			opacity: 0;
-			transform: translateY(-4px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
+  @keyframes faq-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
-	.faq-reveal {
-		animation: faq-reveal 0.2s ease-out;
-	}
+  .faq-reveal {
+    animation: faq-reveal 0.2s ease-out;
+  }
 </style>

@@ -1,20 +1,32 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Button from '../components/ui/Button.astro';
+import Button from '../components/ui/Button.astro'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { getSiteSettings } from '../lib/sanity/client'
+
+let notFoundTitle = 'Halaman Tidak Ditemukan'
+let notFoundDescription = 'Maaf, halaman yang Anda cari tidak tersedia atau telah dipindahkan.'
+
+try {
+	const ss = await getSiteSettings()
+	if (ss?.notFoundTitle) notFoundTitle = ss.notFoundTitle
+	if (ss?.notFoundDescription) notFoundDescription = ss.notFoundDescription
+} catch (error) {
+	console.error('[404] Sanity fetch failed:', error)
+}
 ---
 
 <BaseLayout
-	title="Halaman Tidak Ditemukan"
-	description="Halaman yang Anda cari tidak ditemukan."
+	title={notFoundTitle}
+	description={notFoundDescription}
 >
 	<section class="flex flex-1 items-center justify-center px-4 py-20 sm:py-32">
 		<div class="text-center">
 			<p class="text-6xl sm:text-8xl font-extrabold text-primary-200">404</p>
 			<h1 class="mt-3 text-2xl sm:text-3xl lg:text-4xl font-bold text-warm-900">
-				Halaman Tidak Ditemukan
+				{notFoundTitle}
 			</h1>
 			<p class="mt-3 mx-auto max-w-md text-warm-700">
-				Maaf, halaman yang Anda cari tidak tersedia atau telah dipindahkan.
+				{notFoundDescription}
 			</p>
 			<div class="mt-6 flex flex-wrap justify-center gap-3 sm:gap-4">
 				<Button variant="primary" href="/">Kembali ke Beranda</Button>

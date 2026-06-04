@@ -1,39 +1,68 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Container from '../components/ui/Container.astro';
-import PageHeader from '../components/sections/PageHeader.astro';
-import Card from '../components/ui/Card.astro';
-import Icon from '../components/ui/Icon.astro';
-import { KATEGORI_LABELS } from '../lib/constants';
-import type { GalleryEntry } from '../data/galleries';
-import { fetchAllGalleries, filterPublishedGalleries } from '../data/galleries';
+import PageHeader from '../components/sections/PageHeader.astro'
+import Card from '../components/ui/Card.astro'
+import Container from '../components/ui/Container.astro'
+import Icon from '../components/ui/Icon.astro'
+import type { GalleryEntry } from '../data/galleries'
+import { fetchAllGalleries, filterPublishedGalleries } from '../data/galleries'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { KATEGORI_LABELS } from '../lib/constants'
+import { getSiteSettings } from '../lib/sanity/client'
 
 // SSR - Real-time data fetching (Cloudflare Workers compatible)
-export const prerender = false;
+export const prerender = false
 
 // Direct function call for Cloudflare Workers SSR compatibility
-let galleries: GalleryEntry[] = [];
+let galleries: GalleryEntry[] = []
 
 try {
-  const allGalleries = await fetchAllGalleries();
-  galleries = filterPublishedGalleries(allGalleries);
+	const allGalleries = await fetchAllGalleries()
+	galleries = filterPublishedGalleries(allGalleries)
 } catch (e: any) {
-  console.error('Error fetching galleries:', e?.message || e);
+	console.error('Error fetching galleries:', e?.message || e)
 }
 
-const kategoriGradients: Record<string, string> = {
+const DEFAULT_GRADIENTS: Record<string, string> = {
 	pendidikan: 'from-primary-400 to-primary-600',
 	keagamaan: 'from-gold-400 to-gold-600',
 	sosial: 'from-primary-500 to-gold-500',
 	umum: 'from-warm-400 to-warm-600',
-};
+}
 
-const kategoriIcons = {
-	pendidikan: 'book' as const,
-	keagamaan: 'home' as const,
-	sosial: 'heart' as const,
-	umum: 'globe' as const,
-};
+const DEFAULT_ICONS: Record<string, string> = {
+	pendidikan: 'book',
+	keagamaan: 'home',
+	sosial: 'heart',
+	umum: 'globe',
+}
+
+// Hybrid: Try Sanity siteSettings for gallery category config
+let kategoriGradients: Record<string, string> = DEFAULT_GRADIENTS
+let kategoriIcons: Record<string, string> = DEFAULT_ICONS
+let kategoriLabels: Record<string, string> = {}
+
+try {
+	const ss = await getSiteSettings()
+	if (ss?.galleryCategoryGradients && ss.galleryCategoryGradients.length > 0) {
+		const merged = { ...DEFAULT_GRADIENTS }
+		for (const item of ss.galleryCategoryGradients) {
+			if (item.category && item.gradient) merged[item.category] = item.gradient
+		}
+		kategoriGradients = merged
+	}
+	if (ss?.galleryCategoryIcons && ss.galleryCategoryIcons.length > 0) {
+		const merged = { ...DEFAULT_ICONS }
+		for (const item of ss.galleryCategoryIcons) {
+			if (item.category && item.icon) merged[item.category] = item.icon
+		}
+		kategoriIcons = merged
+	}
+	if (ss?.kategoriLabels) {
+		kategoriLabels = { ...KATEGORI_LABELS, ...ss.kategoriLabels }
+	}
+} catch (error) {
+	console.error('[Galeri] Sanity siteSettings fetch failed:', error)
+}
 ---
 
 <BaseLayout
@@ -51,7 +80,7 @@ const kategoriIcons = {
 	<Container class="pt-4 sm:pt-6 pb-8 sm:pb-16">
 		<div class="flex flex-wrap gap-2 justify-center mb-6 sm:mb-8" data-filter-gallery>
 			<button class="filter-btn rounded-full bg-primary-700 px-4 py-2 text-xs sm:text-sm sm:px-5 sm:py-2.5 font-semibold text-white shadow-sm sm:shadow-md transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" data-filter="all">Semua</button>
-			{Object.entries(KATEGORI_LABELS).map(([key, label]) => (
+			{Object.entries({ ...KATEGORI_LABELS, ...kategoriLabels }).map(([key, label]) => (
 				<button class="filter-btn rounded-full bg-primary-50 px-4 py-2 text-xs sm:text-sm sm:px-5 sm:py-2.5 font-semibold text-primary-700 transition-colors duration-300 hover:bg-primary-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" data-filter={key}>{label}</button>
 			))}
 		</div>
@@ -91,7 +120,7 @@ const kategoriIcons = {
 							<div class="absolute top-4 left-4 right-4 flex items-start justify-between gap-2">
 								<span class="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-primary-700 shadow-sm backdrop-blur-sm">
 									<Icon name={(kategoriIcons[gallery.category] ?? 'book') as 'book' | 'home' | 'heart' | 'globe'} size={3.5} aria-hidden="true" />
-									{KATEGORI_LABELS[gallery.category] || gallery.category}
+									{kategoriLabels[gallery.category] || KATEGORI_LABELS[gallery.category] || gallery.category}
 								</span>
 								<span class="inline-flex items-center gap-1 rounded-full bg-black/50 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
 									<Icon name="image" size={3} aria-hidden="true" />

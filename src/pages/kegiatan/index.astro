@@ -1,45 +1,59 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Container from '../../components/ui/Container.astro';
-import PageHeader from '../../components/sections/PageHeader.astro';
-import Card from '../../components/ui/Card.astro';
-import { KATEGORI_LABELS } from '../../lib/constants';
-import { getKegiatanList } from '../../lib/sanity/client';
+import { getCollection } from 'astro:content'
+import PageHeader from '../../components/sections/PageHeader.astro'
+import Card from '../../components/ui/Card.astro'
+import Container from '../../components/ui/Container.astro'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { KATEGORI_LABELS } from '../../lib/constants'
+import { getKegiatanList, getSiteSettings } from '../../lib/sanity/client'
 
 interface kegiatanEntry {
-  id: string;
-  data: {
-    title: string;
-    description: string;
-    date: Date;
-    kategori: string;
-  };
+	id: string
+	data: {
+		title: string
+		description: string
+		date: Date
+		kategori: string
+	}
 }
 
-let kegiatan: kegiatanEntry[] = [];
+let kegiatan: kegiatanEntry[] = []
+let emptyText = 'Belum ada kegiatan terbaru. Kunjungi kembali nanti.'
+let kategoriLabels: Record<string, string> = {}
 
 try {
-  const sanityItems = await getKegiatanList();
-  if (sanityItems && sanityItems.length > 0) {
-    kegiatan = sanityItems.map((item) => ({
-      id: item.slug,
-      data: {
-        title: item.title,
-        description: item.excerpt ?? '',
-        date: new Date(item.date),
-        kategori: item.category,
-      },
-    }));
-  }
+	const settings = await getSiteSettings()
+	if (settings?.emptyStateTexts?.kegiatan) {
+		emptyText = settings.emptyStateTexts.kegiatan
+	}
+	if (settings?.kategoriLabels) {
+		kategoriLabels = { ...KATEGORI_LABELS, ...settings.kategoriLabels }
+	}
 } catch (error) {
-  console.error('[Kegiatan] Sanity kegiatanList fetch failed:', error);
+	console.error('[Kegiatan] Site settings fetch failed:', error)
+}
+
+try {
+	const sanityItems = await getKegiatanList()
+	if (sanityItems && sanityItems.length > 0) {
+		kegiatan = sanityItems.map((item) => ({
+			id: item.slug,
+			data: {
+				title: item.title,
+				description: item.excerpt ?? '',
+				date: new Date(item.date),
+				kategori: item.category,
+			},
+		}))
+	}
+} catch (error) {
+	console.error('[Kegiatan] Sanity kegiatanList fetch failed:', error)
 }
 
 if (kegiatan.length === 0) {
-  const localItems = await getCollection('kegiatan');
-  localItems.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  kegiatan = localItems;
+	const localItems = await getCollection('kegiatan')
+	localItems.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+	kegiatan = localItems
 }
 ---
 
@@ -58,7 +72,7 @@ if (kegiatan.length === 0) {
 		{
 			kegiatan.length === 0 ? (
 				<div class="text-center py-8 sm:py-16">
-					<p class="text-warm-700">Belum ada kegiatan terbaru. Kunjungi kembali nanti.</p>
+					<p class="text-warm-700">{emptyText}</p>
 				</div>
 			) : (
 				<div class="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 items-start">
@@ -66,7 +80,7 @@ if (kegiatan.length === 0) {
 						<Card variant="hover" href={`/kegiatan/${item.id}`}>
 								<div class="mb-3 flex items-center gap-3">
 									<span class="inline-block rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-700">
-										{KATEGORI_LABELS[item.data.kategori] || item.data.kategori}
+										{kategoriLabels[item.data.kategori] || item.data.kategori}
 									</span>
 									<time datetime={item.data.date.toISOString()} class="text-xs text-warm-500">
 										{item.data.date.toLocaleDateString('id-ID', {
