@@ -1,32 +1,36 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Container from '../components/ui/Container.astro';
-import PageHeader from '../components/sections/PageHeader.astro';
-import Icon from '../components/ui/Icon.astro';
-import Button from '../components/ui/Button.astro';
-import { getSiteSettings } from '../lib/sanity/client';
-import { CONTACT } from '../data/site';
+import PageHeader from '../components/sections/PageHeader.astro'
+import Button from '../components/ui/Button.astro'
+import Container from '../components/ui/Container.astro'
+import Icon from '../components/ui/Icon.astro'
+import { CONTACT } from '../data/site'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { getSiteSettings } from '../lib/sanity/client'
 
 // Hybrid: try Sanity first, fall back to local data
-let address = { ...CONTACT.address };
-let phone = CONTACT.phone;
-let phoneUrl = CONTACT.phoneUrl;
-let whatsapp = CONTACT.whatsapp;
-let email = CONTACT.email;
-let mapsUrl = CONTACT.address.mapsUrl;
-let hours = { ...CONTACT.hours };
+let address = { ...CONTACT.address }
+let phone = CONTACT.phone
+let phoneUrl = CONTACT.phoneUrl
+let whatsapp = CONTACT.whatsapp
+let email = CONTACT.email
+let mapsUrl = CONTACT.address.mapsUrl
+let hours = { ...CONTACT.hours }
 
 try {
-  const sanitySettings = await getSiteSettings();
-  if (sanitySettings) {
-    if (sanitySettings.address) address = { ...address, ...sanitySettings.address };
-    if (sanitySettings.phone) phone = sanitySettings.phone;
-    if (sanitySettings.email) email = sanitySettings.email;
-    if (sanitySettings.mapsUrl) mapsUrl = sanitySettings.mapsUrl;
-    // Sanity doesn't store phoneUrl/whatsapp/hours — keep local fallbacks
-  }
+	const sanitySettings = await getSiteSettings()
+	if (sanitySettings) {
+		if (sanitySettings.address) address = { ...address, ...sanitySettings.address }
+		if (sanitySettings.phone) phone = sanitySettings.phone
+		if (sanitySettings.email) email = sanitySettings.email
+		if (sanitySettings.emails)
+			email = sanitySettings.emails.info || sanitySettings.emails.gmail || email
+		if (sanitySettings.mapsUrl) mapsUrl = sanitySettings.mapsUrl
+		if (sanitySettings.operatingHoursDetail) {
+			hours = { ...hours, ...sanitySettings.operatingHoursDetail }
+		}
+	}
 } catch (error) {
-  console.error('[Kontak] Sanity siteSettings fetch failed:', error);
+	console.error('[Kontak] Sanity siteSettings fetch failed:', error)
 }
 ---
 

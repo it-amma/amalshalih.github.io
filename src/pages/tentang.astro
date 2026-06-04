@@ -1,43 +1,60 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Container from '../components/ui/Container.astro';
-import PageHeader from '../components/sections/PageHeader.astro';
-import Card from '../components/ui/Card.astro';
-import Button from '../components/ui/Button.astro';
-import Icon from '../components/ui/Icon.astro';
-import { getSiteSettings, getPengurus } from '../lib/sanity/client';
-import type { SanityPengurus } from '../lib/sanity/types';
-import { SITE, CONTACT } from '../data/site';
+import PageHeader from '../components/sections/PageHeader.astro'
+import Button from '../components/ui/Button.astro'
+import Card from '../components/ui/Card.astro'
+import Container from '../components/ui/Container.astro'
+import Icon from '../components/ui/Icon.astro'
+import { CONTACT, SITE } from '../data/site'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { getPengurus, getSiteSettings } from '../lib/sanity/client'
+import type { SanityPengurus } from '../lib/sanity/types'
 
 // Hybrid: try Sanity first, fall back to local data
-let addressStreet = CONTACT.address.street;
-let visi = 'Menjadi Lembaga Yang Profesional dan Berkarakter Serta <strong class="text-gold-400">Maslahat Bagi Umat</strong>.';
+let addressStreet = CONTACT.address.street
+let legalData = {
+	foundedDate: SITE.foundedDate,
+	sk: SITE.legal.sk,
+	nib: SITE.legal.nib,
+	npwp: SITE.legal.npwp,
+	kbli: SITE.legal.kbli,
+}
+let visi =
+	'Menjadi Lembaga Yang Profesional dan Berkarakter Serta <strong class="text-gold-400">Maslahat Bagi Umat</strong>.'
 let misi = [
-  'Menyelenggarakan kegiatan keagamaan, sosial, dan kemanusiaan.',
-  'Mewujudkan pembinaan yang fokus pada bidang pendidikan dan Tahfiz Al-Qur\'an.',
-  'Melaksanakan penggalangan dan penyaluran donasi untuk semua bidang.',
-  'Memiliki dan mengembangkan usaha produktif serta menguntungkan.',
-];
-let pengurus: SanityPengurus[] = [];
+	'Menyelenggarakan kegiatan keagamaan, sosial, dan kemanusiaan.',
+	"Mewujudkan pembinaan yang fokus pada bidang pendidikan dan Tahfiz Al-Qur'an.",
+	'Melaksanakan penggalangan dan penyaluran donasi untuk semua bidang.',
+	'Memiliki dan mengembangkan usaha produktif serta menguntungkan.',
+]
+let pengurus: SanityPengurus[] = []
 
 try {
-  const s = await getSiteSettings();
-  if (s) {
-    if (s.address) {
-      addressStreet = s.address.street ?? addressStreet;
-    }
-    if (s.visi) visi = s.visi;
-    if (s.misi && s.misi.length > 0) misi = s.misi;
-  }
+	const s = await getSiteSettings()
+	if (s) {
+		if (s.address) {
+			addressStreet = s.address.street ?? addressStreet
+		}
+		if (s.visi) visi = s.visi
+		if (s.misi && s.misi.length > 0) misi = s.misi
+		if (s.legal) {
+			legalData = {
+				foundedDate: s.legal.foundedDate ?? legalData.foundedDate,
+				sk: s.legal.sk ?? legalData.sk,
+				nib: s.legal.nib ?? legalData.nib,
+				npwp: s.legal.npwp ?? legalData.npwp,
+				kbli: s.legal.kbli ?? legalData.kbli,
+			}
+		}
+	}
 } catch (error) {
-  console.error('[Tentang] Sanity siteSettings fetch failed:', error);
+	console.error('[Tentang] Sanity siteSettings fetch failed:', error)
 }
 
 try {
-  const p = await getPengurus();
-  if (p && p.length > 0) pengurus = p;
+	const p = await getPengurus()
+	if (p && p.length > 0) pengurus = p
 } catch (error) {
-  console.error('[Tentang] Sanity pengurus fetch failed:', error);
+	console.error('[Tentang] Sanity pengurus fetch failed:', error)
 }
 ---
 
@@ -69,13 +86,13 @@ try {
 					</svg>
 				</summary>
 				<div class="accordion-reveal px-5 sm:px-6 pb-5 sm:pb-6 space-y-5 text-warm-700 text-sm">
-					<p>Yayasan Amal Shalih Insan Bantul (ASIB) adalah organisasi nirlaba yang berdiri sejak <strong>{SITE.foundedDate}</strong> berdasarkan SK Kemenkumham RI No. {SITE.legal.sk}.</p>
+					<p>Yayasan Amal Shalih Insan Bantul (ASIB) adalah organisasi nirlaba yang berdiri sejak <strong>{legalData.foundedDate}</strong> berdasarkan SK Kemenkumham RI No. {legalData.sk}.</p>
 					<p>Kami memiliki tiga bidang utama: <strong>Pendidikan</strong>, <strong>Sosial Kemanusiaan</strong>, dan <strong>Keagamaan</strong>.</p>
 					<div class="bg-primary-50 p-4 rounded-xl space-y-2">
-						<p><strong>SK:</strong> {SITE.legal.sk}</p>
-						<p><strong>NIB:</strong> {SITE.legal.nib}</p>
-						<p><strong>NPWP:</strong> {SITE.legal.npwp}</p>
-						<p><strong>KBLI:</strong> {SITE.legal.kbli}</p>
+						<p><strong>SK:</strong> {legalData.sk}</p>
+						<p><strong>NIB:</strong> {legalData.nib}</p>
+						<p><strong>NPWP:</strong> {legalData.npwp}</p>
+						<p><strong>KBLI:</strong> {legalData.kbli}</p>
 					</div>
 				</div>
 			</details>
@@ -90,8 +107,8 @@ try {
 					<div class="space-y-4 leading-relaxed text-warm-700 text-lg">
 						<p>
 							Yayasan Amal Shalih Insan Bantul (ASIB) adalah organisasi nirlaba yang berdiri sejak
-							<strong>{SITE.foundedDate}</strong> berdasarkan SK Kemenkumham RI
-							No. {SITE.legal.sk}.
+							<strong>{legalData.foundedDate}</strong> berdasarkan SK Kemenkumham RI
+							No. {legalData.sk}.
 						</p>
 						<p>
 							Kami memiliki tiga bidang utama: <strong>Pendidikan</strong>, <strong>Sosial Kemanusiaan</strong>, dan <strong>Keagamaan</strong>. Untuk mewujudkan program di setiap bidang, kami melibatkan seluruh komponen masyarakat sekitar.
@@ -102,10 +119,10 @@ try {
 				<div class="bg-primary-900 text-white rounded-2xl p-6 sm:p-8 shadow-xl">
 					<h3 class="text-xl font-bold text-gold-400 mb-6">Informasi Legal</h3>
 					<dl class="space-y-4 text-sm">
-						<div><dt class="text-primary-300">SK Kemenkumham</dt><dd class="font-semibold text-white">{SITE.legal.sk}</dd></div>
-						<div><dt class="text-primary-300">NIB</dt><dd class="font-semibold text-white">{SITE.legal.nib}</dd></div>
-						<div><dt class="text-primary-300">NPWP</dt><dd class="font-semibold text-white">{SITE.legal.npwp}</dd></div>
-						<div><dt class="text-primary-300">KBLI</dt><dd class="font-semibold text-white">{SITE.legal.kbli}</dd></div>
+						<div><dt class="text-primary-300">SK Kemenkumham</dt><dd class="font-semibold text-white">{legalData.sk}</dd></div>
+						<div><dt class="text-primary-300">NIB</dt><dd class="font-semibold text-white">{legalData.nib}</dd></div>
+						<div><dt class="text-primary-300">NPWP</dt><dd class="font-semibold text-white">{legalData.npwp}</dd></div>
+						<div><dt class="text-primary-300">KBLI</dt><dd class="font-semibold text-white">{legalData.kbli}</dd></div>
 					</dl>
 				</div>
 			</div>

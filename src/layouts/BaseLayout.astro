@@ -1,21 +1,82 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Container from '../components/ui/Container.astro';
-import Icon from '../components/ui/Icon.astro';
-import { CONTACT, SITE, SOCIAL } from '../data/site';
-import { NAV_ITEMS } from '../lib/constants';
+import BaseHead from '../components/BaseHead.astro'
+import Container from '../components/ui/Container.astro'
+import Icon from '../components/ui/Icon.astro'
+import { CONTACT, SITE, SOCIAL } from '../data/site'
+import { NAV_ITEMS } from '../lib/constants'
+import { getSiteSettings } from '../lib/sanity/client'
 
 interface Props {
-	title: string;
-	description: string;
-	image?: string;
-	currentPage?: string;
-	pageType?: 'website' | 'article';
-	publishedTime?: string;
-	modifiedTime?: string;
+	title: string
+	description: string
+	image?: string
+	currentPage?: string
+	pageType?: 'website' | 'article'
+	publishedTime?: string
+	modifiedTime?: string
 }
 
-const { title, description, image, currentPage, pageType, publishedTime, modifiedTime } = Astro.props;
+const { title, description, image, currentPage, pageType, publishedTime, modifiedTime } =
+	Astro.props
+
+// Hybrid: Try Sanity for footer data, fallback to hardcoded
+let footerShortName = SITE.shortName
+let footerDescription = SITE.description
+let footerAddress = CONTACT.address.full
+let footerPhone = CONTACT.phone
+let footerPhoneUrl = CONTACT.phoneUrl
+let footerWhatsapp = CONTACT.whatsapp
+let footerEmailInfo = CONTACT.emails.info
+let footerEmailDonasi = CONTACT.emails.donasi
+let footerSocialFacebook = SOCIAL.facebook
+let footerSocialInstagram = SOCIAL.instagram
+let footerSocialYoutube = SOCIAL.youtube
+let footerSocialTiktok = SOCIAL.tiktok
+let footerLinktreeUrl = SOCIAL.linktree.url
+let footerLinktreeLabel = SOCIAL.linktree.label
+let footerCopyright = `\u00a9 ${new Date().getFullYear()} ${SITE.name}. Seluruh hak cipta dilindungi.`
+let navItems = NAV_ITEMS
+
+try {
+	const ss = await getSiteSettings()
+	if (ss) {
+		if (ss.siteName) footerShortName = ss.siteName
+		if (ss.shortName) footerShortName = ss.shortName
+		if (ss.description) footerDescription = ss.description
+		if (ss.address) {
+			const a = ss.address
+			footerAddress = [a.street, a.village, a.district, a.city].filter(Boolean).join(', ')
+		}
+		if (ss.phone) {
+			footerPhone = ss.phone
+			footerPhoneUrl = `tel:${ss.phone.replace(/\s/g, '')}`
+		}
+		if (ss.email) footerEmailInfo = ss.email
+		if (ss.emails) {
+			if (ss.emails.info) footerEmailInfo = ss.emails.info
+			if (ss.emails.donasi) footerEmailDonasi = ss.emails.donasi
+		}
+		if (ss.socialMedia) {
+			if (ss.socialMedia.facebook)
+				footerSocialFacebook = { ...footerSocialFacebook, url: ss.socialMedia.facebook }
+			if (ss.socialMedia.instagram)
+				footerSocialInstagram = { ...footerSocialInstagram, url: ss.socialMedia.instagram }
+			if (ss.socialMedia.youtube)
+				footerSocialYoutube = { ...footerSocialYoutube, url: ss.socialMedia.youtube }
+			if (ss.socialMedia.tiktok)
+				footerSocialTiktok = { ...footerSocialTiktok, url: ss.socialMedia.tiktok }
+		}
+		if (ss.linktree) {
+			footerLinktreeUrl = ss.linktree
+		}
+		if (ss.footerCopyright) footerCopyright = ss.footerCopyright
+		if (ss.navItems && ss.navItems.length > 0) {
+			navItems = ss.navItems
+		}
+	}
+} catch (error) {
+	console.error('[Layout] Sanity siteSettings fetch failed:', error)
+}
 ---
 
 <!doctype html>
@@ -50,7 +111,7 @@ const { title, description, image, currentPage, pageType, publishedTime, modifie
 				<!-- Desktop Nav -->
 				<div class="hidden sm:flex items-center justify-end gap-1 overflow-hidden">
 					<div class="flex items-center gap-1 overflow-x-auto scrollbar-hide whitespace-nowrap snap-x snap-mandatory min-w-0 max-w-[280px] md:max-w-none">
-						{NAV_ITEMS.map((item) => (
+						{navItems.map((item) => (
 							<a
 							href={item.href}
 							aria-current={currentPage === item.href ? 'page' : undefined}
@@ -93,7 +154,7 @@ const { title, description, image, currentPage, pageType, publishedTime, modifie
 				aria-hidden="true"
 			>
 				<div class="flex flex-col p-4 space-y-1">
-					{NAV_ITEMS.map((item) => (
+					{navItems.map((item) => (
 						<a
 						href={item.href}
 						aria-current={currentPage === item.href ? 'page' : undefined}
@@ -218,16 +279,16 @@ const { title, description, image, currentPage, pageType, publishedTime, modifie
 					<div class="flex flex-col gap-5 sm:gap-6 lg:contents">
 						<!-- About -->
 						<div class="min-w-0">
-							<h3 class="mb-2 sm:mb-3 text-base sm:text-lg font-bold text-white">{SITE.shortName}</h3>
+							<h3 class="mb-2 sm:mb-3 text-base sm:text-lg font-bold text-white">{footerShortName}</h3>
 							<p class="text-sm text-primary-200 leading-relaxed break-words mb-3">
-								{SITE.description}
+								{footerDescription}
 							</p>
 							<div class="space-y-1.5 mt-3">
-								<a href={`mailto:${CONTACT.emails.info}`} class="text-xs sm:text-sm text-primary-300 hover:text-white transition-colors block break-all">
-									{CONTACT.emails.info}
+								<a href={`mailto:${footerEmailInfo}`} class="text-xs sm:text-sm text-primary-300 hover:text-white transition-colors block break-all">
+									{footerEmailInfo}
 								</a>
-								<a href={`mailto:${CONTACT.emails.donasi}`} class="text-xs sm:text-sm text-primary-300 hover:text-white transition-colors block break-all">
-									{CONTACT.emails.donasi}
+								<a href={`mailto:${footerEmailDonasi}`} class="text-xs sm:text-sm text-primary-300 hover:text-white transition-colors block break-all">
+									{footerEmailDonasi}
 								</a>
 							</div>
 						</div>
@@ -235,19 +296,19 @@ const { title, description, image, currentPage, pageType, publishedTime, modifie
 						<div class="min-w-0">
 							<h3 class="mb-2 sm:mb-3 text-xs sm:text-sm font-semibold uppercase tracking-wider text-primary-300">Kontak</h3>
 							<ul class="space-y-2 text-sm text-primary-200 break-words">
-								<li class="break-words">{CONTACT.address.full}</li>
+								<li class="break-words">{footerAddress}</li>
 								<li class="flex flex-wrap gap-2">
-									<a href={CONTACT.phoneUrl} class="inline-flex items-center gap-1.5 rounded-md bg-primary-900 px-2.5 py-1.5 text-xs sm:text-sm font-medium text-white hover:bg-primary-800 transition-colors">
+									<a href={footerPhoneUrl} class="inline-flex items-center gap-1.5 rounded-md bg-primary-900 px-2.5 py-1.5 text-xs sm:text-sm font-medium text-white hover:bg-primary-800 transition-colors">
 										<Icon name="phone" size={4} aria-hidden="true" />
-										{CONTACT.phone}
+										{footerPhone}
 									</a>
-									<a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 rounded-md bg-primary-900 px-2.5 py-1.5 text-xs sm:text-sm font-medium text-white hover:bg-primary-800 transition-colors">
+									<a href={footerWhatsapp} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 rounded-md bg-primary-900 px-2.5 py-1.5 text-xs sm:text-sm font-medium text-white hover:bg-primary-800 transition-colors">
 										<Icon name="whatsapp" size={4} aria-hidden="true" />
 										WhatsApp
 									</a>
-									<a href={SOCIAL.linktree.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 rounded-md bg-primary-900 px-2.5 py-1.5 text-xs sm:text-sm font-medium text-white hover:bg-primary-800 transition-colors">
+									<a href={footerLinktreeUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 rounded-md bg-primary-900 px-2.5 py-1.5 text-xs sm:text-sm font-medium text-white hover:bg-primary-800 transition-colors">
 										<Icon name="external-link" size={4} aria-hidden="true" />
-										{SOCIAL.linktree.label}
+										{footerLinktreeLabel}
 									</a>
 								</li>
 							</ul>
@@ -277,43 +338,43 @@ const { title, description, image, currentPage, pageType, publishedTime, modifie
 							<h3 class="mb-2 sm:mb-3 text-xs sm:text-sm font-semibold uppercase tracking-wider text-primary-300 text-center sm:text-left">Ikuti Kami</h3>
 							<!-- Mobile: icon-only horizontal row -->
 							<div class="flex flex-wrap justify-center gap-2 text-primary-300 sm:hidden">
-								<a href={SOCIAL.facebook.url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950" aria-label={SOCIAL.facebook.ariaLabel}>
+								<a href={footerSocialFacebook.url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950" aria-label={footerSocialFacebook.ariaLabel}>
 									<Icon name="facebook" size={4} aria-hidden="true" />
 								</a>
-								<a href={SOCIAL.instagram.url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950" aria-label={SOCIAL.instagram.ariaLabel}>
+								<a href={footerSocialInstagram.url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950" aria-label={footerSocialInstagram.ariaLabel}>
 									<Icon name="instagram" size={4} aria-hidden="true" />
 								</a>
-								<a href={SOCIAL.tiktok.url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950" aria-label={SOCIAL.tiktok.ariaLabel}>
+								<a href={footerSocialTiktok.url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950" aria-label={footerSocialTiktok.ariaLabel}>
 									<Icon name="tiktok" size={4} aria-hidden="true" />
 								</a>
-								<a href={SOCIAL.youtube.url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950" aria-label={SOCIAL.youtube.ariaLabel}>
+								<a href={footerSocialYoutube.url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950" aria-label={footerSocialYoutube.ariaLabel}>
 									<Icon name="youtube" size={4} aria-hidden="true" />
 								</a>
 							</div>
 							<!-- Tablet+: vertical list with icon + label -->
 							<ul class="hidden sm:flex flex-col gap-2 text-sm text-primary-200">
 								<li>
-									<a href={SOCIAL.facebook.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950 rounded-md py-1">
+									<a href={footerSocialFacebook.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950 rounded-md py-1">
 										<Icon name="facebook" size={4} class="shrink-0" aria-hidden="true" />
-										<span>{SOCIAL.facebook.label}</span>
+										<span>{footerSocialFacebook.label}</span>
 									</a>
 								</li>
 								<li>
-									<a href={SOCIAL.instagram.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950 rounded-md py-1">
+									<a href={footerSocialInstagram.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950 rounded-md py-1">
 										<Icon name="instagram" size={4} class="shrink-0" aria-hidden="true" />
-										<span>{SOCIAL.instagram.label}</span>
+										<span>{footerSocialInstagram.label}</span>
 									</a>
 								</li>
 								<li>
-									<a href={SOCIAL.tiktok.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950 rounded-md py-1">
+									<a href={footerSocialTiktok.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950 rounded-md py-1">
 										<Icon name="tiktok" size={4} class="shrink-0" aria-hidden="true" />
-										<span>{SOCIAL.tiktok.label}</span>
+										<span>{footerSocialTiktok.label}</span>
 									</a>
 								</li>
 								<li>
-									<a href={SOCIAL.youtube.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950 rounded-md py-1">
+									<a href={footerSocialYoutube.url} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-950 rounded-md py-1">
 										<Icon name="youtube" size={4} class="shrink-0" aria-hidden="true" />
-										<span>{SOCIAL.youtube.label}</span>
+										<span>{footerSocialYoutube.label}</span>
 									</a>
 								</li>
 							</ul>
@@ -321,7 +382,7 @@ const { title, description, image, currentPage, pageType, publishedTime, modifie
 					</div>
 				</div>
 				<div class="mt-6 sm:mt-8 border-t border-primary-800 pt-4 sm:pt-5 text-center text-xs sm:text-sm text-primary-400">
-					&copy; {new Date().getFullYear()} {SITE.name}. Seluruh hak cipta dilindungi.
+					{footerCopyright}
 				</div>
 			</Container>
 		</footer>

@@ -1,45 +1,67 @@
 ---
-import '../styles/global.css';
-import { SITE, CONTACT, SOCIAL } from '../data/site';
+import '../styles/global.css'
+import { CONTACT, SITE, SOCIAL } from '../data/site'
+import { getSiteSettings } from '../lib/sanity/client'
 
 interface Props {
-	title: string;
-	description: string;
-	image?: string;
-	pageType?: 'website' | 'article';
+	title: string
+	description: string
+	image?: string
+	pageType?: 'website' | 'article'
 	/** ISO 8601 date string for article:published_time */
-	publishedTime?: string;
+	publishedTime?: string
 	/** ISO 8601 date string for article:modified_time */
-	modifiedTime?: string;
+	modifiedTime?: string
 }
 
-const { title, description, image = '/logo-yayasan.webp', pageType = 'website', publishedTime, modifiedTime } = Astro.props;
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const {
+	title,
+	description,
+	image = '/logo-yayasan.webp',
+	pageType = 'website',
+	publishedTime,
+	modifiedTime,
+} = Astro.props
+const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
-// Generate breadcrumb items from URL path
-const pathParts = Astro.url.pathname.split('/').filter(Boolean);
-const breadcrumbItems = [
-	{ "@type": "ListItem", "position": 1, "name": "Beranda", "item": SITE.url },
-];
-const labels: Record<string, string> = {
+// Fetch breadcrumb labels from Sanity (fallback to hardcoded defaults)
+let breadcrumbLabels: Record<string, string> = {}
+try {
+	const settings = await getSiteSettings()
+	if (settings?.breadcrumbLabels) {
+		breadcrumbLabels = settings.breadcrumbLabels
+	}
+} catch (error) {
+	console.error('[BaseHead] Site settings fetch failed:', error)
+}
+
+const defaultLabels: Record<string, string> = {
+	beranda: 'Beranda',
 	tentang: 'Tentang Kami',
 	program: 'Program',
 	kegiatan: 'Kegiatan',
 	donasi: 'Donasi',
 	kontak: 'Kontak',
 	galeri: 'Galeri',
-};
-let currentPath = '';
+	blog: 'Blog',
+	faq: 'FAQ',
+}
+const labels = { ...defaultLabels, ...breadcrumbLabels }
+
+// Generate breadcrumb items from URL path
+const pathParts = Astro.url.pathname.split('/').filter(Boolean)
+const breadcrumbItems = [{ '@type': 'ListItem', position: 1, name: labels.beranda, item: SITE.url }]
+let currentPath = ''
 pathParts.forEach((part) => {
-	currentPath += `/${part}`;
+	currentPath += `/${part}`
 	breadcrumbItems.push({
-		"@type": "ListItem",
-		"position": breadcrumbItems.length + 1,
-		"name": labels[part] || part.charAt(0).toUpperCase() + part.slice(1),
-		"item": `${SITE.url}${currentPath}`,
-	});
-});
-const ogImageURL = new URL(image, Astro.url);
+		'@type': 'ListItem',
+		position: breadcrumbItems.length + 1,
+		name: labels[part] || part.charAt(0).toUpperCase() + part.slice(1),
+		item: `${SITE.url}${currentPath}`,
+	})
+})
+const ogImageURL = new URL(image, Astro.url)
 ---
 
 <meta charset="utf-8" />
