@@ -1,9 +1,9 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Container from '../components/ui/Container.astro';
-import PageHeader from '../components/sections/PageHeader.astro';
-import Icon from '../components/ui/Icon.astro';
-import { CONTACT } from '../data/site';
+import PageHeader from '../components/sections/PageHeader.astro'
+import Container from '../components/ui/Container.astro'
+import Icon from '../components/ui/Icon.astro'
+import { CONTACT } from '../data/site'
+import BaseLayout from '../layouts/BaseLayout.astro'
 ---
 
 <BaseLayout
@@ -128,8 +128,21 @@ import { CONTACT } from '../data/site';
 				</p>
 				<div class="rounded-xl bg-warm-50 p-5 text-sm text-warm-700 space-y-1">
 					<p class="font-semibold text-warm-900">{CONTACT.address.full}</p>
-					<p>Email: <a href={`mailto:${CONTACT.email}`} class="text-primary-700 hover:underline">{CONTACT.email}</a></p>
-					<p>Telepon: <a href={CONTACT.phoneUrl} class="text-primary-700 hover:underline">{CONTACT.phone}</a></p>
+					<div class="space-y-1">
+						<p><span class="text-xs font-semibold uppercase tracking-wider text-primary-500">Kontak Umum</span><br />
+							<a href={`mailto:${CONTACT.emails.info}`} class="text-primary-700 hover:underline">{CONTACT.emails.info}</a>
+						</p>
+						<p><span class="text-xs font-semibold uppercase tracking-wider text-primary-500">Donasi</span><br />
+							<a href={`mailto:${CONTACT.emails.donasi}`} class="text-primary-700 hover:underline">{CONTACT.emails.donasi}</a>
+						</p>
+						<p><span class="text-xs font-semibold uppercase tracking-wider text-primary-500">Administrasi</span><br />
+							<a href={`mailto:${CONTACT.emails.admin}`} class="text-primary-700 hover:underline">{CONTACT.emails.admin}</a>
+						</p>
+						<p><span class="text-xs font-semibold uppercase tracking-wider text-primary-500">Humas &amp; Media</span><br />
+							<a href={`mailto:${CONTACT.emails.humas}`} class="text-primary-700 hover:underline">{CONTACT.emails.humas}</a>
+						</p>
+					</div>
+					<p class="mt-2">Telepon: <a href={CONTACT.phoneUrl} class="text-primary-700 hover:underline">{CONTACT.phone}</a></p>
 				</div>
 			</section>
 
