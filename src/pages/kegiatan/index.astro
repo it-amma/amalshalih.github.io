@@ -33,27 +33,30 @@ try {
 	console.error('[Kegiatan] Site settings fetch failed:', error)
 }
 
-// Local content collection as primary source (canonical markdown files)
-const localItems = await getCollection('kegiatan')
-if (localItems.length > 0) {
-	localItems.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-	kegiatan = localItems
-} else {
-	try {
-		const sanityItems = await getKegiatanList()
-		if (sanityItems && sanityItems.length > 0) {
-			kegiatan = sanityItems.map((item) => ({
-				id: item.slug,
-				data: {
-					title: item.title,
-					description: item.excerpt ?? '',
-					date: new Date(item.date),
-					kategori: item.category,
-				},
-			}))
-		}
-	} catch (error) {
-		console.error('[Kegiatan] Sanity kegiatanList fetch failed:', error)
+// Sanity CMS sebagai sumber utama konten kegiatan
+// Static markdown files adalah fallback jika Sanity tidak dapat dijangkau
+try {
+	const sanityItems = await getKegiatanList()
+	if (sanityItems && sanityItems.length > 0) {
+		kegiatan = sanityItems.map((item) => ({
+			id: item.slug,
+			data: {
+				title: item.title,
+				description: item.excerpt ?? '',
+				date: new Date(item.date),
+				kategori: item.category,
+			},
+		}))
+	}
+} catch (error) {
+	console.error('[Kegiatan] Sanity kegiatanList fetch failed:', error)
+}
+
+if (kegiatan.length === 0) {
+	const localItems = await getCollection('kegiatan')
+	if (localItems.length > 0) {
+		localItems.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+		kegiatan = localItems
 	}
 }
 ---

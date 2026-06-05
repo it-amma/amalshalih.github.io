@@ -44,37 +44,51 @@ try {
 
 let Content = null
 
-// Local content collection as primary source
-const localItems = await getCollection('kegiatan')
-const localItem = localItems.find((item) => item.id === slug)
-if (localItem) {
-	const rendered = await render(localItem)
-	Content = rendered.Content
-	pageData = {
-		title: localItem.data.title,
-		description: localItem.data.description,
-		date: localItem.data.date,
-		kategori: localItem.data.kategori,
-		image: localItem.data.image,
-		fromSanity: false,
-		bodyHtml: '',
-	}
-} else {
-	try {
-		const sanityItem = await getKegiatanItem(slug)
-		if (sanityItem) {
-			pageData = {
-				title: sanityItem.title,
-				description: sanityItem.excerpt ?? '',
-				date: new Date(sanityItem.date),
-				kategori: sanityItem.category,
-				image: undefined,
-				fromSanity: true,
-				bodyHtml: renderPortableText(sanityItem.body),
+// Sanity CMS sebagai sumber utama, fallback ke static markdown jika body kosong
+try {
+	const sanityItem = await getKegiatanItem(slug)
+	if (sanityItem) {
+		const bodyHtml = sanityItem.body ? renderPortableText(sanityItem.body) : ''
+		pageData = {
+			title: sanityItem.title,
+			description: sanityItem.excerpt ?? '',
+			date: new Date(sanityItem.date),
+			kategori: sanityItem.category,
+			image: undefined,
+			fromSanity: true,
+			bodyHtml,
+		}
+
+		// Jika Sanity body kosong, coba fallback ke local markdown untuk body konten
+		if (!bodyHtml) {
+			const localItems = await getCollection('kegiatan')
+			const localItem = localItems.find((item) => item.id === slug)
+			if (localItem) {
+				const rendered = await render(localItem)
+				Content = rendered.Content
+				// Gunakan metadata dari Sanity, body dari markdown lokal
 			}
 		}
-	} catch (error) {
-		console.error(`[Kegiatan Detail] Sanity kegiatanItem fetch failed for slug "${slug}":`, error)
+	}
+} catch (error) {
+	console.error(`[Kegiatan Detail] Sanity kegiatanItem fetch failed for slug "${slug}":`, error)
+}
+
+if (!pageData) {
+	const localItems = await getCollection('kegiatan')
+	const localItem = localItems.find((item) => item.id === slug)
+	if (localItem) {
+		const rendered = await render(localItem)
+		Content = rendered.Content
+		pageData = {
+			title: localItem.data.title,
+			description: localItem.data.description,
+			date: localItem.data.date,
+			kategori: localItem.data.kategori,
+			image: localItem.data.image,
+			fromSanity: false,
+			bodyHtml: '',
+		}
 	}
 }
 
@@ -272,7 +286,7 @@ const breadcrumbJsonLd = {
 			prose-pre:bg-warm-900 prose-pre:text-warm-100 prose-pre:rounded-xl prose-pre:p-4 prose-pre:overflow-x-auto
 			prose-hr:border-warm-200
 		">
-			{fromSanity ? <div set:html={bodyHtml} /> : Content && <Content />}
+			{fromSanity && bodyHtml ? <div set:html={bodyHtml} /> : Content && <Content />}
 		</div>
 
 		<!-- Share & Navigation -->
