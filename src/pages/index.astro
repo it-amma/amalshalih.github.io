@@ -3,6 +3,7 @@ import Button from '../components/ui/Button.astro'
 import Card from '../components/ui/Card.astro'
 import Container from '../components/ui/Container.astro'
 import Icon from '../components/ui/Icon.astro'
+import { fetchHeroPhotos } from '../data/hero-photos'
 import { STATS } from '../data/site'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { getSiteSettings } from '../lib/sanity/client'
@@ -36,6 +37,10 @@ try {
 } catch (error) {
 	console.error('[Home] Sanity siteSettings fetch failed:', error)
 }
+
+// Hero slideshow photos from Google Drive
+const heroPhotos = await fetchHeroPhotos()
+const initialPhoto = heroPhotos.length > 0 ? heroPhotos[0] : null
 ---
 
 <BaseLayout
@@ -44,7 +49,19 @@ try {
 	currentPage="/"
 >
 	<!-- Hero -->
-	<section class="relative overflow-hidden bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 text-white">
+	<section class="relative overflow-hidden text-white">
+		<!-- Slideshow Background -->
+		<div class="absolute inset-0 bg-primary-900">
+			<div id="hero-bg-a" class="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-out"
+				style="background-image: url({initialPhoto?.thumbnailUrl || ''}); background-color: #166534;"
+				data-photos={JSON.stringify(heroPhotos.map(p => p.thumbnailUrl))}
+				data-current="0"
+			></div>
+			<div id="hero-bg-b" class="absolute inset-0 bg-cover bg-center opacity-0 transition-all duration-1000 ease-out"></div>
+		</div>
+		<!-- Dark overlay for text readability -->
+		<div class="absolute inset-0 bg-gradient-to-br from-primary-900/85 via-primary-800/70 to-primary-950/90"></div>
+		<!-- Subtle dot pattern -->
 		<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50"></div>
 		<div class="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-6 sm:pt-12 lg:pt-16 pb-12 sm:pb-24 lg:pb-32">
 			<div class="max-w-3xl">
@@ -72,6 +89,41 @@ try {
 			</div>
 		</div>
 	</section>
+
+	<script is:inline>
+	(function() {
+		const bgA = document.getElementById('hero-bg-a');
+		const bgB = document.getElementById('hero-bg-b');
+		if (!bgA || !bgB) return;
+
+		const photos = JSON.parse(bgA.dataset.photos || '[]');
+		if (photos.length < 2) return;
+
+		// Preload all images
+		photos.forEach(function(src) {
+			var img = new Image();
+			img.src = src;
+		});
+
+		var current = 0;
+		var active = 'a';
+
+		setInterval(function() {
+			current = (current + 1) % photos.length;
+			var nextEl = active === 'a' ? bgB : bgA;
+			var currentEl = active === 'a' ? bgA : bgB;
+
+			nextEl.style.backgroundImage = 'url(' + photos[current] + ')';
+			nextEl.style.opacity = '';
+			requestAnimationFrame(function() {
+				nextEl.style.opacity = '1';
+				currentEl.style.opacity = '0';
+			});
+
+			active = active === 'a' ? 'b' : 'a';
+		}, 6000);
+	})();
+	</script>
 
 	<!-- Stats -->
 	<section class="relative -mt-6 sm:-mt-12 z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
