@@ -110,6 +110,11 @@ function buildAutoReplyHtml(data: FormData): string {
 	`
 }
 
+interface ResendError {
+	message?: string
+	error?: string
+}
+
 async function sendResendEmail(
 	apiKey: string,
 	to: string,
@@ -135,17 +140,18 @@ async function sendResendEmail(
 			body: JSON.stringify(body),
 		})
 
-		const result = await response.json()
+		const result = (await response.json()) as ResendError
 
 		if (!response.ok) {
 			console.error('[Resend] Failed:', result)
-			return { success: false, error: (result as any).message || 'Resend API error' }
+			return { success: false, error: result.message || result.error || 'Resend API error' }
 		}
 
 		return { success: true }
-	} catch (error: any) {
+	} catch (error: unknown) {
 		console.error('[Resend] Error:', error)
-		return { success: false, error: error.message }
+		const message = error instanceof Error ? error.message : 'Unknown error'
+		return { success: false, error: message }
 	}
 }
 
@@ -164,7 +170,14 @@ export const POST: APIRoute = async ({ request }) => {
 			console.error('[API /kontak] RESEND_API_KEY not configured')
 			return new Response(
 				JSON.stringify({ success: false, error: 'Konfigurasi email belum lengkap.' }),
-				{ status: 500, headers: { 'Content-Type': 'application/json' } },
+				{
+					status: 500,
+					headers: {
+						'Content-Type': 'application/json',
+						'X-Content-Type-Options': 'nosniff',
+						'X-Frame-Options': 'DENY',
+					},
+				},
 			)
 		}
 
@@ -198,6 +211,29 @@ export const POST: APIRoute = async ({ request }) => {
 			})
 		}
 
+		// CSRF Protection: Validate Origin/Referer header
+		const allowedOrigins = [
+			'https://amalshalih.id',
+			'https://www.asib.workers.dev',
+			'http://localhost:4321',
+		]
+		const origin = request.headers.get('origin') || request.headers.get('referer')
+		if (origin) {
+			const originUrl = new URL(origin)
+			const originHost = originUrl.protocol + '//' + originUrl.host
+			if (!allowedOrigins.includes(originHost)) {
+				console.error('[CSRF] Blocked request from:', originHost)
+				return new Response(JSON.stringify({ success: false, error: 'Unauthorized origin' }), {
+					status: 403,
+					headers: {
+						'Content-Type': 'application/json',
+						'X-Content-Type-Options': 'nosniff',
+						'X-Frame-Options': 'DENY',
+					},
+				})
+			}
+		}
+
 		const errors: string[] = []
 		if (!data.nama) errors.push('Nama harus diisi.')
 		if (!data.email) errors.push('Email harus diisi.')
@@ -209,7 +245,11 @@ export const POST: APIRoute = async ({ request }) => {
 		if (errors.length > 0) {
 			return new Response(JSON.stringify({ success: false, errors }), {
 				status: 400,
-				headers: { 'Content-Type': 'application/json' },
+				headers: {
+					'Content-Type': 'application/json',
+					'X-Content-Type-Options': 'nosniff',
+					'X-Frame-Options': 'DENY',
+				},
 			})
 		}
 
@@ -261,13 +301,24 @@ export const POST: APIRoute = async ({ request }) => {
 
 		return new Response(JSON.stringify({ success: true }), {
 			status: 200,
-			headers: { 'Content-Type': 'application/json' },
+			headers: {
+				'Content-Type': 'application/json',
+				'X-Content-Type-Options': 'nosniff',
+				'X-Frame-Options': 'DENY',
+			},
 		})
 	} catch (error: any) {
 		console.error('[API /kontak] Error:', error)
 		return new Response(
 			JSON.stringify({ success: false, errors: ['Terjadi kesalahan. Silakan coba lagi.'] }),
-			{ status: 500, headers: { 'Content-Type': 'application/json' } },
+			{
+				status: 500,
+				headers: {
+					'Content-Type': 'application/json',
+					'X-Content-Type-Options': 'nosniff',
+					'X-Frame-Options': 'DENY',
+				},
+			},
 		)
 	}
 }

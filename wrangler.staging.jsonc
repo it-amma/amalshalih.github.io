@@ -1,0 +1,26 @@
+{
+	"name": "www-staging",
+	"main": "@astrojs/cloudflare/entrypoints/server",
+	"compatibility_date": "2026-06-01",
+	"compatibility_flags": ["nodejs_compat"],
+	"vars": {
+		"NODE_ENV": "staging"
+	},
+	"kv_namespaces": [
+		{
+			"binding": "SESSION",
+			"id": "1fcf5a834af8489790a5e55793205d2a"
+		},
+		{
+			"binding": "LIKES",
+			"id": "0525d17bcb8b43098ec8415b976e2dca"
+		}
+	],
+	"assets": {
+		"binding": "ASSETS",
+		"directory": "./dist"
+	},
+	"observability": {
+		"enabled": true
+	}
+}

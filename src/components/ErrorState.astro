@@ -1,0 +1,46 @@
+---
+interface Props {
+	title: string
+	message: string
+	icon?: 'alert-circle' | 'info' | 'x-circle'
+}
+
+const { title, message, icon = 'alert-circle' } = Astro.props
+
+const icons = {
+	'alert-circle': `
+		<path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+	`,
+	info: `
+		<path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+	`,
+	'x-circle': `
+		<path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+	`,
+}
+
+const iconPaths = icons[icon]
+const colors = {
+	'alert-circle': 'text-red-600 bg-red-50',
+	info: 'text-blue-600 bg-blue-50',
+	'x-circle': 'text-red-600 bg-red-50',
+}
+const iconColor = colors[icon]
+---
+
+<div class="flex flex-col items-center justify-center py-12 sm:py-20 text-center">
+	<div class={`mb-6 flex h-16 w-16 items-center justify-center rounded-full ${iconColor}`}>
+		<svg
+			class="h-8 w-8"
+			fill="none"
+			viewBox="0 0 24 24"
+			stroke="currentColor"
+			stroke-width="2"
+			aria-hidden="true"
+		>
+			{iconPaths}
+		</svg>
+	</div>
+	<h2 class="text-xl font-bold text-warm-900 mb-2">{title}</h2>
+	<p class="text-warm-600 max-w-md mx-auto">{message}</p>
+</div>
