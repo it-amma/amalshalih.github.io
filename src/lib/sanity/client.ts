@@ -1,6 +1,9 @@
 import { sanityClient } from 'sanity:client'
+import { cachedFetch, sanityCacheKey } from '../kv-cache'
 import {
 	bankDonasiQuery,
+	blogPostItemQuery,
+	blogPostListQuery,
 	faqListQuery,
 	kegiatanItemQuery,
 	kegiatanListQuery,
@@ -10,6 +13,7 @@ import {
 } from './queries'
 import type {
 	SanityBankDonasi,
+	SanityBlogPost,
 	SanityFaq,
 	SanityKegiatan,
 	SanityPengurus,
@@ -18,27 +22,45 @@ import type {
 } from './types'
 
 export async function getKegiatanList(): Promise<SanityKegiatan[]> {
-	return sanityClient.fetch(kegiatanListQuery)
+	return cachedFetch({
+		key: sanityCacheKey(kegiatanListQuery),
+		fetcher: () => sanityClient.fetch(kegiatanListQuery),
+	})
 }
 
 export async function getKegiatanItem(slug: string): Promise<SanityKegiatan | null> {
-	return sanityClient.fetch(kegiatanItemQuery, { slug })
+	return cachedFetch({
+		key: sanityCacheKey(kegiatanItemQuery, { slug }),
+		fetcher: () => sanityClient.fetch(kegiatanItemQuery, { slug }),
+	})
 }
 
 export async function getProgramList(): Promise<SanityProgram[]> {
-	return sanityClient.fetch(programListQuery)
+	return cachedFetch({
+		key: sanityCacheKey(programListQuery),
+		fetcher: () => sanityClient.fetch(programListQuery),
+	})
 }
 
 export async function getBankDonasi(): Promise<SanityBankDonasi[]> {
-	return sanityClient.fetch(bankDonasiQuery)
+	return cachedFetch({
+		key: sanityCacheKey(bankDonasiQuery),
+		fetcher: () => sanityClient.fetch(bankDonasiQuery),
+	})
 }
 
 export async function getPengurus(): Promise<SanityPengurus[]> {
-	return sanityClient.fetch(pengurusQuery)
+	return cachedFetch({
+		key: sanityCacheKey(pengurusQuery),
+		fetcher: () => sanityClient.fetch(pengurusQuery),
+	})
 }
 
 export async function getSiteSettings(): Promise<SanitySiteSettings | null> {
-	return sanityClient.fetch(siteSettingsQuery)
+	return cachedFetch({
+		key: sanityCacheKey(siteSettingsQuery),
+		fetcher: () => sanityClient.fetch(siteSettingsQuery),
+	})
 }
 
 export async function getFaqList(): Promise<SanityFaq[] | null> {
@@ -49,4 +71,18 @@ export async function getFaqList(): Promise<SanityFaq[] | null> {
 		console.error('Failed to fetch FAQ from Sanity:', error)
 		return []
 	}
+}
+
+export async function getBlogPostList(): Promise<SanityBlogPost[]> {
+	return cachedFetch({
+		key: sanityCacheKey(blogPostListQuery),
+		fetcher: () => sanityClient.fetch(blogPostListQuery),
+	})
+}
+
+export async function getBlogPost(slug: string): Promise<SanityBlogPost | null> {
+	return cachedFetch({
+		key: sanityCacheKey(blogPostItemQuery, { slug }),
+		fetcher: () => sanityClient.fetch(blogPostItemQuery, { slug }),
+	})
 }

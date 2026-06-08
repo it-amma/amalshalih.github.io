@@ -65,6 +65,31 @@ export const pengurusQuery = `*[_type == "pengurus"] | order(order asc) {
   "photoAlt": photo.alt
 }`
 
+export const blogPostListQuery = `*[_type == "blogPost" && defined(slug.current)] | order(date desc) {
+  _id,
+  title,
+  "slug": slug.current,
+  date,
+  category,
+  author,
+  excerpt,
+  "imageUrl": image.asset->url,
+  "imageAlt": image.alt
+}`
+
+export const blogPostItemQuery = `*[_type == "blogPost" && slug.current == $slug][0] {
+  _id,
+  title,
+  "slug": slug.current,
+  date,
+  category,
+  author,
+  excerpt,
+  "imageUrl": image.asset->url,
+  "imageAlt": image.alt,
+  body
+}`
+
 export const siteSettingsQuery = `*[_type == "siteSettings"][0] {
   siteName,
   shortName,

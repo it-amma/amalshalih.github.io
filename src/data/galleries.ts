@@ -8,6 +8,7 @@ import {
 	listSubfolders,
 	parseFolderName,
 } from '../lib/google-drive'
+import { cachedFetch, driveCacheKey } from '../lib/kv-cache'
 
 function getGoogleDriveCredentials(): string | undefined {
 	return env.GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY
@@ -86,7 +87,7 @@ async function transformDriveFolder(folder: DriveFolder): Promise<GalleryEntry |
 	}
 }
 
-// Fetch all galleries from Google Drive (REAL-TIME)
+// Fetch all galleries from Google Drive with KV caching
 export async function fetchAllGalleries(): Promise<GalleryEntry[]> {
 	// Return empty array if Google Drive credentials not configured
 	if (!getGoogleDriveCredentials()) {
@@ -96,23 +97,29 @@ export async function fetchAllGalleries(): Promise<GalleryEntry[]> {
 
 	try {
 		console.log('🔍 Fetching galleries from Google Drive...')
-		const subfolders = await listSubfolders(PARENT_FOLDER_ID)
 
-		if (subfolders.length === 0) {
-			console.log('⚠️ No subfolders found in parent folder')
-			return []
-		}
+		return cachedFetch({
+			key: driveCacheKey('galleries'),
+			fetcher: async () => {
+				const subfolders = await listSubfolders(PARENT_FOLDER_ID)
 
-		console.log(`📁 Found ${subfolders.length} subfolders`)
+				if (subfolders.length === 0) {
+					console.log('⚠️ No subfolders found in parent folder')
+					return []
+				}
 
-		// Fetch all galleries in parallel
-		const galleries = await Promise.all(subfolders.map(transformDriveFolder))
+				console.log(`📁 Found ${subfolders.length} subfolders`)
 
-		// Filter out null entries (failed to parse/transform)
-		const validGalleries = galleries.filter((g): g is GalleryEntry => g !== null)
+				// Fetch all galleries in parallel
+				const galleries = await Promise.all(subfolders.map(transformDriveFolder))
 
-		console.log(`✅ Successfully fetched ${validGalleries.length} galleries`)
-		return validGalleries
+				// Filter out null entries (failed to parse/transform)
+				const validGalleries = galleries.filter((g): g is GalleryEntry => g !== null)
+
+				console.log(`✅ Successfully fetched ${validGalleries.length} galleries`)
+				return validGalleries
+			},
+		})
 	} catch (error) {
 		const message = error instanceof Error ? error.message : String(error)
 		console.error('❌ Failed to fetch galleries:', message)

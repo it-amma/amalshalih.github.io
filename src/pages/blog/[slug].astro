@@ -3,6 +3,8 @@ import { getCollection, render } from 'astro:content'
 import Container from '../../components/ui/Container.astro'
 import Icon from '../../components/ui/Icon.astro'
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import { getBlogPost } from '../../lib/sanity/client'
+import { renderPortableText } from '../../lib/sanity/render'
 
 // SSR mode for Cloudflare Workers
 export const prerender = false
@@ -12,15 +14,72 @@ if (!slug) {
 	return Astro.redirect('/blog')
 }
 
-// Fetch the specific blog post
-const blogPosts = await getCollection('blog')
-const post = blogPosts.find((p) => p.id === slug)
+// Try Sanity first
+let sanityPost = null
+let postFromSanity = false
+try {
+	sanityPost = await getBlogPost(slug)
+	if (sanityPost) {
+		postFromSanity = true
+	}
+} catch (error) {
+	console.error('[Blog Detail] Sanity fetch failed:', error)
+}
+
+let post: {
+	id: string
+	data: {
+		title: string
+		description: string
+		date: Date
+		image?: string
+		category?: string
+		author?: string
+	}
+	body?: unknown
+} | null = null
+
+let Content: any = null
+
+if (sanityPost) {
+	post = {
+		id: sanityPost.slug,
+		data: {
+			title: sanityPost.title,
+			description: sanityPost.excerpt ?? '',
+			date: new Date(sanityPost.date),
+			image: sanityPost.imageUrl,
+			category: sanityPost.category,
+			author: sanityPost.author,
+		},
+		body: sanityPost.body,
+	}
+}
+
+// Fall back to markdown collection
+if (!post) {
+	const blogPosts = await getCollection('blog')
+	const markdownPost = blogPosts.find((p) => p.id === slug)
+	if (markdownPost) {
+		post = {
+			id: markdownPost.id,
+			data: {
+				title: markdownPost.data.title,
+				description: markdownPost.data.description,
+				date: markdownPost.data.date,
+				image: markdownPost.data.image,
+				category: markdownPost.data.category,
+				author: markdownPost.data.author,
+			},
+		}
+		const { Content: MarkdownContent } = await render(markdownPost)
+		Content = MarkdownContent
+	}
+}
 
 if (!post) {
 	return Astro.redirect('/blog')
 }
-
-const { Content } = await render(post)
 
 const formattedDate = post.data.date.toLocaleDateString('id-ID', {
 	weekday: 'long',
@@ -30,10 +89,10 @@ const formattedDate = post.data.date.toLocaleDateString('id-ID', {
 })
 
 // Estimate reading time (avg 200 words per minute)
-const words = post.body?.split(/\s+/).length || 0
-const readingTime = Math.ceil(words / 200)
+const words = post.body ? String(post.body).split(/\s+/).length : 0
+const readingTime = Math.ceil(words / 200) || 3
 
-// Fetch related posts
+// Fetch related posts (from markdown for now)
 const allPosts = await getCollection('blog')
 const relatedPosts = allPosts
 	.filter((p) => p.id !== post.id && p.data.category === post.data.category)
@@ -146,7 +205,11 @@ const relatedPosts = allPosts
 				prose-blockquote:border-l-primary-500 prose-blockquote:bg-primary-50 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r-lg
 				prose-img:rounded-2xl prose-img:shadow-md
 				sm:prose-lg">
-				<Content />
+				{postFromSanity && post.body ? (
+					<div set:html={renderPortableText(post.body)} />
+				) : (
+					<Content />
+				)}
 			</div>
 
 			<!-- Footer / Engagement Section -->

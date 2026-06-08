@@ -177,12 +177,6 @@ export function getFullImageUrl(fileId: string, width = 1600) {
 	return `/api/drive-image/${fileId}?size=${width}`
 }
 
-interface ShortcutItem {
-	id: string
-	name: string
-	targetId: string
-}
-
 export async function listItemsWithShortcuts(folderId: string): Promise<DriveImage[]> {
 	const accessToken = await getAccessToken()
 

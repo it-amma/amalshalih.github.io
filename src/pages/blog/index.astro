@@ -5,8 +5,55 @@ import Card from '../../components/ui/Card.astro'
 import Container from '../../components/ui/Container.astro'
 import Icon from '../../components/ui/Icon.astro'
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import { getBlogPostList } from '../../lib/sanity/client'
 
-const posts = await getCollection('blog')
+interface BlogPost {
+	id: string
+	data: {
+		title: string
+		description: string
+		date: Date
+		image?: string
+		category?: string
+	}
+}
+
+let posts: BlogPost[] = []
+
+// Try Sanity first
+try {
+	const sanityPosts = await getBlogPostList()
+	if (sanityPosts && sanityPosts.length > 0) {
+		posts = sanityPosts.map((post) => ({
+			id: post.slug,
+			data: {
+				title: post.title,
+				description: post.excerpt ?? '',
+				date: new Date(post.date),
+				image: post.imageUrl,
+				category: post.category,
+			},
+		}))
+	}
+} catch (error) {
+	console.error('[Blog Index] Sanity blog fetch failed:', error)
+}
+
+// Fall back to markdown collection
+if (posts.length === 0) {
+	const markdownPosts = await getCollection('blog')
+	posts = markdownPosts.map((post) => ({
+		id: post.id,
+		data: {
+			title: post.data.title,
+			description: post.data.description,
+			date: post.data.date,
+			image: post.data.image,
+			category: post.data.category,
+		},
+	}))
+}
+
 const sortedPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 ---
 

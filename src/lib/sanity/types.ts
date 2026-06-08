@@ -41,6 +41,19 @@ export interface SanityPengurus {
 	photoAlt?: string
 }
 
+export interface SanityBlogPost {
+	_id: string
+	title: string
+	slug: string
+	date: string
+	category?: string
+	author?: string
+	excerpt?: string
+	imageUrl?: string
+	imageAlt?: string
+	body?: unknown
+}
+
 export interface SanitySiteSettings {
 	siteName?: string
 	shortName?: string
