@@ -214,13 +214,16 @@ export const POST: APIRoute = async ({ request }) => {
 		// CSRF Protection: Validate Origin/Referer header
 		const allowedOrigins = [
 			'https://amalshalih.id',
+			'https://www.amalshalih.id',
+			'https://amalshalih.or.id',
+			'https://www.amalshalih.or.id',
 			'https://www.asib.workers.dev',
 			'http://localhost:4321',
 		]
 		const origin = request.headers.get('origin') || request.headers.get('referer')
 		if (origin) {
 			const originUrl = new URL(origin)
-			const originHost = originUrl.protocol + '//' + originUrl.host
+			const originHost = `${originUrl.protocol}//${originUrl.host}`
 			if (!allowedOrigins.includes(originHost)) {
 				console.error('[CSRF] Blocked request from:', originHost)
 				return new Response(JSON.stringify({ success: false, error: 'Unauthorized origin' }), {

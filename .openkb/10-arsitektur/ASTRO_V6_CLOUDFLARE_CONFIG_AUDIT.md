@@ -98,7 +98,7 @@ This caused:
 Added proper wrangler scripts:
 ```json
 {
-  "wrangler:dev": "wrangler dev",
+  "wrangler:dev": "cd dist/server && wrangler dev",
   "wrangler:deploy": "wrangler deploy"
 }
 ```

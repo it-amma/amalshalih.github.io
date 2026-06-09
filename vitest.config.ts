@@ -8,6 +8,6 @@ export default defineConfig({
 		}),
 	],
 	test: {
-		exclude: ['test/integration/**', 'node_modules/**', 'studio-amalshalih/**'],
+		exclude: ['test/integration/**', 'node_modules/**', '.opencode/**', 'studio-amalshalih/**'],
 	},
 })

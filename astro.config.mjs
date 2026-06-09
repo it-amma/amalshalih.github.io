@@ -14,7 +14,7 @@ const env = loadEnv('production', process.cwd(), '')
 Object.assign(process.env, env)
 
 export default defineConfig({
-	site: 'https://amalshalih.id',
+	site: 'https://amalshalih.or.id',
 	output: 'server',
 	adapter: cloudflare(),
 	integrations: [
@@ -31,7 +31,7 @@ export default defineConfig({
 				if (/404/.test(item.url)) {
 					return undefined
 				}
-				if (item.url === 'https://amalshalih.id/') {
+				if (item.url === 'https://amalshalih.or.id/') {
 					// @ts-expect-error
 					item.changefreq = 'daily'
 					item.priority = 1.0

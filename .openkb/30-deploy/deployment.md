@@ -15,7 +15,7 @@
 - [1. Konsep Dasar Deployment](#1-konsep-dasar-deployment)
 - [2. Ringkasan Project](#2-ringkasan-project)
 - [3. Persiapan Build](#3-persiapan-build)
-- [4. Cloudflare Pages (Aktif)](#4-cloudflare-pages-aktif)
+- [4. Cloudflare Workers (Aktif)](#4-cloudflare-pages-aktif)
 - [5. Vercel (Alternatif)](#5-vercel-alternatif)
 - [6. Platform Lain](#6-platform-lain)
 - [7. Perbandingan & Rekomendasi](#7-perbandingan--rekomendasi)
@@ -36,19 +36,19 @@ Bayangkan seperti ini:
 - **Build:** Semua file diubah jadi format siap publikasi (HTML statis)
 - **Deploy:** File hasil build dikirim ke server hosting — seluruh dunia bisa akses
 
-### 1.2. Static Site vs Server-Side
+### 1.2. Static Site vs Workers SSR
 
-Website Yayasan ASIB adalah **Static Site**:
+Website Yayasan ASIB adalah **Workers SSR**:
 
 | Konsep | Static Site | Server-Side (SSR) |
 |--------|-------------|-------------------|
 | **HTML** | Sudah jadi saat build | Dibuat setiap ada request |
-| **Server** | Cuma perlu serve file | Perlu runtime (Node.js, PHP, dll) |
+| **Server** | Serve file + compute runtime | Perlu runtime (Node.js, PHP, dll) |
 | **Kecepatan** | Super cepat (CDN) | Bergantung server |
 | **Biaya** | Murah / gratis | Lebih mahal |
 | **Kompleksitas** | Sederhana | Lebih rumit |
 
-Karena Astro di-mode `static`, output build kita adalah file HTML siap pakai —
+Karena Astro di-mode `static`, output build kita adalah runtime server module —
 bisa dideploy ke **hosting manapun** tanpa persyaratan khusus.
 
 ### 1.3. Istilah Penting
@@ -148,7 +148,7 @@ Jika build error, cek:
 
 ---
 
-## 4. Cloudflare Pages (Aktif)
+## 4. Cloudflare Workers (Aktif)
 
 ### 4.1. Status Saat Ini
 
@@ -262,7 +262,7 @@ bisa set di:
 Dashboard Cloudflare → Pages → `amalshalih` → **Settings** → **Environment variables**
 
 Variable yang mungkin diperlukan nanti:
-- `PUBLIC_FORMSPREE_ID` — ID form kontak (jika pakai plan berbayar)
+- `RESEND_API_KEY` — ID form kontak (jika pakai plan berbayar)
 - `PUBLIC_GA_ID` — Google Analytics (jika dipasang)
 
 ### 4.7. Preview Deployments (Branch)
@@ -270,7 +270,7 @@ Variable yang mungkin diperlukan nanti:
 Cloudflare Pages otomatis membuat preview URL untuk setiap Pull Request.
 Setiap PR akan punya URL unik seperti:
 ```
-https://<hash>.amalshalih.pages.dev
+https://www-staging.asib.workers.dev (Staging preview)
 ```
 Ini berguna untuk review sebelum merge ke production.
 

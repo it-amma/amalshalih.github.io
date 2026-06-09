@@ -17,7 +17,7 @@ Dokumen ini mencatat keputusan arsitektur penting dalam project Yayasan Amal Sha
 // wrangler.jsonc
 {
   "name": "amalshalih",
-  "main": "./dist/server/entry.mjs",
+  "main": "@astrojs/cloudflare/entrypoints/server",
   "compatibility_date": "2025-05-29",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
@@ -130,7 +130,7 @@ try {
 **Workflow:**
 ```
 1. bun run build        → Astro build ke dist/
-2. wrangler deploy      → Deploy dist/server/entry.mjs
+2. wrangler deploy      → Deploy @astrojs/cloudflare/entrypoints/server
 ```
 
 ## Error Handling Strategy: Explicit Logging

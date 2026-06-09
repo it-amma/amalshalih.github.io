@@ -62,3 +62,53 @@ Screenshot *.png
 src/data/cache/
 src/data/generated-galleries.json
 *.snapshot.yml
+
+# Firebase Admin Keys (SECURITY)
+.firebase/
+
+# =============================================================================
+# AI & DEVELOPMENT TOOLS
+# =============================================================================
+
+# Opencode — AI coding assistant configuration & plugins (local-only)
+# Contains: plugins/, node_modules/, opencode.json (local config)
+.opencode/
+
+# Graphify — Generated knowledge graph (build artifact)
+# Can be regenerated anytime with `graphify_build`
+graphify-out/
+
+# =============================================================================
+# ADDITIONAL BUILD & CACHE DIRECTORIES
+# =============================================================================
+
+# Vite/rollup cache (if using Vite)
+.vite/
+
+# Bun runtime cache
+.bun/
+
+# ESLint cache
+.eslintcache
+
+# Biome cache
+.biome/
+
+# TypeScript build info (if using tsc)
+*.tsbuildinfo
+
+# =============================================================================
+# OPTIONAL: IDE & EDITOR SPECIFIC
+# =============================================================================
+
+# VS Code (if not using .idea)
+.vscode/
+
+# Vim/Neovim swap files
+*.swp
+*.swo
+*~
+
+# Emacs backup files
+*~
+.\#*

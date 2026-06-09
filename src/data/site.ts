@@ -4,7 +4,7 @@ export const SITE = {
 	abbreviation: 'ASIB',
 	tagline: 'Maslahat Bagi Umat',
 	description: 'Menjadi lembaga yang profesional dan berkarakter serta maslahat bagi umat.',
-	url: 'https://amalshalih.id',
+	url: 'https://amalshalih.or.id',
 	founded: '2020',
 	foundedDate: '27 Maret 2020',
 	legal: {
